@@ -62,7 +62,7 @@ export default function HomeChargingPage() {
             <div>
               <h3 className="text-lg font-bold text-purple-400 mb-3">Time-of-Use (TOU) Rates</h3>
               <p className="text-slate-400 leading-relaxed">
-                Most utility companies offer special EV or TOU rates. Electricity is much cheaper during "Off-Peak" hours (usually midnight to 6 AM) when grid demand is lowest. Setting your EV to schedule charging during these windows can cut your fuel costs by more than 50% compared to daytime charging.
+                Most utility companies offer special EV or TOU rates. Electricity is much cheaper during &quot;Off-Peak&quot; hours (usually midnight to 6 AM) when grid demand is lowest. Setting your EV to schedule charging during these windows can cut your fuel costs by more than 50% compared to daytime charging.
               </p>
             </div>
 

@@ -18,7 +18,7 @@ export default function NotFound() {
         Dead Battery
       </h2>
       <p className="text-lg text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed">
-        The page or vehicle you're looking for doesn't exist, has been moved, or the URL is incorrect. Let's get you back on the road.
+        The page or vehicle you&apos;re looking for doesn&apos;t exist, has been moved, or the URL is incorrect. Let&apos;s get you back on the road.
       </p>
 
       {/* Quick Search / Jump Pills */}
@@ -76,7 +76,6 @@ export default function NotFound() {
           ← Return to Homepage
         </Link>
       </div>
-
     </div>
   );
 }

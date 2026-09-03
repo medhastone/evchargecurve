@@ -353,7 +353,7 @@ export default function RangeLossTool() {
             <div>
               <h4 className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-2">Trip Planning Insight</h4>
               <p className="text-sm text-blue-200/80 leading-relaxed">
-                A 300-mile highway journey in these exact conditions will require charging stops to break up the drive. Relying on your vehicle's built-in navigation is highly recommended, as it will precondition the battery pack before arrival at the DC fast charger, ensuring you get optimal charging speeds upon plug-in.
+                A 300-mile highway journey in these exact conditions will require charging stops to break up the drive. Relying on your vehicle&apos;s built-in navigation is highly recommended, as it will precondition the battery pack before arrival at the DC fast charger, ensuring you get optimal charging speeds upon plug-in.
               </p>
             </div>
           </div>

@@ -14,6 +14,24 @@ import { cn } from '@/lib/utils';
 
 const CHARGER_TIERS = [50, 150, 250, 350];
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const p = payload[0].payload;
+      return (
+        <div className="bg-slate-900/90 border border-slate-700 p-3 rounded-lg shadow-xl backdrop-blur-sm">
+          <p className="text-slate-300 font-medium mb-1">State of Charge: <span className="text-white font-bold">{label}%</span></p>
+          <p className="text-emerald-400 font-bold text-lg">{p.kw} kW</p>
+          {p.active ? (
+            <span className="inline-block mt-1 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-xs rounded-full">Charging</span>
+          ) : (
+            <span className="inline-block mt-1 px-2 py-0.5 bg-slate-700 text-slate-400 text-xs rounded-full">Outside Range</span>
+          )}
+        </div>
+      );
+    }
+    return null;
+  };
+
 export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehicleId?: string }) {
   const evModels = Object.values(VEHICLES);
   
@@ -105,23 +123,7 @@ export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehic
   };
 
   // Custom Chart Tooltip
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const p = payload[0].payload;
-      return (
-        <div className="bg-slate-900/90 border border-slate-700 p-3 rounded-lg shadow-xl backdrop-blur-sm">
-          <p className="text-slate-300 font-medium mb-1">State of Charge: <span className="text-white font-bold">{label}%</span></p>
-          <p className="text-emerald-400 font-bold text-lg">{p.kw} kW</p>
-          {p.active ? (
-            <span className="inline-block mt-1 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-xs rounded-full">Charging</span>
-          ) : (
-            <span className="inline-block mt-1 px-2 py-0.5 bg-slate-700 text-slate-400 text-xs rounded-full">Outside Range</span>
-          )}
-        </div>
-      );
-    }
-    return null;
-  };
+  
 
   if (!isMounted) return null;
 

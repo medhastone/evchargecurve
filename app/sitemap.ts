@@ -3,6 +3,9 @@ import { VEHICLES } from '@/data/evModels';
 
 const BASE_URL = 'https://evchargecurve.com';
 
+// Required for fully static sitemaps in Next.js "output: export" mode
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
     {

@@ -274,7 +274,7 @@ export default function HomeChargingTool() {
             <div>
               <h4 className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-1">AC Inverter Loss Factored In</h4>
               <p className="text-sm text-blue-200/80 leading-relaxed">
-                Home chargers supply AC power, but the battery stores DC power. The vehicle's onboard converter handles this conversion, resulting in approximately <strong>10% energy loss as heat</strong>. This calculator automatically bills you for {results.actualEnergyNeededKwh.toFixed(1)} kWh drawn from the wall to safely put {(results.actualEnergyNeededKwh * 0.9).toFixed(1)} kWh into the pack.
+                Home chargers supply AC power, but the battery stores DC power. The vehicle&apos;s onboard converter handles this conversion, resulting in approximately <strong>10% energy loss as heat</strong>. This calculator automatically bills you for {results.actualEnergyNeededKwh.toFixed(1)} kWh drawn from the wall to safely put {(results.actualEnergyNeededKwh * 0.9).toFixed(1)} kWh into the pack.
               </p>
             </div>
           </div>

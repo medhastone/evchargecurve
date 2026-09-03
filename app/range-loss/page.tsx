@@ -24,7 +24,7 @@ export default function RangeLossPage() {
           Real-World EV Range
         </h1>
         <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto">
-          EPA ratings don't reflect reality. See how cold weather, high-speed highway driving, roof boxes, and heavy towing destroy your range.
+          EPA ratings don&apos;t reflect reality. See how cold weather, high-speed highway driving, roof boxes, and heavy towing destroy your range.
         </p>
       </section>
 
@@ -42,7 +42,7 @@ export default function RangeLossPage() {
             <div>
               <h3 className="text-lg font-bold text-blue-400 mb-3">Cold Weather & Thermal Management</h3>
               <p className="text-slate-400 leading-relaxed">
-                Internal combustion engines generate massive amounts of waste heat, which is easily diverted to warm the cabin. EVs are incredibly efficient, meaning they don't produce enough waste heat. Heating the cabin in winter requires pulling direct energy from the battery pack. Heat pumps mitigate this, but at sub-zero temperatures, resistive heaters (PTC) take over and consume enormous amounts of power.
+                Internal combustion engines generate massive amounts of waste heat, which is easily diverted to warm the cabin. EVs are incredibly efficient, meaning they don&apos;t produce enough waste heat. Heating the cabin in winter requires pulling direct energy from the battery pack. Heat pumps mitigate this, but at sub-zero temperatures, resistive heaters (PTC) take over and consume enormous amounts of power.
               </p>
             </div>
             
@@ -91,7 +91,7 @@ export default function RangeLossPage() {
                 "name": "How much does a roof box affect EV range?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "A roof box ruins the vehicle's aerodynamic profile and typically reduces highway range by 10% to 15% depending on the vehicle shape and driving speed."
+                  "text": "A roof box ruins the vehicle&apos;s aerodynamic profile and typically reduces highway range by 10% to 15% depending on the vehicle shape and driving speed."
                 }
               }
             ]

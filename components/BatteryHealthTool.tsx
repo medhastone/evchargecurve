@@ -7,6 +7,19 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Zap, Activity, ShieldCheck, ShieldAlert, HeartPulse, Battery, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-slate-900/95 border border-slate-700 p-3 rounded-lg shadow-xl backdrop-blur-sm">
+          <p className="text-slate-300 font-medium mb-2">Year {label}</p>
+          <p className="text-emerald-400 font-bold">Projected SoH: {payload[0].value}%</p>
+          {payload[1] && <p className="text-red-400 font-bold text-sm mt-1">Warranty Limit: {payload[1].value}%</p>}
+        </div>
+      );
+    }
+    return null;
+  };
+
 export default function BatteryHealthTool() {
   const evModels = Object.values(VEHICLES);
   const [vehicleId, setVehicleId] = useState(evModels[0].id);
@@ -40,18 +53,7 @@ export default function BatteryHealthTool() {
   
   const gaugeColor = degradation.currentSohPct > 85 ? 'text-emerald-500' : degradation.currentSohPct >= 70 ? 'text-amber-500' : 'text-red-500';
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-slate-900/95 border border-slate-700 p-3 rounded-lg shadow-xl backdrop-blur-sm">
-          <p className="text-slate-300 font-medium mb-2">Year {label}</p>
-          <p className="text-emerald-400 font-bold">Projected SoH: {payload[0].value}%</p>
-          {payload[1] && <p className="text-red-400 font-bold text-sm mt-1">Warranty Limit: {payload[1].value}%</p>}
-        </div>
-      );
-    }
-    return null;
-  };
+  
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
