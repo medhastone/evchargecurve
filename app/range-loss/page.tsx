@@ -63,7 +63,7 @@ export default function RangeLossPage() {
             <div>
               <h3 className="text-lg font-bold text-orange-400 mb-3">Towing Payload</h3>
               <p className="text-slate-400 leading-relaxed">
-                Towing a heavy, non-aerodynamic trailer is the ultimate range killer for any vehicle, but EV drivers notice it more due to the current charging infrastructure. Depending on the weight and frontal area of the trailer, towing can reduce an EV's range by 30% to 50%, requiring twice as many charging stops.
+                Towing a heavy, non-aerodynamic trailer is the ultimate range killer for any vehicle, but EV drivers notice it more due to the current charging infrastructure. Depending on the weight and frontal area of the trailer, towing can reduce an EV&apos;s range by 30% to 50%, requiring twice as many charging stops.
               </p>
             </div>
           </div>

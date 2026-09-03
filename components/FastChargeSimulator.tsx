@@ -47,6 +47,7 @@ export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehic
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
     const params = new URLSearchParams(window.location.search);
     if (params.get('vid')) setVehicleId(params.get('vid') as string);
