@@ -1,0 +1,6 @@
+{
+  "name": "EV Charge Curve",
+  "description": "Interactive dashboard for estimating EV charging time, battery health, range loss, and home charging stats.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
