@@ -1,8 +1,10 @@
+import { useSettings } from '@/components/providers/SettingsProvider';
 'use client';
 
 import React, { useState } from 'react';
 
 export default function HomeCharging() {
+  const { currency: globalCurrency } = useSettings();
  const [offPeakRate, setOffPeakRate] = useState(0.09);
  const [peakRate, setPeakRate] = useState(0.38);
  const [annualMiles, setAnnualMiles] = useState(13500);
@@ -69,8 +71,8 @@ export default function HomeCharging() {
  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
  <div className="flex flex-col gap-2">
  <div className="flex justify-between items-end">
- <label className="uppercase tracking-widest text-[10px] text-slate-300">Off-Peak Rate ($/kWh)</label>
- <span className="font-mono text-sm text-emerald-400">${offPeakRate.toFixed(2)}</span>
+ <label className="uppercase tracking-widest text-[10px] text-slate-300">Off-Peak Rate</label>
+ <span key={globalCurrency.symbol} className="font-mono text-sm text-emerald-400">{globalCurrency.symbol}{offPeakRate.toFixed(2)}</span>
  </div>
  <input 
  type="range" min="0.01" max="0.30" step="0.01" value={offPeakRate} 
@@ -81,8 +83,8 @@ export default function HomeCharging() {
 
  <div className="flex flex-col gap-2">
  <div className="flex justify-between items-end">
- <label className="uppercase tracking-widest text-[10px] text-slate-300">Peak Rate ($/kWh)</label>
- <span className="font-mono text-sm text-error">${peakRate.toFixed(2)}</span>
+ <label className="uppercase tracking-widest text-[10px] text-slate-300">Peak Rate</label>
+ <span key={globalCurrency.symbol} className="font-mono text-sm text-error">{globalCurrency.symbol}{peakRate.toFixed(2)}</span>
  </div>
  <input 
  type="range" min="0.10" max="0.80" step="0.01" value={peakRate} 
@@ -124,15 +126,15 @@ export default function HomeCharging() {
  </div>
  <div className="flex justify-between items-center mt-6">
  <span className="text-xs text-slate-300">Est. Off-Peak (Monthly)</span>
- <span className="font-mono text-xs text-slate-100">${offPeakCost.toFixed(0)}</span>
+ <span key={globalCurrency.symbol} className="font-mono text-xs text-slate-100">{globalCurrency.symbol}{offPeakCost.toFixed(0)}</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-xs text-slate-300">Est. Peak (Monthly)</span>
- <span className="font-mono text-xs text-slate-300 line-through">${peakCost.toFixed(0)}</span>
+ <span key={globalCurrency.symbol} className="font-mono text-xs text-slate-300 line-through">{globalCurrency.symbol}{peakCost.toFixed(0)}</span>
  </div>
  <div className="flex justify-between items-center bg-primary/10 -mx-3 px-3 py-2 rounded-lg mt-3">
  <span className="text-xs text-emerald-400 font-semibold">Monthly Savings</span>
- <span className="font-mono text-xs text-emerald-400 font-bold">${savings.toFixed(0)}</span>
+ <span key={globalCurrency.symbol} className="font-mono text-xs text-emerald-400 font-bold">{globalCurrency.symbol}{savings.toFixed(0)}</span>
  </div>
  </div>
  </div>

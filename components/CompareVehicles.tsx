@@ -2,8 +2,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { useSettings } from '@/components/providers/SettingsProvider';
 
 export default function CompareVehicles() {
+  const { currency, unit, distanceLabel, speedLabel } = useSettings();
+  const isKm = unit === 'km';
  const [crosshairSoc, setCrosshairSoc] = useState(45);
  const [targetSoc, setTargetSoc] = useState(80);
  const [copied, setCopied] = useState(false);
@@ -41,7 +44,7 @@ export default function CompareVehicles() {
  };
 
  const handleShareClick = () => {
- navigator.clipboard?.writeText(window.location.href);
+ navigator.clipboard?.writeText(window.location.href).catch((e: any) => console.error(e));
  setCopied(true);
  setTimeout(() => {
  setCopied(false);
@@ -170,7 +173,7 @@ export default function CompareVehicles() {
  />
  <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between font-mono text-[11px] ">
- <span className="text-slate-100 bg-slate-600/80 backdrop-blur-md px-3 py-1 rounded">310 mi EPA Range</span>
+ <span className="text-slate-100 bg-slate-600/80 backdrop-blur-md px-3 py-1 rounded">310 {distanceLabel} EPA Range</span>
  <span className="text-emerald-400 bg-primary/15 backdrop-blur-md px-3 py-1 rounded font-semibold">250 kW Peak Rated</span>
  </div>
  </div>
@@ -230,7 +233,7 @@ export default function CompareVehicles() {
  />
  <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between font-mono text-[11px] ">
- <span className="text-slate-100 bg-slate-600/80 backdrop-blur-md px-3 py-1 rounded">260 mi EPA Range</span>
+ <span className="text-slate-100 bg-slate-600/80 backdrop-blur-md px-3 py-1 rounded">260 {distanceLabel} EPA Range</span>
  <span className="text-cyan-400 bg-secondary-container/30 backdrop-blur-md px-3 py-1 rounded font-semibold">235 kW Peak Rated</span>
  </div>
  </div>
@@ -313,7 +316,7 @@ export default function CompareVehicles() {
  <label className="uppercase tracking-widest text-[10px] text-slate-500 uppercase">DC Fast Charge Electricity Tariff</label>
  <div className="flex items-center justify-between bg-slate-800-lowest px-3 rounded-lg h-[42px]">
  <div className="flex items-center gap-2">
- <span className="font-mono text-xs text-slate-300">$</span>
+ <span className="font-mono text-xs text-slate-300">{currency.symbol}</span>
  <input className="bg-transparent font-mono text-xs text-slate-100 w-16 focus:outline-none" step="0.01" type="number" defaultValue="0.42" />
  <span className="font-mono text-[11px] text-slate-500">/ kWh</span>
  </div>
@@ -603,14 +606,14 @@ export default function CompareVehicles() {
  <span className="h-2 w-2 rounded-full bg-primary"></span>
  <span className="text-xs text-slate-300">Model Y LR</span>
  </div>
- <span className="font-mono text-sm text-slate-100">+8.0 <span className=" text-slate-500">mi / min</span></span>
+ <span className="font-mono text-sm text-slate-100">+8.0 <span className=" text-slate-500">{distanceLabel} / min</span></span>
  </div>
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <span className="h-2 w-2 rounded-full bg-secondary"></span>
  <span className="text-xs text-slate-100">Ioniq 5 AWD</span>
  </div>
- <span className="font-mono text-sm text-cyan-400 font-bold">+10.1 <span className=" text-cyan-400">mi / min</span></span>
+ <span className="font-mono text-sm text-cyan-400 font-bold">+10.1 <span className=" text-cyan-400">{distanceLabel} / min</span></span>
  </div>
  <div className="w-full bg-slate-800-lowest h-2 rounded-full overflow-hidden flex">
  <div className="bg-secondary h-full" style={{ width: '56%' }}></div>
@@ -619,7 +622,7 @@ export default function CompareVehicles() {
  </div>
  <div className="p-2 bg-slate-800-lowest rounded font-mono text-[11px] text-cyan-400 flex items-center gap-2">
  <span className="material-symbols-outlined text-[16px]">speed</span>
- <span>+2.1 miles added per minute connected</span>
+ <span>+2.1 {distanceLabel} added per minute connected</span>
  </div>
  </div>
  
@@ -637,14 +640,14 @@ export default function CompareVehicles() {
  <span className="h-2 w-2 rounded-full bg-primary"></span>
  <span className="text-xs text-slate-100">Model Y LR</span>
  </div>
- <span className="font-mono text-sm text-emerald-400 font-bold">$22.05 <span className=" text-slate-500">(52.5 kWh)</span></span>
+ <span className="font-mono text-sm text-emerald-400 font-bold">{currency.symbol}22.05 <span className=" text-slate-500">(52.5 kWh)</span></span>
  </div>
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <span className="h-2 w-2 rounded-full bg-secondary"></span>
  <span className="text-xs text-slate-300">Ioniq 5 AWD</span>
  </div>
- <span className="font-mono text-sm text-slate-100">$22.75 <span className=" text-slate-500">(54.1 kWh)</span></span>
+ <span className="font-mono text-sm text-slate-100">{currency.symbol}22.75 <span className=" text-slate-500">(54.1 kWh)</span></span>
  </div>
  <div className="w-full bg-slate-800-lowest h-2 rounded-full overflow-hidden flex">
  <div className="bg-primary h-full" style={{ width: '49%' }}></div>
@@ -653,7 +656,7 @@ export default function CompareVehicles() {
  </div>
  <div className="p-2 bg-slate-800-lowest rounded font-mono text-[11px] text-emerald-400 flex items-center gap-2">
  <span className="material-symbols-outlined text-[16px]">savings</span>
- <span>$0.70 cheaper session (due to superior drag efficiency)</span>
+ <span>{currency.symbol}0.70 cheaper session (due to superior drag efficiency)</span>
  </div>
  </div>
  </div>
@@ -798,7 +801,7 @@ export default function CompareVehicles() {
  <div className="bg-slate-800-lowest p-4 rounded-lg">
  <span className="uppercase tracking-widest text-[10px] text-slate-500 block">ROAD TRIP PIT STOP STRATEGY</span>
  <span className="font-mono text-sm text-emerald-400">Unplug at 70-80%</span>
- <span className="text-xs text-slate-500 block mt-1">Sub-20 min stop yields 180 mi added</span>
+ <span className="text-xs text-slate-500 block mt-1">Sub-20 min stop yields 180 {distanceLabel} added</span>
  </div>
  </div>
  </div>

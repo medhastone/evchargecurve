@@ -5,19 +5,15 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { interpolateChargeCurve } from '@/lib/evCalculations';
 
 import { VEHICLES } from "@/data/evModels";
+import { useSettings } from '@/components/providers/SettingsProvider';
 
 // const VEHICLES: Record<string, any> = {
 
 const CHARGER_TIERS = [50, 150, 250, 350];
-const CURRENCIES: Record<string, string> = {
- USD: '$',
- GBP: '£',
- EUR: '€',
- CAD: '$',
- AUD: '$'
-};
+
 
 export default function DcSimulator({ initialVehicleId }: { initialVehicleId?: string }) {
+  const { currency: globalCurrency, unit, distanceLabel } = useSettings();
  const [selectedVehicleId, setSelectedVehicleId] = useState(initialVehicleId || 'tesla-model-y-lr');
  const [brand, setBrand] = useState('tesla');
  const [chargerCapKw, setChargerCapKw] = useState(250);
@@ -25,7 +21,7 @@ export default function DcSimulator({ initialVehicleId }: { initialVehicleId?: s
  const [endSoc, setEndSoc] = useState(80);
  const [isColdWeather, setIsColdWeather] = useState(false);
  const [kwhCost, setKwhCost] = useState(0.45);
- const [currency, setCurrency] = useState('USD');
+ 
  const [copied, setCopied] = useState(false);
 
  const [hoverSoc, setHoverSoc] = useState<number | null>(null);
@@ -80,7 +76,7 @@ export default function DcSimulator({ initialVehicleId }: { initialVehicleId?: s
  }, [vehicle, chargerCapKw, startSoc, safeEndSoc, isColdWeather]);
 
  const sessionCost = (calculation.kwhAdded * kwhCost).toFixed(2);
- const currencySymbol = CURRENCIES[currency] || '$';
+ const currencySymbol = globalCurrency.symbol || '$';
 
  const handleCopyLink = () => {
  if (typeof window === 'undefined') return;
@@ -88,7 +84,7 @@ export default function DcSimulator({ initialVehicleId }: { initialVehicleId?: s
  url.searchParams.set('v', selectedVehicleId);
  url.searchParams.set('s', startSoc.toString());
  url.searchParams.set('e', safeEndSoc.toString());
- navigator.clipboard.writeText(url.toString());
+ navigator.clipboard.writeText(url.toString()).catch((e: any) => console.error(e));
  
  setCopied(true);
  setTimeout(() => setCopied(false), 2000);
@@ -226,142 +222,85 @@ export default function DcSimulator({ initialVehicleId }: { initialVehicleId?: s
  </div>
  </div>
 
- {/* Vehicle Model Selector Dropdown */}
- <div className="flex flex-col gap-1">
- <div className="flex items-center justify-between">
- <span className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">Calibrated Vehicle Model</span>
- <span className="font-mono text-[11px] text-cyan-400 flex items-center gap-1">
- <span className="material-symbols-outlined text-[14px]">electric_bolt</span> {vehicle.architecture} Pack Architecture
- </span>
- </div>
- <div className="relative group">
- <select 
- value={selectedVehicleId}
- onChange={(e) => { setSelectedVehicleId(e.target.value); setBrand(VEHICLES[e.target.value].brand); }}
- className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
- title="Select Vehicle"
- >
- {Object.values(VEHICLES).map(v => (
- <option key={v.id} value={v.id}>{v.name}</option>
- ))}
- </select>
- <div className="w-full bg-slate-800-lowest text-slate-100 rounded-lg p-3 flex items-center justify-between group-hover:bg-slate-700 transition-colors shadow-sm relative z-0 border border-transparent group-hover:border-slate-700">
- <div className="flex items-center gap-3 min-w-0">
- <div className="w-9 h-9 rounded-lg bg-slate-700 flex items-center justify-center shrink-0 text-emerald-400">
- <span className="material-symbols-outlined text-[20px]">directions_car</span>
- </div>
- <div className="flex flex-col min-w-0">
- <span className="text-sm font-semibold text-slate-100 truncate">{vehicle.name}</span>
- <span className="font-mono text-[11px] text-slate-300">{vehicle.batteryCapacity} kWh Usable • {vehicle.chemistry} • Max {vehicle.maxChargeKw} kW</span>
- </div>
- </div>
- <span className="material-symbols-outlined text-slate-500">expand_more</span>
- </div>
- </div>
- </div>
 
- {/* Dispenser Max Power */}
- <div className="flex flex-col gap-3 mt-2">
- <div className="flex items-center justify-between">
- <span className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">Dispenser Limit (kW)</span>
- <span className="font-mono text-[11px] text-purple-400">Real-world thermal caps apply</span>
- </div>
- <div className="flex gap-2">
- {CHARGER_TIERS.map(kw => (
- <button
- key={kw}
- onClick={() => setChargerCapKw(kw)}
- className={`flex-1 py-2 rounded-lg font-mono text-[11px] transition-all ${
- chargerCapKw === kw
- ? 'bg-primary text-on-primary font-bold shadow-sm'
- : 'bg-slate-600 text-slate-300 hover:bg-slate-950-bright'
- }`}
- >
- {kw} kW
- </button>
- ))}
- </div>
- </div>
+{/* Vehicle Model Selector Dropdown */}
+<div className="flex flex-col gap-1">
+  <div className="flex items-center justify-between">
+    <span className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">Calibrated Vehicle Model</span>
+    <span className="font-mono text-[11px] text-cyan-400 flex items-center gap-1">
+      <span className="material-symbols-outlined text-[14px]">electric_bolt</span>
+      {vehicle.architecture} Pack Architecture
+    </span>
+  </div>
+  <select
+    value={selectedVehicleId}
+    onChange={(e) => setSelectedVehicleId(e.target.value)}
+    className="bg-slate-800 border border-slate-700 text-white rounded-lg p-3 focus:outline-none focus:border-emerald-500 appearance-none font-bold"
+  >
+    {Object.values(VEHICLES).filter(v => brand === 'others' ? !['tesla', 'hyundai', 'ford', 'rivian', 'porsche'].includes(v.brand) : v.brand === brand).map(v => (
+      <option key={v.id} value={v.id}>{v.name} ({v.usablePackKwh} kWh)</option>
+    ))}
+  </select>
+</div>
 
- {/* SOC Sliders */}
- <div className="flex flex-col gap-3 mt-2">
- <div className="flex justify-between items-center">
- <span className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">Charge Range Limits</span>
- <span className="font-mono text-[11px] text-emerald-400 font-bold">{startSoc}% → {safeEndSoc}%</span>
- </div>
- <div className="flex flex-col gap-3">
- <div className="flex items-center gap-3">
- <span className=" text-slate-300 w-16">Arrive</span>
- <input 
- type="range" 
- min="0" max="99" 
- value={startSoc} 
- onChange={(e) => setStartSoc(parseInt(e.target.value, 10))}
- className="flex-1 accent-primary"
- />
- <span className=" font-mono text-[11px] w-8 text-right text-slate-100 font-semibold">{startSoc}%</span>
- </div>
- <div className="flex items-center gap-3">
- <span className=" text-slate-300 w-16">Depart</span>
- <input 
- type="range" 
- min="1" max="100" 
- value={safeEndSoc} 
- onChange={(e) => setEndSoc(parseInt(e.target.value, 10))}
- className="flex-1 accent-primary"
- />
- <span className=" font-mono text-[11px] w-8 text-right text-slate-100 font-semibold">{safeEndSoc}%</span>
- </div>
- </div>
+{/* Dispenser Power */}
+<div className="flex flex-col gap-1 mt-4">
+  <span className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">DC Dispenser Power</span>
+  <div className="grid grid-cols-4 gap-2">
+    {CHARGER_TIERS.map(kw => (
+      <button
+        key={kw} type="button"
+        onClick={() => setChargerCapKw(kw)}
+        className={`py-2 rounded-lg font-mono text-[11px] ${chargerCapKw === kw ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50' : 'bg-slate-800 text-slate-300 border border-transparent hover:bg-slate-700'}`}
+      >
+        {kw} kW
+      </button>
+    ))}
+  </div>
+</div>
 
- {/* Quick Presets */}
- <div className="flex flex-wrap gap-2 mt-1">
- <button onClick={() => { setStartSoc(10); setEndSoc(80); }} className="px-3 py-1 bg-slate-600 hover:bg-slate-950-bright rounded-full text-slate-100 transition-colors border border-transparent hover:border-outline-variant">10% → 80% (Road Trip)</button>
- <button onClick={() => { setStartSoc(20); setEndSoc(80); }} className="px-3 py-1 bg-slate-600 hover:bg-slate-950-bright rounded-full text-slate-100 transition-colors border border-transparent hover:border-outline-variant">20% → 80% (Quick Stop)</button>
- <button onClick={() => { setStartSoc(10); setEndSoc(100); }} className="px-3 py-1 bg-slate-600 hover:bg-slate-950-bright rounded-full text-slate-100 transition-colors border border-transparent hover:border-outline-variant">10% → 100% (Full Battery)</button>
- </div>
- </div>
+{/* SOC Sliders */}
+<div className="flex flex-col gap-4 mt-4">
+  <div>
+    <div className="flex justify-between mb-1">
+      <span className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">Arrival SOC</span>
+      <span className="font-mono text-[11px] text-emerald-400 font-bold">{startSoc}%</span>
+    </div>
+    <input type="range" min="1" max="99" value={startSoc} onChange={(e) => {
+      const val = parseInt(e.target.value);
+      setStartSoc(val);
+      if (val >= endSoc) setEndSoc(Math.min(100, val + 10));
+    }} className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500" />
+  </div>
+  <div>
+    <div className="flex justify-between mb-1">
+      <span className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">Target SOC</span>
+      <span className="font-mono text-[11px] text-cyan-400 font-bold">{endSoc}%</span>
+    </div>
+    <input type="range" min={startSoc + 1} max="100" value={endSoc} onChange={(e) => setEndSoc(parseInt(e.target.value))} className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500" />
+  </div>
+</div>
 
- {/* Cold Weather & Cost */}
- <div className="grid grid-cols-2 gap-3 mt-2 border-t border-slate-600 pt-3">
- <div className="flex flex-col gap-2">
- <label className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">Battery Climate</label>
- <button 
- onClick={() => setIsColdWeather(!isColdWeather)}
- className={`py-2 px-3 rounded-lg flex items-center justify-center gap-1 transition-all ${
- isColdWeather ? 'bg-secondary text-on-secondary font-semibold shadow-sm' : 'bg-slate-600 text-slate-300 hover:bg-slate-950-bright'
- }`}
- >
- <span className="material-symbols-outlined text-[16px]">{isColdWeather ? 'ac_unit' : 'device_thermostat'}</span>
- {isColdWeather ? 'Cold Pack' : 'Optimal'}
- </button>
- </div>
- <div className="flex flex-col gap-2">
- <label className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">Local Energy Rate</label>
- <div className="flex items-center bg-slate-600 rounded-lg px-3 focus-within:ring-1 ring-primary transition-all">
- <select 
- value={currency} 
- onChange={(e) => setCurrency(e.target.value)}
- className="bg-transparent text-slate-100 focus:outline-none appearance-none cursor-pointer"
- title="Currency"
- >
- {Object.keys(CURRENCIES).map(c => <option key={c} value={c}>{c}</option>)}
- </select>
- <input 
- type="number" 
- step="0.01"
- value={kwhCost}
- onChange={(e) => setKwhCost(parseFloat(e.target.value))}
- className="bg-transparent text-slate-100 w-full py-2 pl-1 focus:outline-none font-mono text-[11px]"
- title="Cost per kWh"
- />
- <span className="text-slate-300 pl-2">/kWh</span>
- </div>
- </div>
- </div>
-
- </div>
- </div>
+{/* Temp & Cost */}
+<div className="flex flex-col sm:flex-row items-center gap-4 mt-4">
+  <div className="flex-1 w-full flex flex-col gap-1">
+    <span className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">Ambient Temp</span>
+    <button type="button" onClick={() => setIsColdWeather(!isColdWeather)} className={`py-2 rounded-lg font-mono text-[11px] flex justify-center items-center gap-1 ${isColdWeather ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50' : 'bg-orange-500/20 text-orange-400 border border-orange-500/50'}`}>
+      <span className="material-symbols-outlined text-[14px]">{isColdWeather ? 'ac_unit' : 'device_thermostat'}</span>
+      {isColdWeather ? 'Cold Pack' : 'Optimal'}
+    </button>
+  </div>
+  <div className="flex-1 w-full flex flex-col gap-1">
+    <span className="uppercase tracking-widest text-[10px] text-slate-500 uppercase tracking-wider">Local Energy Rate</span>
+    <div className="flex items-center bg-slate-600 rounded-lg px-3 focus-within:ring-1 ring-primary transition-all">
+      <span key={globalCurrency.symbol} className="text-emerald-400 font-bold">{globalCurrency.symbol}</span>
+      <input type="number" step="0.01" value={kwhCost} onChange={(e) => setKwhCost(parseFloat(e.target.value))} className="bg-transparent text-slate-100 w-full py-2 pl-2 focus:outline-none font-mono text-[11px]" title="Cost per kWh" />
+      <span className="text-slate-300">/kWh</span>
+    </div>
+  </div>
+</div>
+</div>
+</div>
 
  {/* RIGHT COLUMN: Chart & Results (7 Cols) */}
  <div className="lg:col-span-7 flex flex-col gap-6">

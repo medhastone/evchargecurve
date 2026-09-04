@@ -7,6 +7,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Zap, Activity, ShieldCheck, ShieldAlert, HeartPulse, Battery, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import { useSettings } from '@/components/providers/SettingsProvider';
+
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -21,11 +23,13 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   };
 
 export default function BatteryHealthTool() {
+  const { unit, distanceLabel } = useSettings();
+  const isKm = unit === 'km';
   const evModels = Object.values(VEHICLES);
   const [vehicleId, setVehicleId] = useState(evModels[0].id);
   const [modelYear, setModelYear] = useState(2022);
   const [mileage, setMileage] = useState(40000);
-  const [isKm, setIsKm] = useState(false);
+  
   const [habit, setHabit] = useState<'ac_gentle' | 'mixed' | 'dc_heavy'>('mixed');
 
   const currentYear = 2026;
@@ -97,10 +101,10 @@ export default function BatteryHealthTool() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold text-emerald-400">{mileage.toLocaleString()}</span>
                     <button 
-                      onClick={() => setIsKm(!isKm)}
+                      
                       className="px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded border border-slate-600 text-slate-400 hover:text-white hover:border-slate-400"
                     >
-                      {isKm ? 'KM' : 'MI'}
+                      {distanceLabel.toUpperCase()}
                     </button>
                   </div>
                 </div>
@@ -177,7 +181,7 @@ export default function BatteryHealthTool() {
 
             <div className="bg-slate-800/50 border border-slate-700 p-4 rounded-2xl flex flex-col justify-center">
               <p className="text-xs text-slate-400 uppercase tracking-wider mb-1 font-semibold">Lost Range</p>
-              <p className="text-xl font-black text-orange-400">-{Math.round(degradation.lostMiles)} <span className="text-xs font-normal text-slate-400">mi</span></p>
+              <p className="text-xl font-black text-orange-400">-{Math.round(degradation.lostMiles)} <span className="text-xs font-normal text-slate-400">{distanceLabel}</span></p>
               <p className="text-[10px] text-slate-500 mt-1">Permanent fade</p>
             </div>
           </div>

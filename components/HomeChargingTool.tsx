@@ -6,6 +6,7 @@ import {
   Zap, Plug, Home, Battery, Fuel, DollarSign, Clock, CheckCircle2, AlertCircle, ArrowRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useSettings } from '@/components/providers/SettingsProvider';
 
 const CHARGERS = [
   { id: 'l1', name: 'Standard Outlet (L1)', specs: '120V / 12A', kw: 1.4 },
@@ -15,6 +16,7 @@ const CHARGERS = [
 ];
 
 export default function HomeChargingTool() {
+  const { currency, unit, distanceLabel, speedLabel } = useSettings();
   const evModels = Object.values(VEHICLES);
   const [vehicleId, setVehicleId] = useState(evModels[0].id);
   
@@ -61,7 +63,7 @@ export default function HomeChargingTool() {
     // Annual comparisons
     const annualEnergyKwh = (annualMiles / miPerKwh) / 0.90;
     const annualHomeCost = annualEnergyKwh * offPeakRate;
-    const annualDcCost = (annualMiles / miPerKwh) * 0.45; // Approx $0.45/kWh for public DC Fast
+    const annualDcCost = (annualMiles / miPerKwh) * 0.45; // Approx 0.45/kWh for public DC Fast
     const annualGasCost = (annualMiles / mpg) * gasPrice;
 
     return {
@@ -177,7 +179,7 @@ export default function HomeChargingTool() {
             
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div>
-                <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Off-Peak ($/kWh)</label>
+                <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Off-Peak Rate</label>
                 <input 
                   type="number" step="0.01" min="0"
                   value={offPeakRate} onChange={(e) => setOffPeakRate(Number(e.target.value))}
@@ -185,7 +187,7 @@ export default function HomeChargingTool() {
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Peak ($/kWh)</label>
+                <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Peak Rate</label>
                 <input 
                   type="number" step="0.01" min="0"
                   value={peakRate} onChange={(e) => setPeakRate(Number(e.target.value))}
@@ -196,7 +198,7 @@ export default function HomeChargingTool() {
 
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div>
-                <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Gas Price ($/gal)</label>
+                <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Gas Price ({currency.symbol}/gal)</label>
                 <input 
                   type="number" step="0.1" min="0"
                   value={gasPrice} onChange={(e) => setGasPrice(Number(e.target.value))}
@@ -216,7 +218,7 @@ export default function HomeChargingTool() {
             <div>
               <div className="flex justify-between mb-2">
                 <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Annual Driving</label>
-                <span className="text-sm font-bold text-white">{annualMiles.toLocaleString()} mi</span>
+                <span className="text-sm font-bold text-white">{annualMiles.toLocaleString()} {distanceLabel}</span>
               </div>
               <input 
                 type="range" min="5000" max="35000" step="500"
@@ -245,7 +247,7 @@ export default function HomeChargingTool() {
               <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-700">
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-slate-400 uppercase tracking-wider">Charging Speed</span>
-                  <span className="text-sm font-bold text-emerald-400">+{Math.round(results.milesAddedPerHour)} mi/hr</span>
+                  <span className="text-sm font-bold text-emerald-400">+{Math.round(results.milesAddedPerHour)} {speedLabel}</span>
                 </div>
               </div>
             </div>
@@ -255,14 +257,14 @@ export default function HomeChargingTool() {
               <DollarSign className="absolute top-4 right-4 w-16 h-16 text-slate-700/50" />
               <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-4">Session Cost (Off-Peak)</h4>
               <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-3xl text-emerald-400 font-bold">$</span>
+                <span key={currency.symbol} className="text-3xl text-emerald-400 font-bold">{currency.symbol}</span>
                 <span className="text-5xl font-black text-emerald-400">{results.offPeakCost.toFixed(2)}</span>
               </div>
               
               <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-700">
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-slate-400 uppercase tracking-wider">Peak Rate Warning</span>
-                  <span className="text-sm font-bold text-orange-400">${results.peakCost.toFixed(2)}</span>
+                  <span key={currency.symbol} className="text-sm font-bold text-orange-400">{currency.symbol}{results.peakCost.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -290,7 +292,7 @@ export default function HomeChargingTool() {
                   <Home className="w-5 h-5 text-emerald-400" />
                   <span className="text-sm font-bold text-emerald-400 uppercase tracking-wider">Home EV</span>
                 </div>
-                <div className="text-3xl font-black text-white mb-1">${Math.round(results.annualHomeCost)}<span className="text-sm font-normal text-slate-400">/yr</span></div>
+                <div className="text-3xl font-black text-white mb-1">{currency.symbol}{Math.round(results.annualHomeCost)}<span className="text-sm font-normal text-slate-400">/yr</span></div>
                 <p className="text-xs text-slate-500">Charging off-peak 100%</p>
               </div>
 
@@ -300,8 +302,8 @@ export default function HomeChargingTool() {
                   <Zap className="w-5 h-5 text-cyan-400" />
                   <span className="text-sm font-bold text-cyan-400 uppercase tracking-wider">Public DC</span>
                 </div>
-                <div className="text-3xl font-black text-white mb-1">${Math.round(results.annualDcCost)}<span className="text-sm font-normal text-slate-400">/yr</span></div>
-                <p className="text-xs text-slate-500">Assumes avg $0.45/kWh</p>
+                <div className="text-3xl font-black text-white mb-1">{currency.symbol}{Math.round(results.annualDcCost)}<span className="text-sm font-normal text-slate-400">/yr</span></div>
+                <p className="text-xs text-slate-500">Assumes avg {currency.symbol}0.45/kWh</p>
               </div>
 
               {/* Gas Car */}
@@ -310,8 +312,8 @@ export default function HomeChargingTool() {
                   <Fuel className="w-5 h-5 text-red-400" />
                   <span className="text-sm font-bold text-red-400 uppercase tracking-wider">Gas Car</span>
                 </div>
-                <div className="text-3xl font-black text-white mb-1">${Math.round(results.annualGasCost)}<span className="text-sm font-normal text-slate-400">/yr</span></div>
-                <p className="text-xs text-slate-500">{mpg} MPG @ ${gasPrice.toFixed(2)}/gal</p>
+                <div className="text-3xl font-black text-white mb-1">{currency.symbol}{Math.round(results.annualGasCost)}<span className="text-sm font-normal text-slate-400">/yr</span></div>
+                <p className="text-xs text-slate-500">{mpg} MPG @ {currency.symbol}{gasPrice.toFixed(2)}/gal</p>
               </div>
             </div>
 
@@ -319,7 +321,7 @@ export default function HomeChargingTool() {
               <div>
                 <h4 className="text-slate-400 font-medium mb-1">Total Savings Charging at Home vs Gas</h4>
                 <div className="flex items-center gap-3">
-                  <span className="text-4xl font-black text-emerald-400">+${Math.round(results.savingsVsGas)}</span>
+                  <span className="text-4xl font-black text-emerald-400">+{currency.symbol}{Math.round(results.savingsVsGas)}</span>
                   <span className="text-sm text-emerald-500/80 uppercase tracking-wider font-bold">In Your Pocket<br/>Every Year</span>
                 </div>
               </div>
@@ -329,7 +331,7 @@ export default function HomeChargingTool() {
               <div>
                 <h4 className="text-slate-400 font-medium mb-1">Total Savings vs Exclusively Fast Charging</h4>
                 <div className="flex items-center gap-3">
-                  <span className="text-4xl font-black text-cyan-400">+${Math.round(results.savingsVsDc)}</span>
+                  <span className="text-4xl font-black text-cyan-400">+{currency.symbol}{Math.round(results.savingsVsDc)}</span>
                 </div>
               </div>
             </div>

@@ -8,15 +8,19 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import { useSettings } from '@/components/providers/SettingsProvider';
+
 type ClimateMode = 'heat_pump' | 'resistive' | 'ac' | 'off';
 type Accessory = 'none' | 'roof_box' | 'bike_rack';
 
 export default function RangeLossTool() {
+  const { unit, distanceLabel, speedLabel } = useSettings();
+  const isMetric = unit === 'km';
   const evModels = Object.values(VEHICLES);
   const [vehicleId, setVehicleId] = useState(evModels[0].id);
   
   const [tempF, setTempF] = useState(70);
-  const [isMetric, setIsMetric] = useState(false);
+  
   
   const [speedMph, setSpeedMph] = useState(65);
   const [climateMode, setClimateMode] = useState<ClimateMode>('heat_pump');
@@ -117,21 +121,21 @@ export default function RangeLossTool() {
           <div className="bg-blue-500/20 p-2 rounded-lg text-blue-400"><ThermometerSnowflake className="w-5 h-5"/></div>
           <div>
             <h4 className="font-bold text-blue-400">Sub-Zero Road Trip</h4>
-            <p className="text-xs text-blue-300/70">10°F, 70 mph, Resistive Max</p>
+            <p className="text-xs text-blue-300/70">10°F, {isMetric ? "112 km/h" : "70 mph"}, Resistive Max</p>
           </div>
         </button>
         <button onClick={() => applyPreset('towing')} className="bg-orange-500/10 border border-orange-500/30 hover:border-orange-500 p-4 rounded-2xl flex items-center gap-3 transition-colors text-left">
           <div className="bg-orange-500/20 p-2 rounded-lg text-orange-400"><Car className="w-5 h-5"/></div>
           <div>
             <h4 className="font-bold text-orange-400">Summer Boat Towing</h4>
-            <p className="text-xs text-orange-300/70">85°F, 65 mph, 4000 lbs</p>
+            <p className="text-xs text-orange-300/70">85°F, {isMetric ? "105 km/h" : "65 mph"}, 4000 lbs</p>
           </div>
         </button>
         <button onClick={() => applyPreset('normal')} className="bg-emerald-500/10 border border-emerald-500/30 hover:border-emerald-500 p-4 rounded-2xl flex items-center gap-3 transition-colors text-left">
           <div className="bg-emerald-500/20 p-2 rounded-lg text-emerald-400"><Route className="w-5 h-5"/></div>
           <div>
             <h4 className="font-bold text-emerald-400">Normal Commute</h4>
-            <p className="text-xs text-emerald-300/70">70°F, 55 mph, Heat Pump</p>
+            <p className="text-xs text-emerald-300/70">70°F, {isMetric ? "88 km/h" : "55 mph"}, Heat Pump</p>
           </div>
         </button>
       </div>
@@ -149,7 +153,7 @@ export default function RangeLossTool() {
               className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors appearance-none"
             >
               {evModels.map((v: any) => (
-                <option key={v.id} value={v.id}>{v.name} (EPA: {v.epaRangeMiles} mi)</option>
+                <option key={v.id} value={v.id}>{v.name} (EPA: {Math.round(isMetric ? v.epaRangeMiles * 1.609 : v.epaRangeMiles)} {distanceLabel})</option>
               ))}
             </select>
           </div>
@@ -164,13 +168,8 @@ export default function RangeLossTool() {
                   Ambient Temp
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-emerald-400">{displayTemp}°{isMetric ? 'C' : 'F'}</span>
-                  <button 
-                    onClick={() => setIsMetric(!isMetric)}
-                    className="px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded border border-slate-600 text-slate-400 hover:text-white hover:border-slate-400"
-                  >
-                    {isMetric ? '°C' : '°F'}
-                  </button>
+                  <span className="text-sm font-bold text-emerald-400">{displayTemp}°{isMetric ? "C" : "F"}</span>
+                  
                 </div>
               </div>
               <input 
@@ -194,7 +193,7 @@ export default function RangeLossTool() {
                       speedMph === s ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-400" : "bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-500"
                     )}
                   >
-                    {s} <span className="text-xs font-normal">mph</span>
+                    {isMetric ? Math.round(s * 1.609) : s} <span className="text-xs font-normal">{speedLabel}</span>
                   </button>
                 ))}
               </div>
@@ -282,7 +281,7 @@ export default function RangeLossTool() {
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-slate-400">Factory EPA Rating</span>
-                  <span className="text-white font-bold">{calcResult.baseEpaRange} mi</span>
+                  <span className="text-white font-bold">{Math.round(isMetric ? calcResult.baseEpaRange * 1.609 : calcResult.baseEpaRange)} {distanceLabel}</span>
                 </div>
                 <div className="w-full bg-slate-700 h-4 rounded-full overflow-hidden">
                   <div className="bg-slate-500 h-full" style={{ width: '100%' }}></div>
@@ -292,7 +291,7 @@ export default function RangeLossTool() {
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-emerald-400 font-bold">Calculated Highway Range</span>
-                  <span className="text-emerald-400 font-black text-xl">{Math.round(calcResult.adjustedRange)} mi</span>
+                  <span className="text-emerald-400 font-black text-xl">{Math.round(isMetric ? calcResult.adjustedRange * 1.609 : calcResult.adjustedRange)} {distanceLabel}</span>
                 </div>
                 <div className="w-full bg-slate-700 h-4 rounded-full overflow-hidden flex">
                   <div 
@@ -333,13 +332,13 @@ export default function RangeLossTool() {
               <p className="text-xs text-slate-400 uppercase tracking-wider mb-1 font-semibold">Efficiency</p>
               <div className="flex items-end gap-2">
                 <p className="text-3xl font-black text-white">{Math.round(calcResult.whPerMi)}</p>
-                <p className="text-sm font-normal text-slate-400 mb-1">Wh/mi</p>
+                <p className="text-sm font-normal text-slate-400 mb-1">Wh/{distanceLabel}</p>
               </div>
-              <p className="text-xs text-slate-500 mt-2">{calcResult.miPerKwh.toFixed(2)} mi/kWh</p>
+              <p className="text-xs text-slate-500 mt-2">{(isMetric ? calcResult.miPerKwh / 1.609 : calcResult.miPerKwh).toFixed(2)} {distanceLabel}/kWh</p>
             </div>
 
             <div className="bg-slate-800/50 border border-slate-700 p-4 rounded-2xl">
-              <p className="text-xs text-slate-400 uppercase tracking-wider mb-1 font-semibold">300-Mile Trip</p>
+              <p className="text-xs text-slate-400 uppercase tracking-wider mb-1 font-semibold">{isMetric ? "500-km" : "300-Mile"} Trip</p>
               <div className="flex items-end gap-2">
                 <p className="text-3xl font-black text-cyan-400">+{calcResult.extraStops}</p>
                 <p className="text-sm font-normal text-slate-400 mb-1">DC stops</p>
@@ -353,7 +352,7 @@ export default function RangeLossTool() {
             <div>
               <h4 className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-2">Trip Planning Insight</h4>
               <p className="text-sm text-blue-200/80 leading-relaxed">
-                A 300-mile highway journey in these exact conditions will require charging stops to break up the drive. Relying on your vehicle&apos;s built-in navigation is highly recommended, as it will precondition the battery pack before arrival at the DC fast charger, ensuring you get optimal charging speeds upon plug-in.
+                A {isMetric ? "500-km" : "300-mile"} highway journey in these exact conditions will require charging stops to break up the drive. Relying on your vehicle&apos;s built-in navigation is highly recommended, as it will precondition the battery pack before arrival at the DC fast charger, ensuring you get optimal charging speeds upon plug-in.
               </p>
             </div>
           </div>

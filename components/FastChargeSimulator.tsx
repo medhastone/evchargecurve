@@ -11,6 +11,7 @@ import {
   ThermometerSun, Share2, Copy, CheckCircle2, Info 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useSettings } from '@/components/providers/SettingsProvider';
 
 const CHARGER_TIERS = [50, 150, 250, 350];
 
@@ -33,6 +34,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   };
 
 export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehicleId?: string }) {
+  const { currency } = useSettings();
   const evModels = Object.values(VEHICLES);
   
   // State
@@ -113,13 +115,13 @@ export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehic
     url.searchParams.set('cold', isCold.toString());
     url.searchParams.set('rate', rate.toString());
     
-    navigator.clipboard.writeText(url.toString());
+    navigator.clipboard.writeText(url.toString()).catch((e: any) => console.error(e));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleWhatsApp = () => {
-    const text = `🔌 EVChargeCurve Simulation:\n${vehicle.name} charging at a ${chargerKw}kW station.\n\n📊 ${startSoc}% to ${endSoc}%\n⏱️ Time: ${simulation.totalMinutes} mins\n🔋 Added: ${simulation.kwhAdded} kWh\n💵 Cost: $${simulation.sessionCost}\n\nPlan your trip at evchargecurve.com!`;
+    const text = `🔌 EVChargeCurve Simulation:\n${vehicle.name} charging at a ${chargerKw}kW station.\n\n📊 ${startSoc}% to ${endSoc}%\n⏱️ Time: ${simulation.totalMinutes} mins\n🔋 Added: ${simulation.kwhAdded} kWh\n💵 Cost: ${currency.symbol}${simulation.sessionCost}\n\nPlan your trip at evchargecurve.com!`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -255,7 +257,7 @@ export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehic
             <div className="bg-slate-800/50 border border-slate-700 p-4 rounded-2xl flex flex-col justify-center">
               <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-semibold">Energy Rate</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{currency.symbol}</span>
                 <input 
                   type="number" step="0.01" min="0"
                   value={rate}
@@ -288,7 +290,7 @@ export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehic
             </div>
             <div className="bg-slate-800/50 border border-slate-700 p-4 rounded-2xl">
               <p className="text-xs text-slate-400 uppercase tracking-wider mb-1 font-semibold">Session Cost</p>
-              <p className="text-2xl font-black text-white"><span className="text-lg text-slate-400">$</span>{simulation.sessionCost}</p>
+              <p className="text-2xl font-black text-white"><span className="text-lg text-slate-400">{currency.symbol}</span>{simulation.sessionCost}</p>
             </div>
           </div>
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { Zap } from 'lucide-react';
+import Image from 'next/image';
+
 import { VEHICLES } from '@/data/evModels';
 
 export default function Footer() {
@@ -16,9 +17,7 @@ export default function Footer() {
  {/* Brand & Description */}
  <div className="col-span-1 md:col-span-2">
  <Link href="/" className="flex items-center gap-2 group mb-4 w-max">
- <div className="bg-emerald-500/10 p-1.5 rounded-lg border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
- <Zap className="w-5 h-5 text-emerald-400 fill-emerald-400/20" />
- </div>
+ <Image src="/logo.png" alt="EVChargeCurve Logo" width={24} height={24} className="rounded object-contain" referrerPolicy="no-referrer" />
  <span className="font-bold text-xl tracking-tight text-white">
  EVCharge<span className="text-emerald-400">Curve</span>
  </span>
