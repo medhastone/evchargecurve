@@ -52,7 +52,7 @@ export default function Home() {
         </h1>
 
         <p className="text-base sm:text-lg md:text-xl text-slate-400 max-w-4xl mx-auto mb-8 relative z-10 leading-relaxed">
-          Stop planning EV road trips using flat average charge times. Our physics-grounded <strong>ev charging curve calculator</strong> and <strong>dc fast charge time calculator</strong> simulate real battery management system (BMS) step-down tapers, ambient temperature derating, and session costs across 50+ production electric vehicles.
+          Stop planning EV road trips using flat average charge times. Our physics-grounded EV charging curve calculator and DC fast charge time calculator simulate real battery management system (BMS) step-down tapers, ambient temperature derating, and session costs across 50+ production electric vehicles.
         </p>
 
         {/* Engineering Trust Badges */}
@@ -120,7 +120,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-white mb-3">1% SoC Piecewise Integration</h3>
               <p className="text-slate-400 text-sm leading-relaxed">
-                Instead of flat averages, this <strong>dc fast charge time calculator</strong> integrates power at 1% State of Charge (SoC) intervals, accurately calculating the exact plateau duration and steep step-down taper as internal cell resistance rises.
+                Instead of flat averages, this DC fast charge time calculator integrates power at 1% State of Charge (SoC) intervals, accurately calculating the exact plateau duration and steep step-down taper as internal cell resistance rises.
               </p>
             </div>
           </div>
@@ -134,7 +134,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Dynamic Thermal Modeling</h3>
               <p className="text-slate-400 text-sm leading-relaxed">
-                Our <strong>dc fast charging speed drop off calculator</strong> applies real-world thermal derating coefficients for cold-gated winter sessions and accounts for vehicle cabin HVAC draw during charging stops.
+                Our DC fast charging speed drop off calculator applies real-world thermal derating coefficients for cold-gated winter sessions (account for cold-weather losses using our <Link href="/range-loss" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300">winter range calculator</Link>) and accounts for vehicle cabin HVAC draw during charging stops.
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default function Home() {
                 Phase 2: Constant Voltage (CV) Mode &amp; Taper (60% to 100% SoC)
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed mb-4">
-                Once individual cell voltages approach the maximum electrochemical threshold (typically <strong>4.20V to 4.25V per cell</strong>), the BMS must prevent over-voltage to stop electrolyte decomposition and catastrophic <strong>lithium plating</strong>.
+                Once individual cell voltages approach the maximum electrochemical threshold (typically <strong>4.20V to 4.25V per cell</strong>), the BMS must prevent over-voltage to mitigate long-term <Link href="/battery-health" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">battery degradation</Link>, stop electrolyte decomposition, and prevent catastrophic <strong>lithium plating</strong>.
               </p>
               <p className="text-sm text-slate-400 leading-relaxed mb-4">
                 The charger switches to Constant Voltage mode: voltage is locked, and current is systematically dialed down.
@@ -211,13 +211,13 @@ export default function Home() {
               Road Trip Efficiency Alert
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-              The 80% Taper Penalty: Why 80% to 100% Takes Twice as Long
+              The 80% Taper Penalty: Why Charging from 80% to 100% Takes Twice as Long
             </h2>
             <p className="text-slate-400 leading-relaxed">
-              One of the most crucial insights provided by our <strong>ev charging taper curve simulator</strong> is the stark time penalty of staying plugged in past 80% SoC at public DC fast chargers.
+              One of the most crucial insights provided by our EV charging taper curve simulator is the stark time penalty of staying plugged in past 80% SoC at public DC fast chargers. Operating as an empirical DC fast charging speed drop off calculator, our tool reveals how BMS current restrictions dramatically alter session economics.
             </p>
             <p className="text-slate-400 leading-relaxed">
-              While charging from <strong>10% to 80%</strong> typically takes 18 to 30 minutes, completing the final <strong>80% to 100%</strong> top-up frequently takes an additional <strong>35 to 55 minutes</strong> because charging rates plunge below 25 kW to protect cell anodes.
+              While realistic EV charging time 10 to 80 typically ranges from 18 to 30 minutes, completing the final <strong>80% to 100%</strong> top-up frequently takes an additional <strong>35 to 55 minutes</strong> because charging rates plunge below 25 kW to protect cell anodes.
             </p>
 
             <div className="bg-[#131B2A] border border-slate-800 rounded-2xl p-6">
@@ -272,10 +272,10 @@ export default function Home() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Production EV Fast Charge Taper &amp; Dwell Benchmarks
+            Production EV 10% to 80% DC Fast Charge Time Benchmarks &amp; Taper Data
           </h2>
           <p className="text-slate-400 text-sm md:text-base max-w-3xl mx-auto">
-            Laboratory and field test telemetry recorded during 10% to 80% DC fast charging sessions in optimal ambient conditions (70&deg;F / 21&deg;C) with active thermal preconditioning.
+            Laboratory and field test telemetry recorded during 10% to 80% DC fast charge time sessions in optimal ambient conditions (70&deg;F / 21&deg;C) with active thermal preconditioning. Compare real-world highway stop durations across leading platforms.
           </p>
         </div>
 
@@ -284,12 +284,12 @@ export default function Home() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle &amp; Pack Size</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Platform Voltage</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Peak kW</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">10%–80% Dwell</th>
-                  <th className="p-4 sm:p-5 font-semibold text-rose-400">80%–100% Time</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">15-Min Range Added</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle &amp; Pack Size</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Platform Voltage</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Peak kW</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">10%–80% Dwell Time</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-rose-400">80%–100% Trickle Time</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">15-Min Range Added</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -382,7 +382,7 @@ export default function Home() {
             </div>
             <h3 className="text-lg font-bold text-white mb-3">Legacy Urban Fast Chargers</h3>
             <p className="text-slate-400 text-sm leading-relaxed mb-4">
-              Standard 50 kW to 100 kW units (often 125A or 200A uncooled cables). Best for destination stops (grocery stores, retail centers) where dwell times exceed 45 to 60 minutes.
+              Standard 50 kW to 100 kW units (often 125A or 200A uncooled cables). Best for destination stops (grocery stores, retail centers) where dwell times exceed 45 to 60 minutes; for overnight charging alternatives, see our <Link href="/home-charging" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">Level 2 home charging calculator</Link>.
             </p>
             <div className="text-xs font-mono text-slate-300 bg-[#0B0F17] p-3 rounded-lg border border-slate-800">
               10% to 80% Time: 50 to 80 Mins
@@ -449,7 +449,7 @@ export default function Home() {
                 <span className="text-emerald-400 font-mono">02.</span> Always Precondition the Battery
               </h4>
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                Always set the fast charger as your in-vehicle GPS destination 20–40 minutes before arrival. This triggers thermal conditioning to warm cell anodes to ~70&deg;F–90&deg;F, preventing severe cold-gating.
+                Always set the fast charger as your in-vehicle GPS destination 20–40 minutes before arrival. This triggers thermal conditioning to warm cell anodes to ~70&deg;F–90&deg;F, preventing severe cold-gating (calculate heating tradeoffs with our <Link href="/preconditioning" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">battery preconditioning calculator</Link>).
               </p>
             </div>
 
@@ -467,7 +467,7 @@ export default function Home() {
                 <span className="text-emerald-400 font-mono">04.</span> Prefer 800V Dispensers for 800V Cars
               </h4>
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                If you drive an 800V vehicle (Ioniq 5/6, EV6, Taycan), choose 350 kW stalls over 150 kW stalls to unlock your car&apos;s full 240+ kW curve. If you drive a 400V vehicle capped at 150 kW, select a 150 kW stall to preserve the 350 kW dispenser.
+                If you drive an 800V vehicle (Ioniq 5/6, EV6, Taycan), choose 350 kW stalls over 150 kW stalls to unlock your car&apos;s full 240+ kW curve (see our <Link href="/compare" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">EV charging curve comparison tool</Link> to benchmark 400V vs 800V dwell times).
               </p>
             </div>
           </div>
@@ -535,7 +535,7 @@ export default function Home() {
               Why do I need a specialized EV charging curve calculator instead of using peak kW?
             </h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Advertised peak kW is only sustained briefly (often 1 to 4 minutes) at low battery percentages. An EV charging curve calculator is essential for realistic trip planning because it integrates the inevitable step-down taper as the battery fills, providing mathematically accurate session durations.
+              Advertised peak kW is only sustained briefly (often 1 to 4 minutes) at low battery percentages. An EV charging curve calculator is essential for realistic highway trip planning because it integrates the inevitable step-down taper as the battery fills, providing mathematically accurate session durations.
             </p>
           </div>
 
@@ -546,7 +546,7 @@ export default function Home() {
               How accurate is this DC fast charge time calculator for highway road trips?
             </h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Highly accurate. This calculator is validated against real-world OBD2 CAN-bus telemetry, modeling standard 10% to 80% charging windows, piecewise BMS step-downs, and the impact of ambient temperature and battery preconditioning.
+              Highly accurate. This DC fast charge time calculator is validated against real-world OBD2 CAN-bus telemetry, modeling standard 10% to 80% DC fast charge time windows, piecewise BMS step-downs, and the impact of ambient temperature and battery preconditioning.
             </p>
           </div>
 
@@ -554,10 +554,10 @@ export default function Home() {
           <div className="bg-[#131B2A] border border-slate-800 rounded-2xl p-8 hover:border-slate-700 transition-colors">
             <h3 className="text-lg font-bold text-white mb-4 flex items-start gap-4">
               <Gauge className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-0.5 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-              Why does this calculator warn against charging past 80% at DC fast chargers?
+              Why does this DC fast charging speed drop off calculator warn against charging past 80%?
             </h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Because charging from 80% to 100% takes longer than 10% to 80%! As cell voltages approach 4.2V, the BMS slashes current to prevent lithium plating, increasing dwell time and per-minute stall occupancy fees while adding very little range.
+              Because charging from 80% to 100% takes longer than EV charging time 10 to 80! As cell voltages approach 4.2V, the BMS slashes current to prevent lithium plating, increasing dwell time and per-minute stall occupancy fees while adding very little range.
             </p>
           </div>
 
@@ -565,10 +565,10 @@ export default function Home() {
           <div className="bg-[#131B2A] border border-slate-800 rounded-2xl p-8 hover:border-slate-700 transition-colors">
             <h3 className="text-lg font-bold text-white mb-4 flex items-start gap-4">
               <Layers className="w-6 h-6 text-blue-400 flex-shrink-0 mt-0.5 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" />
-              Can this EV charging taper simulator account for cold weather &amp; cold gating?
+              Can this EV charging taper curve simulator account for cold weather &amp; cold gating?
             </h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Yes. When an EV battery is cold (&lt;32&deg;F / 0&deg;C) without preconditioning, internal resistance spikes and electrolyte ion mobility drops. The BMS throttles charging power (often to under 40 kW) until the pack warms up, which this simulator models accurately.
+              Yes. When an EV battery is cold (&lt;32&deg;F / 0&deg;C) without preconditioning, internal resistance spikes and electrolyte ion mobility drops. Our EV charging taper curve simulator models how the BMS throttles charging power (often to under 40 kW) until the pack reaches optimal electrochemical temperature.
             </p>
           </div>
 

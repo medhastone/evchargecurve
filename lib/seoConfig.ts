@@ -47,22 +47,22 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
       {
         question: 'Why do I need a specialized EV charging curve calculator instead of using peak kW?',
         answer:
-          'Advertised peak kW is only sustained briefly (often 1 to 4 minutes) at low battery percentages. An EV charging curve calculator is essential for realistic trip planning because it integrates the inevitable step-down taper as the battery fills, providing mathematically accurate session durations.',
+          'Advertised peak kW is only sustained briefly (often 1 to 4 minutes) at low battery percentages. An EV charging curve calculator is essential for realistic highway trip planning because it integrates the inevitable step-down taper as the battery fills, providing mathematically accurate session durations.',
       },
       {
         question: 'How accurate is this DC fast charge time calculator for highway road trips?',
         answer:
-          'Highly accurate. This calculator is validated against real-world OBD2 CAN-bus telemetry, modeling standard 10% to 80% charging windows, piecewise BMS step-downs, and the impact of ambient temperature and battery preconditioning.',
+          'Highly accurate. This DC fast charge time calculator is validated against real-world OBD2 CAN-bus telemetry, modeling standard 10% to 80% DC fast charge time windows, piecewise BMS step-downs, and the impact of ambient temperature and battery preconditioning.',
       },
       {
-        question: 'Why does this calculator warn against charging past 80% at DC fast chargers?',
+        question: 'Why does this DC fast charging speed drop off calculator warn against charging past 80%?',
         answer:
-          'Because charging from 80% to 100% takes longer than 10% to 80%! As cell voltages approach 4.2V, the BMS slashes current to prevent lithium plating, increasing dwell time and per-minute stall occupancy fees while adding very little range.',
+          'Because charging from 80% to 100% takes longer than EV charging time 10 to 80! As cell voltages approach 4.2V, the BMS slashes current to prevent lithium plating, increasing dwell time and per-minute stall occupancy fees while adding very little range.',
       },
       {
-        question: 'Can this EV charging taper simulator account for cold weather & cold gating?',
+        question: 'Can this EV charging taper curve simulator account for cold weather & cold gating?',
         answer:
-          'Yes. When an EV battery is cold (<32°F / 0°C) without preconditioning, internal resistance spikes and electrolyte ion mobility drops. The BMS throttles charging power (often to under 40 kW) until the pack warms up, which this simulator models accurately.',
+          'Yes. When an EV battery is cold (<32°F / 0°C) without preconditioning, internal resistance spikes and electrolyte ion mobility drops. Our EV charging taper curve simulator models how the BMS throttles charging power (often to under 40 kW) until the pack warms up.',
       },
       {
         question: 'How does station voltage architecture (400V vs 800V) affect charging time?',
@@ -234,7 +234,7 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
       {
         question: 'How do cold ambient temperatures affect comparative charging speeds?',
         answer:
-          'Without active battery preconditioning in freezing conditions, lithium ions move slowly through the liquid electrolyte, creating high internal resistance. The BMS limits charging power (often to under 45 kW) to prevent lithium plating until the pack reaches ~68°F (20°C).',
+          'Without active battery preconditioning in freezing conditions (evaluated using our cold weather range loss calculator), lithium ions move slowly through the liquid electrolyte, creating high internal resistance. The BMS limits charging power (often to under 45 kW) to prevent lithium plating until the pack reaches ~68°F (20°C).',
       },
       {
         question: 'What is the optimal highway road trip charging strategy?',

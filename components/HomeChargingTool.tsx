@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { 
   Zap, Plug, Home, Battery, Fuel, DollarSign, Clock, CheckCircle2, AlertCircle, ArrowRight, PlusCircle
 } from 'lucide-react';
@@ -158,8 +159,17 @@ export default function HomeChargingTool() {
 
           {/* Charge Window */}
           <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl">
-            <div className="flex justify-between items-end mb-6">
-              <h3 className="text-lg font-bold text-white">Daily Session Target</h3>
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h3 className="text-lg font-bold text-white">Daily Session Target</h3>
+                <p className="text-xs text-slate-400 mt-1">
+                  Optimize pack longevity with our{' '}
+                  <Link href="/battery-health" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300 font-medium">
+                    EV battery degradation calculator
+                  </Link>
+                  .
+                </p>
+              </div>
               <div className="text-right">
                 <p className="text-sm font-bold text-emerald-400">{startSoc}% → {endSoc}%</p>
               </div>
@@ -322,7 +332,14 @@ export default function HomeChargingTool() {
                   <span className="text-sm font-bold text-cyan-400 uppercase tracking-wider">Public DC</span>
                 </div>
                 <div className="text-3xl font-black text-white mb-1">{currency.symbol}{Math.round(results.annualDcCost)}<span className="text-sm font-normal text-slate-400">/yr</span></div>
-                <p className="text-xs text-slate-500">Assumes avg {currency.symbol}0.45/kWh</p>
+                <p className="text-xs text-slate-500 mb-2">Assumes avg {currency.symbol}0.45/kWh</p>
+                <div className="text-[11px] text-slate-400 pt-2 border-t border-slate-800">
+                  Model highway station stops with our{' '}
+                  <Link href="/" className="text-cyan-400 underline underline-offset-2 hover:text-cyan-300 font-medium">
+                    DC fast charging curve calculator
+                  </Link>
+                  .
+                </div>
               </div>
 
               {/* Gas Car */}

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import BatteryHealthTool from '@/components/BatteryHealthTool';
-import StructuredData from '@/components/StructuredData';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getToolMetadata } from '@/lib/seoConfig';
 import { 
@@ -31,11 +31,91 @@ import {
 
 export const metadata: Metadata = getToolMetadata('batteryHealth');
 
+// Schema.org JSON-LD combining SoftwareApplication and FAQPage
+const batteryHealthSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: 'EV Battery Degradation Calculator & State of Health (SoH) Estimator',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'All',
+      url: 'https://evchargecurve.com/battery-health',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      description:
+        'Diagnostic EV battery health test calculator to determine remaining usable kWh, calendar wear, and factory warranty thresholds under real-world electrochemical aging models.',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'What is the average annual degradation rate for modern EV battery packs?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Modern liquid-cooled EV battery packs experience approximately 1.5% to 2.5% capacity loss in the first 20,000 miles due to initial SEI layer formation, stabilizing to a gradual 0.8% to 1.2% per year thereafter under standard thermal conditions.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How does battery chemistry (LFP vs NMC) impact long-term degradation?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Lithium Iron Phosphate (LFP) cells tolerate daily 100% charging and deliver 3,000+ full charge cycles with low calendar fade. Nickel Manganese Cobalt (NMC/NCA) cells offer higher energy density but degrade faster if stored above 80% state of charge or in extreme ambient heat.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the standard EV battery warranty degradation threshold for replacement?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Federally mandated US warranties (and standard global warranties) require automakers to cover EV traction batteries for a minimum of 8 years or 100,000 miles, guaranteeing a free battery repair or replacement if capacity retention drops below 70%.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How does frequent DC fast charging affect battery State of Health (SoH)?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Frequent DC fast charging in extreme heat accelerates Solid Electrolyte Interphase (SEI) growth and cathode micro-cracking, resulting in an additional 1.5% to 3.0% capacity loss over 100,000 miles compared to gentle AC Level 2 overnight charging.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How do I test the true State of Health (SoH) of a used EV battery before buying?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Connect a Bluetooth OBD2 scanner (such as an OBDLink LX or vLinker) with diagnostic software (ScanMyTesla, Car Scanner ELM OBD2, or Recurrent) to read nominal remaining kWh, total discharge cycles, and cell voltage balance (delta mV under load).',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What charging habits maximize electric vehicle battery lifespan beyond 15 years?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Keep daily charge limits at 70% to 80% for NMC batteries, avoid letting the battery sit below 10% or at 100% for extended periods, charge on Level 2 AC power when possible, and precondition the pack before DC fast charging in cold weather.',
+          },
+        },
+      ],
+    },
+  ],
+};
+
 export default function BatteryHealthPage() {
   return (
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
-      {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
-      <StructuredData toolKey="batteryHealth" />
+      {/* Search Engine Pre-rendered JSON-LD Rich Snippet (SoftwareApplication + FAQPage) */}
+      <script
+        id="structured-data-batteryhealth"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(batteryHealthSchema),
+        }}
+      />
       
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-14 md:pb-10 text-center relative">
@@ -198,6 +278,13 @@ export default function BatteryHealthPage() {
                 <li><strong>High SoC Hold (&gt;90%):</strong> Triggers cathode transition metal dissolution into the electrolyte</li>
                 <li><strong>DC Fast Charge Heat:</strong> Localized cell core temperatures can exceed 50&deg;C without active cooling</li>
               </ul>
+              <p className="text-xs text-slate-400 pt-2 border-t border-slate-800/80">
+                While extreme heat accelerates irreversible chemical degradation, sub-zero ambient temperatures temporarily immobilize ion conductivity and spike internal resistance—estimate seasonal cold impact using our{' '}
+                <Link href="/range-loss" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300">
+                  cold weather range loss calculator
+                </Link>
+                .
+              </p>
             </div>
           </div>
 
@@ -224,7 +311,7 @@ export default function BatteryHealthPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Production EV Battery Degradation &amp; Chemistry Benchmark Matrix
+            LFP vs NMC Battery Degradation Calculator: 8-Year Capacity Retention Benchmarks
           </h2>
           <p className="text-slate-400 max-w-3xl mx-auto leading-relaxed text-sm md:text-base">
             Compare real-world battery retention across major EV platforms, chemistries (LFP vs NMC/NCA), and cooling architectures over 36,000 miles (Year 3) and 100,000 miles (Year 8).
@@ -236,12 +323,12 @@ export default function BatteryHealthPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle &amp; Chemistry</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Thermal Cooling</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">Year 3 / 36k Mi SoH</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">Year 8 / 100k Mi SoH</th>
-                  <th className="p-4 sm:p-5 font-semibold text-amber-400">70% Warranty Buffer</th>
-                  <th className="p-4 sm:p-5 font-semibold text-indigo-400">Daily Charge Limit</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle &amp; Chemistry</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Thermal Cooling</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">Year 3 / 36k Mi SoH</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">Year 8 / 100k Mi SoH</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-amber-400">70% Warranty Buffer</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-indigo-400">Daily Charge Limit</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -315,7 +402,7 @@ export default function BatteryHealthPage() {
               Pre-Purchase Inspection Protocol
             </div>
             <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
-              Used EV Buyer&apos;s Battery Health Inspection Playbook
+              Used EV Battery Health Test Guide: How to Check Pack Degradation Before Buying
             </h2>
             <p className="text-slate-400 leading-relaxed">
               How savvy buyers, certified technicians, and fleet inspectors verify true traction battery health before signing paperwork on a pre-owned electric vehicle.
@@ -358,7 +445,11 @@ export default function BatteryHealthPage() {
                 Test 10% to 50% DCFC Power Acceptance Profile
               </h4>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Plug into a DC fast charger at &lt;20% SoC. A healthy pack should ramp immediately to its advertised peak power. Sluggish power ramp-up or loud, struggling cooling compressor noise indicates high internal resistance or thermal loop clogging.
+                Plug into a DC fast charger at &lt;20% SoC. A healthy pack should ramp immediately to its advertised peak power profile—compare real charging tapers against our{' '}
+                <Link href="/" className="text-amber-400 underline underline-offset-4 hover:text-amber-300">
+                  DC fast charging curve calculator
+                </Link>
+                . Sluggish power ramp-up or loud, struggling cooling compressor noise indicates high internal resistance or thermal loop clogging.
               </p>
             </div>
 
@@ -516,7 +607,15 @@ export default function BatteryHealthPage() {
               </h3>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Keep daily charge limits at 70% to 80% for NMC batteries, avoid letting the battery sit below 10% or at 100% for extended periods, charge on Level 2 AC power when possible, and precondition the pack before DC fast charging in cold weather.
+              Keep daily charge limits at 70% to 80% for NMC batteries, avoid letting the battery sit below 10% or at 100% for extended periods, charge on Level 2 AC power at home when possible (model charging speeds via our{' '}
+              <Link href="/home-charging" className="text-teal-400 underline underline-offset-4 hover:text-teal-300">
+                EV home charging time calculator 240V
+              </Link>{' '}
+              and verify breaker headroom with our{' '}
+              <Link href="/panel-capacity" className="text-teal-400 underline underline-offset-4 hover:text-teal-300">
+                home electrical panel capacity tool
+              </Link>
+              ), and precondition the pack before DC fast charging in cold weather.
             </p>
           </div>
         </div>
@@ -524,4 +623,5 @@ export default function BatteryHealthPage() {
     </div>
   );
 }
+
 

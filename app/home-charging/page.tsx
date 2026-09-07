@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import HomeChargingTool from '@/components/HomeChargingTool';
-import StructuredData from '@/components/StructuredData';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getToolMetadata } from '@/lib/seoConfig';
 import { 
@@ -31,10 +31,86 @@ import {
 export const metadata: Metadata = getToolMetadata('homeCharging');
 
 export default function HomeChargingPage() {
+  const schemaData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'SoftwareApplication',
+        name: 'EV Home Charging Time Calculator 240V & Level 2 Cost Estimator',
+        operatingSystem: 'Any',
+        applicationCategory: 'UtilitiesApplication',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+        description:
+          'Calculate 240V Level 2 EV home charging speed, circuit breaker sizing (NEC 80% continuous rule), AC-to-DC onboard inverter efficiency, and overnight Time-of-Use (TOU) electricity costs across all electric vehicles.',
+        url: 'https://evchargecurve.com/home-charging',
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: [
+          {
+            '@type': 'Question',
+            name: 'How long does a 240V Level 2 charger take to charge an EV from 10% to 80%?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'A standard 240V 32A (7.7 kW / NEMA 14-50) home charger adds 25 to 30 miles of range per hour, charging a typical 75 kWh battery from 10% to 80% in 6.5 to 7.5 hours. A 48A (11.5 kW) hardwired station completes the same session in 4.5 to 5 hours.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'What is the NEC 80% continuous load rule for EV home chargers?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Under National Electrical Code (NEC Article 625), electric vehicle charging is classified as a continuous load (lasting over 3 hours). The continuous current draw must never exceed 80% of the circuit breaker rating. A 50A breaker allows a maximum 40A continuous draw, a 40A breaker allows 32A, and a 60A breaker allows 48A.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Why is 240V Level 2 charging more energy-efficient than 120V Level 1 charging?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Level 2 charging achieves 88% to 93% AC-to-DC conversion efficiency compared to only 74% to 82% on 120V Level 1. At 120V (1.4 kW), fixed parasitic loads (BMS computers, coolant pumps, inverter overhead) consume 250W to 350W continuously—wasting up to 25% of supplied power as heat.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'What is the difference between a NEMA 14-50 plug-in charger and a hardwired 48A EVSE?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Plug-in NEMA 14-50 chargers plug into a 240V wall receptacle and are capped at 40A continuous (9.6 kW) on a 50A breaker. Hardwired chargers connect directly to conduit and can draw 48A continuous (11.5 kW) on a 60A breaker, providing 20% faster charging without nuisance GFCI tripping.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'How much money does off-peak Time-of-Use (TOU) home charging save per year?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Switching to a dedicated utility EV Time-of-Use (TOU) tariff (typically $0.07 to $0.14/kWh overnight vs $0.35 to $0.50/kWh peak) lowers the cost to fully recharge a 75 kWh battery to $6–$10, saving $1,200 to $2,200 annually compared to gasoline fueling.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Why does my EV charge slower than the maximum kW rating of my home charger?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Charging speed is determined by the vehicle onboard AC-to-DC charger (OBC) bottleneck. If your vehicle has a 7.7 kW or 9.6 kW onboard inverter, it will draw a maximum of 32A or 40A, regardless of whether your wall EVSE is rated for 48A or 80A.',
+            },
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
       {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
-      <StructuredData toolKey="homeCharging" />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
       
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-14 md:pb-10 text-center relative">
@@ -81,10 +157,20 @@ export default function HomeChargingPage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 relative z-20">
         <HomeChargingTool />
 
-        {/* Trust Banner */}
-        <div className="mt-8 flex flex-col md:flex-row items-center justify-center gap-3 p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 text-xs sm:text-sm text-center">
-          <Info className="w-4 h-4 text-blue-400 shrink-0" />
-          <span>Calculations comply with National Electrical Code (NEC 625.42), vehicle onboard AC charger (OBC) kW bottlenecks, and utility off-peak tariff tiers.</span>
+        {/* Trust Banner & Contextual Guidance */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 text-xs sm:text-sm">
+            <Info className="w-4 h-4 text-blue-400 shrink-0" />
+            <span>Calculations comply with National Electrical Code (NEC 625.42), vehicle onboard AC charger (OBC) kW bottlenecks, and utility off-peak tariff tiers.</span>
+          </div>
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 text-xs sm:text-sm">
+            <BatteryWarning className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>In the Daily Session Target section, setting routine limits to 80% protects battery longevity—forecast cell health with our{' '}
+              <Link href="/battery-health" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300 font-semibold">
+                EV battery degradation calculator
+              </Link>.
+            </span>
+          </div>
         </div>
       </section>
 
@@ -142,9 +228,15 @@ export default function HomeChargingPage() {
                 <PiggyBank className="w-6 h-6 text-amber-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">Time-of-Use Cost Savings</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">
+              <p className="text-slate-400 leading-relaxed text-sm mb-3">
                 Using an integrated <strong>electric car charge cost per kwh calculator</strong>, our system simulates off-peak utility tariffs ($0.08&ndash;$0.14/kWh) to calculate exact annual savings over gasoline.
               </p>
+              <div className="pt-2 border-t border-slate-800/80 text-xs text-slate-400">
+                In our annual economics breakdown, compare domestic utility rates against highway public DC fast charging rates with our{' '}
+                <Link href="/" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300 font-semibold">
+                  DC fast charging curve calculator
+                </Link>.
+              </div>
             </div>
           </div>
         </div>
@@ -179,11 +271,11 @@ export default function HomeChargingPage() {
               <table className="w-full text-left text-xs sm:text-sm">
                 <thead className="border-b border-slate-800 text-slate-400 font-semibold bg-slate-900/60">
                   <tr>
-                    <th className="p-3.5">Breaker Rating</th>
-                    <th className="p-3.5 text-emerald-400">Continuous Draw (80%)</th>
-                    <th className="p-3.5 text-cyan-400">Voltage &amp; kW Output</th>
-                    <th className="p-3.5">Connection Type</th>
-                    <th className="p-3.5">Minimum Copper Wire Gauge</th>
+                    <th scope="col" className="p-3.5">Breaker Rating</th>
+                    <th scope="col" className="p-3.5 text-emerald-400">Continuous Draw (80%)</th>
+                    <th scope="col" className="p-3.5 text-cyan-400">Voltage &amp; kW Output</th>
+                    <th scope="col" className="p-3.5">Connection Type</th>
+                    <th scope="col" className="p-3.5">Minimum Copper Wire Gauge</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -244,10 +336,10 @@ export default function HomeChargingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Box 1 */}
             <div className="bg-[#0B0F17] border border-slate-800 rounded-2xl p-6">
-              <h4 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
                 <Cpu className="w-5 h-5 text-blue-400" />
                 The AC-to-DC Inverter Efficiency Equation
-              </h4>
+              </h3>
               <p className="text-sm text-slate-400 leading-relaxed mb-4">
                 When plugged into a home 240V AC wall unit, electricity flows through the vehicle&apos;s internal Onboard Charger (OBC) to be rectified into high-voltage DC. Energy consumed from your meter includes conversion and thermal management losses:
               </p>
@@ -261,10 +353,10 @@ export default function HomeChargingPage() {
 
             {/* Box 2 */}
             <div className="bg-[#0B0F17] border border-slate-800 rounded-2xl p-6">
-              <h4 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-amber-400" />
-                NEMA 14-50 Receptacle Quality &amp; Hardwiring
-              </h4>
+                NEMA 14-50 Charging Speed Calculator: Plug-In Outlet Limits vs Direct Hardwiring
+              </h3>
               <p className="text-sm text-slate-400 leading-relaxed mb-4">
                 Standard $10 builder-grade residential NEMA 14-50 receptacles (e.g. Leviton) are designed for stove use (drawing intermittent power once or twice a day).
               </p>
@@ -285,7 +377,7 @@ export default function HomeChargingPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Production EV Home Charging Speed &amp; Cost Benchmark Matrix
+            EV Level 2 Charging Calculator Benchmarks: 240V Speeds &amp; Overnight Cost by Model
           </h2>
           <p className="text-slate-400 max-w-3xl mx-auto leading-relaxed text-sm md:text-base">
             Compare battery pack sizes, onboard AC inverter limits (OBC), 240V Level 2 charging speeds, and overnight off-peak charging costs ($0.11/kWh) across popular electric vehicles.
@@ -297,12 +389,12 @@ export default function HomeChargingPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Model</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Battery (Usable)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-blue-400">Onboard Charger (OBC)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">NEMA 14-50 (32A / 7.7 kW)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">Hardwired 48A (11.5 kW)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-amber-400">Overnight Cost (10&ndash;80%)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Model</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Battery (Usable)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-blue-400">Onboard Charger (OBC)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">NEMA 14-50 (32A / 7.7 kW)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">Hardwired 48A (11.5 kW)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-amber-400">Overnight Cost (10&ndash;80%)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -379,7 +471,10 @@ export default function HomeChargingPage() {
               The Homeowner&apos;s EVSE Installation Playbook: 4 Critical Steps
             </h2>
             <p className="text-slate-400 leading-relaxed">
-              Before calling an electrician or purchasing a Level 2 wall connector, follow this engineering checklist to ensure safe installation and avoid costly electrical panel upgrades.
+              Before calling an electrician or purchasing a Level 2 wall connector, follow this engineering checklist to ensure safe installation and avoid costly electrical panel upgrades. While traveling away from home, estimate overnight hospitality charging with our{' '}
+              <Link href="/destination-charging" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300 font-medium">
+                hotel EV charger speed calculator
+              </Link>.
             </p>
           </div>
 
@@ -389,11 +484,14 @@ export default function HomeChargingPage() {
               <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm uppercase mb-3">
                 <FileText className="w-4 h-4" /> Step 1: NEC 220 Panel Load Calculation
               </div>
-              <h4 className="font-bold text-white text-base mb-2">
+              <h3 className="font-bold text-white text-base mb-2">
                 Verify 100A vs 200A Main Service Capacity
-              </h4>
+              </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Calculate existing household continuous and non-continuous loads (HVAC compressor, electric range, water heater, dryer). A 100A main service may not support an additional 50A breaker without an expensive service upgrade.
+                Calculate existing household continuous and non-continuous loads (HVAC compressor, electric range, water heater, dryer). A 100A main service may not support an additional 50A breaker without an expensive service upgrade. Evaluate panel breaker capacity with our{' '}
+                <Link href="/panel-capacity" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300 font-semibold">
+                  EV charger breaker size &amp; 100A panel capacity calculator
+                </Link>.
               </p>
             </div>
 
@@ -402,9 +500,9 @@ export default function HomeChargingPage() {
               <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm uppercase mb-3">
                 <Wrench className="w-4 h-4" /> Step 2: Hardwire vs Plug-in NEMA 14-50
               </div>
-              <h4 className="font-bold text-white text-base mb-2">
+              <h3 className="font-bold text-white text-base mb-2">
                 Hardwire for Max 48A Speed &amp; No GFCI Trips
-              </h4>
+              </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 Plug-in chargers cap out at 40A on a 50A breaker and require expensive industrial GFCI breakers. Hardwiring directly to a 60A breaker unlocks full 48A (11.5 kW) output, runs cooler, and eliminates plug-connection failure points.
               </p>
@@ -415,9 +513,9 @@ export default function HomeChargingPage() {
               <div className="flex items-center gap-2 text-blue-400 font-bold text-sm uppercase mb-3">
                 <Cpu className="w-4 h-4" /> Step 3: Smart EVEMS Load Shedders
               </div>
-              <h4 className="font-bold text-white text-base mb-2">
+              <h3 className="font-bold text-white text-base mb-2">
                 Avoid $4,000+ Panel Upgrades with Energy Management
-              </h4>
+              </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 If your 100A panel is near capacity, install an Electric Vehicle Energy Management System (EVEMS) such as DCC-12, Wallbox Power Boost, or Emporia Vue. These devices throttle or pause EV charging when central A/C or electric ovens engage.
               </p>
@@ -426,11 +524,11 @@ export default function HomeChargingPage() {
             {/* Step 4 */}
             <div className="bg-[#0B0F17] border border-slate-800 rounded-2xl p-6">
               <div className="flex items-center gap-2 text-amber-400 font-bold text-sm uppercase mb-3">
-                <PiggyBank className="w-4 h-4" /> Step 4: Time-of-Use Tariff Schedulers
+                <PiggyBank className="w-4 h-4" /> Time-of-Use Tariff Schedulers
               </div>
-              <h4 className="font-bold text-white text-base mb-2">
-                Automate Charging for 12:00 AM &ndash; 6:00 AM Windows
-              </h4>
+              <h3 className="font-bold text-white text-base mb-2">
+                Step 4: EV TOU Savings Calculator: Automate Super Off-Peak Charging Windows
+              </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 Enroll in your utility&apos;s special EV rate plan (such as PG&amp;E EV2-A, Duke Energy Off-Peak, or ConEd SmartCharge). Configure your vehicle or EVSE app to begin charging automatically during super off-peak hours to slash fueling costs by 65%.
               </p>
@@ -454,12 +552,12 @@ export default function HomeChargingPage() {
           <table className="w-full text-left text-sm md:text-base">
             <thead className="bg-[#0B0F17]">
               <tr>
-                <th className="p-5 font-semibold text-slate-400 w-1/2 border-b border-slate-800">
+                <th scope="col" className="p-5 font-semibold text-slate-400 w-1/2 border-b border-slate-800">
                   <div className="flex flex-col">
                     <span className="text-lg text-slate-300">Level 1 (Standard 120V Outlet)</span>
                   </div>
                 </th>
-                <th className="p-5 font-semibold text-emerald-400 w-1/2 border-b border-emerald-500/30 bg-emerald-950/10 relative">
+                <th scope="col" className="p-5 font-semibold text-emerald-400 w-1/2 border-b border-emerald-500/30 bg-emerald-950/10 relative">
                   <div className="absolute top-0 left-0 w-full h-0.5 bg-emerald-500/50"></div>
                   <div className="flex flex-col">
                     <span className="text-lg">Level 2 (240V Dedicated Circuit)</span>
@@ -599,4 +697,3 @@ export default function HomeChargingPage() {
     </div>
   );
 }
-

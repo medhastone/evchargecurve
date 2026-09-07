@@ -123,7 +123,9 @@ export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehic
     url.searchParams.set('cold', isCold.toString());
     url.searchParams.set('rate', rate.toString());
     
-    navigator.clipboard.writeText(url.toString()).catch((e: any) => console.error(e));
+    navigator.clipboard.writeText(url.toString()).catch(() => {
+      // Ignore clipboard errors in iframe/preview
+    });
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

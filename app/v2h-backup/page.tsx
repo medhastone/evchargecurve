@@ -1,5 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import Script from 'next/script';
 import V2HBackupTool from '@/components/V2HBackupTool';
 import StructuredData from '@/components/StructuredData';
 import Breadcrumb from '@/components/Breadcrumb';
@@ -27,8 +29,84 @@ import {
 export const metadata: Metadata = getToolMetadata('v2hBackup');
 
 export default function V2HBackupPage() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "EV V2H Backup Calculator & Home Emergency Run-Time Sizer",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "description": "Calculate exact blackout survival days, household appliance run-time, and battery reserve thresholds using our comprehensive how long can an ev power my house calculator.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How long can an EV power my house during a power outage?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A typical 77 kWh to 131 kWh EV battery can power essential household circuits (refrigerator, LED lighting, Wi-Fi router, medical CPAP, and gas furnace blower) consuming 8–12 kWh/day for 6 to 14 consecutive days. Under whole-home loads with heat pumps (25–35 kWh/day), an EV provides 2.5 to 4.5 days of continuous power."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between Vehicle-to-Load (V2L) and Vehicle-to-Home (V2H)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "V2L (Vehicle-to-Load) provides standalone 120V/240V AC outlets on the car delivering 1.8 kW to 3.6 kW to run specific appliances via extension cords. V2H (Vehicle-to-Home) integrates directly with your home main electrical panel via a bidirectional inverter and automatic transfer switch to energize whole-house circuits at 7.2 kW to 11.5 kW."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can an EV battery with V2H run a central air conditioner or heat pump?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, provided the bidirectional inverter output (e.g., 9.6 kW on Ford F-150 Lightning, 11.5 kW on Tesla Cybertruck Powershare, or 10.2 kW on GM Energy) meets the running wattage. For older single-stage compressors, installing an HVAC soft-starter (Micro-Air EasyStart) reduces locked rotor inrush current by up to 70%, preventing inverter trip-outs."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does bidirectional V2H discharge damage or void the vehicle battery warranty?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Automakers with native V2H and V2L architecture (including Ford, Tesla, GM, Hyundai, Kia, and Nissan) officially cover bidirectional discharge under their standard 8-year / 100,000-mile high-voltage battery warranties. Discharging 10 kWh/day creates minimal electrochemical stress (~0.1 C-rate), equivalent to driving just 30 gentle miles."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does an EV compare to a Tesla Powerwall or home standby generator?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A single EV battery pack (75 to 205 kWh) holds the equivalent energy of 5 to 15 stationary Tesla Powerwalls (13.5 kWh each) at a fraction of the cost per kWh. Compared to fossil fuel generators, V2H produces zero toxic carbon monoxide exhaust, operates at 0 dB silent volume, and requires zero gasoline storage or oil changes."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can rooftop solar recharge an EV during an extended blackout using V2H microgrid forming?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. With a microgrid-forming V2H gateway (such as Tesla Powershare Gateway, Ford Home Integration System, or Enphase IQ Bidirectional EV Charger), the system establishes an isolated 60 Hz reference voltage. This black-starts rooftop solar inverters during an outage, charging the EV from solar by day and powering the home by night for indefinite grid independence."
+            }
+          }
+        ]
+      }
+    ]
+  };
+
   return (
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
+      <Script
+        id="v2h-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
       <StructuredData toolKey="v2hBackup" />
 
@@ -107,7 +185,7 @@ export default function V2HBackupPage() {
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">Usable Pack &amp; Evacuation Floor</h3>
               <p className="text-slate-400 leading-relaxed text-sm">
-                Select your EV platform (e.g., Ford F-150 Lightning 131 kWh, Cybertruck 123 kWh, or Ioniq 5 77.4 kWh). The engine locks an emergency driving reserve (15%–25% SoC) so you always retain 35–60 miles of escape range.
+                Select your EV platform (e.g., Ford F-150 Lightning 131 kWh, Cybertruck 123 kWh, or Ioniq 5 77.4 kWh). The engine locks an emergency driving reserve (15%–25% SoC) so you always retain 35–60 miles of escape range for highway charging evacuation (plan stops with our <Link href="/" className="text-amber-400 hover:text-amber-300 underline underline-offset-4">DC fast charging curve calculator</Link>).
               </p>
             </div>
           </div>
@@ -177,7 +255,10 @@ export default function V2HBackupPage() {
                   <p className="text-slate-400 text-xs">The vehicle uses its internal bidirectional OBC (On-Board Charger) to rectify DC battery voltage into 120V/240V AC before outputting through a standard charge inlet or cabin outlets (e.g., Hyundai E-GMP 1.9–3.6 kW, Tesla Cybertruck Powershare 11.5 kW).</p>
                 </div>
                 <div className="bg-[#131B2A] p-3 rounded-xl border border-slate-800">
-                  <div className="text-emerald-400 font-bold mb-1">2. DC Bidirectional (External Power Conversion System / PCS)</div>
+                  <div className="text-emerald-400 font-bold mb-1">
+                    <h3 className="inline text-emerald-400 font-bold text-sm">2. DC Bidirectional (External Power Conversion System / PCS)</h3>
+                  </div>
+                  <h3 className="text-xs font-bold text-slate-300 mt-2 mb-1">F-150 Lightning Home Power Outage Calculator: 9.6 kW Intelligent Backup Power</h3>
                   <p className="text-slate-400 text-xs">The vehicle sends raw 400V–800V DC power directly through the DC pins of the CCS1 or NACS plug to an external wall-mounted inverter and isolation gateway (e.g., Ford Home Integration System / GM Energy Ultium Home 10.2 kW, Wallbox Quasar 2).</p>
                 </div>
               </div>
@@ -195,7 +276,7 @@ export default function V2HBackupPage() {
               <div className="bg-[#131B2A] rounded-xl p-3 text-xs font-mono text-slate-300 border border-slate-800 mb-3 space-y-1">
                 <div className="text-amber-400 font-bold">NEC Article 705.13 &amp; 702.6 Compliance:</div>
                 <div className="text-slate-400">&bull; Microgrid Interconnection Device (MID) physically opens main grid breaker in &lt;16 milliseconds.</div>
-                <div className="text-slate-400">&bull; Automatic transfer switch forms an isolated local 60 Hz split-phase microgrid.</div>
+                <div className="text-slate-400">&bull; Automatic home panel transfer switches (size yours with our <Link href="/panel-capacity" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4">EV charger breaker size &amp; 100A panel capacity calculator</Link>) form an isolated local 60 Hz split-phase microgrid.</div>
               </div>
               <p className="text-xs text-slate-400">
                 When grid power is restored, the V2H gateway senses stable voltage and frequency for 5 consecutive minutes before safely resynchronizing and reconnecting to the utility.
@@ -217,7 +298,7 @@ export default function V2HBackupPage() {
               <div className="bg-[#131B2A] border border-slate-800 p-4 rounded-xl">
                 <div className="text-slate-400 font-medium mb-1">Daytime (Solar Generation)</div>
                 <div className="text-yellow-400 font-bold text-base mb-1">EV Charges at 5–10 kW</div>
-                <p className="text-slate-500 text-xs">Excess rooftop solar recharges the EV battery while simultaneously running household air conditioning and appliances.</p>
+                <p className="text-slate-500 text-xs">Excess rooftop solar recharges the EV battery while simultaneously running household air conditioning and appliances. Maximizing solar self-consumption significantly reduces your footprint; use our <Link href="/carbon-offset" className="text-yellow-400 hover:text-yellow-300 underline underline-offset-4">EV CO2 emissions saved calculator</Link> to learn more.</p>
               </div>
               <div className="bg-[#131B2A] border border-slate-800 p-4 rounded-xl">
                 <div className="text-slate-400 font-medium mb-1">Nighttime (EV Discharge)</div>
@@ -238,7 +319,7 @@ export default function V2HBackupPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Production EV Bidirectional &amp; V2H Capability Matrix
+            How Long Can an EV Power My House? V2H Backup Duration Benchmarks by Model
           </h2>
           <p className="text-slate-400 max-w-3xl mx-auto leading-relaxed text-sm md:text-base">
             Detailed engineering comparison of factory bidirectional charging power, battery capacity, discharge protocol, and home backup hardware requirements across top electric vehicles.
@@ -250,12 +331,12 @@ export default function V2HBackupPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">EV Model</th>
-                  <th className="p-4 sm:p-5 font-semibold text-amber-400">Battery Pack Size</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">Max V2H/V2L Power</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Bidirectional Protocol</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">Emergency Backup Days</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Required Home Hardware</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">EV Model</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-amber-400">Battery Pack Size</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">Max V2H/V2L Power</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Bidirectional Protocol</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">Emergency Backup Days</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Required Home Hardware</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -329,7 +410,7 @@ export default function V2HBackupPage() {
               Emergency Preparedness &amp; Load Management
             </div>
             <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
-              Household Outage Energy Tiers: Maximizing Survival Runtime
+              EV Home Backup Run Time Calculator: Outage Energy Tiers &amp; Autonomy Days
             </h2>
             <p className="text-slate-400 leading-relaxed">
               Careful electrical load prioritization dramatically extends your EV battery&apos;s backup duration. Review the three standard residential load profiles below.
@@ -483,7 +564,7 @@ export default function V2HBackupPage() {
                 Minimal Full Cycle Count
               </h4>
               <p className="text-xs text-slate-400 leading-relaxed">
-                A severe 5-day blackout consuming 50 kWh represents just <strong>0.5 of a single full battery cycle</strong> on a 100 kWh pack. Modern automotive packs are rated for 1,500 to 2,500 full equivalent cycles (300,000+ miles). An occasional emergency outage uses less than 0.03% of total lifetime pack endurance.
+                A severe 5-day blackout consuming 50 kWh represents just <strong>0.5 of a single full battery cycle</strong> on a 100 kWh pack (to model cycle aging, use our <Link href="/battery-health" className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4">EV battery degradation calculator &amp; State of Health test</Link>). Modern automotive packs are rated for 1,500 to 2,500 full equivalent cycles (300,000+ miles). An occasional emergency outage uses less than 0.03% of total lifetime pack endurance.
               </p>
             </div>
           </div>
@@ -513,10 +594,10 @@ export default function V2HBackupPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Feature / Specification</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400 bg-emerald-950/20">Bidirectional EV (V2H)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">Stationary Battery (Tesla Powerwall 3)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-amber-400">Whole-Home Standby Generator (22 kW)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Feature / Specification</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400 bg-emerald-950/20">Bidirectional EV (V2H)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">Stationary Battery (Tesla Powerwall 3)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-amber-400">Whole-Home Standby Generator (22 kW)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">

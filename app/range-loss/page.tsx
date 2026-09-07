@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import RangeLossTool from '@/components/RangeLossTool';
-import StructuredData from '@/components/StructuredData';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getToolMetadata } from '@/lib/seoConfig';
 import { 
@@ -30,11 +30,91 @@ import {
 
 export const metadata: Metadata = getToolMetadata('rangeLoss');
 
+// Schema.org JSON-LD combining SoftwareApplication and FAQPage
+const rangeLossSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: 'EV Cold Weather Range Loss Calculator & Highway Towing Estimator',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'All',
+      url: 'https://evchargecurve.com/range-loss',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      description:
+        'Calculates real-world EV winter range drop, heat pump vs PTC heater energy consumption, sub-zero highway degradation, and aerodynamic trailer towing range loss.',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Why do electric vehicles lose 25% to 40% range in sub-zero winter temperatures?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Cold temperatures increase internal electrolyte viscosity and chemical resistance (overpotential), reducing usable battery capacity, while high-voltage cabin heating draws 3 to 6 kW of continuous power directly from the traction pack and denser cold air increases aerodynamic drag.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How much does a heat pump vs resistive PTC heater affect winter EV highway range?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Vapor-injection heat pumps achieve a Coefficient of Performance (COP) between 2.0 and 3.5 by scavenging thermal energy from the drive unit and ambient air, consuming only 1.0 to 1.8 kW compared to 4.0 to 6.0 kW for resistive PTC heaters (COP 1.0) and reclaiming 10% to 15% total range in 20°F to 40°F weather.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Why does trailer frontal surface area reduce EV towing range far more than trailer weight?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'At highway speeds above 55 mph, aerodynamic drag accounts for over 75% of total energy consumption. A tall, blunt 8x8 ft box travel trailer nearly doubles vehicle drag area (CdA), causing consumption to surge from ~320 Wh/mi to 750–900 Wh/mi regardless of whether it is lightly loaded.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How does highway speed (65 mph vs 75+ mph) compound winter and towing range loss?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Aerodynamic drag scales quadratically with velocity (v²), and power consumption scales cubically (v³). Slowing down from 75 mph to 65 mph while towing or driving in freezing weather reduces energy consumption by 15% to 22%, extending driving distance between charging stops by 30 to 50 miles.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How much do winter snow tires and increased cold air density reduce EV efficiency?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Winter tires feature aggressive siping and softer tread compounds that increase rolling resistance by 4% to 8%. Simultaneously, freezing air at 10°F is roughly 12% denser than warm air at 75°F, proportionally increasing aerodynamic drag on the vehicle body.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How does departure preconditioning while plugged in preserve winter driving range?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Preconditioning draws AC electricity from the grid to warm both the cabin and the 1,000-lb traction battery to its optimal electrochemical operating temperature (68°F–86°F / 20°C–30°C) before departure, preserving 10% to 15% of battery capacity and restoring full regenerative braking.',
+          },
+        },
+      ],
+    },
+  ],
+};
+
 export default function RangeLossPage() {
   return (
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
-      {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
-      <StructuredData toolKey="rangeLoss" />
+      {/* Search Engine Pre-rendered JSON-LD Rich Snippet (SoftwareApplication + FAQPage) */}
+      <script
+        id="structured-data-rangeloss"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(rangeLossSchema),
+        }}
+      />
       
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-14 md:pb-10 text-center relative">
@@ -179,7 +259,11 @@ export default function RangeLossPage() {
                 V<sub>terminal</sub> = V<sub>open_circuit</sub> - I &times; R<sub>internal</sub>(T)
               </div>
               <p className="text-xs text-slate-400">
-                This voltage depression causes the BMS to signal low state-of-charge earlier, while also restricting regenerative braking power until the battery is warmed to protect cells from lithium plating.
+                This voltage depression causes the BMS to signal low state-of-charge earlier, while also restricting regenerative braking power until the battery is warmed to protect cells from lithium plating (model long-term wear kinetics with our{' '}
+                <Link href="/battery-health" className="text-amber-400 underline underline-offset-4 hover:text-amber-300">
+                  EV battery degradation calculator
+                </Link>
+                ).
               </p>
             </div>
 
@@ -187,7 +271,7 @@ export default function RangeLossPage() {
             <div className="bg-[#0B0F17] border border-slate-800 rounded-2xl p-6">
               <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
                 <Flame className="w-5 h-5 text-cyan-400" />
-                Heat Pump HVAC vs Resistive PTC (COP Physics)
+                Heat Pump vs PTC Heater EV Range Calculator: COP Thermodynamics Explained
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed mb-4">
                 Heating an EV cabin requires significant thermal power because there is no wasteful internal combustion engine generating free byproduct heat:
@@ -206,10 +290,10 @@ export default function RangeLossPage() {
           {/* The Quadratic Speed Trap Warning Box */}
           <div className="bg-[#0B0F17] border border-amber-500/30 rounded-2xl p-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
-            <h4 className="text-base font-bold text-white mb-2 flex items-center gap-2">
+            <h3 className="text-base sm:text-lg font-bold text-white mb-2 flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-amber-400" />
-              The Quadratic Speed Trap: Why 75 MPH Devastates Winter &amp; Towing Range
-            </h4>
+              EV Range at 70 mph vs 80 mph: Why Highway Speed Devastates Winter &amp; Towing Range
+            </h3>
             <p className="text-sm text-slate-400 leading-relaxed mb-3">
               Aerodynamic drag force scales with the <strong className="text-slate-200">square of vehicle velocity (v&sup2;)</strong>, while propulsion power required to overcome drag scales with the <strong className="text-slate-200">cube of velocity (v&sup3;)</strong>:
             </p>
@@ -238,7 +322,7 @@ export default function RangeLossPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Production EV Winter &amp; Towing Real-World Range Matrix
+            EV Cold Weather Range Loss Calculator Matrix: Freezing Winter vs Towing Range
           </h2>
           <p className="text-slate-400 max-w-3xl mx-auto leading-relaxed text-sm md:text-base">
             Compare real-world highway driving range across top electric pickups, SUVs, and sedans under mild summer (70&deg;F), sub-zero freezing winter (15&deg;F), and heavy trailer towing conditions.
@@ -250,12 +334,12 @@ export default function RangeLossPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle &amp; Battery Size</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Thermal HVAC System</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">70&deg;F EPA Highway</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">15&deg;F Winter Range</th>
-                  <th className="p-4 sm:p-5 font-semibold text-amber-400">5,000-lb Box Trailer</th>
-                  <th className="p-4 sm:p-5 font-semibold text-indigo-400">Teardrop / Boat</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle &amp; Battery Size</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Thermal HVAC System</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">70&deg;F EPA Highway</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">15&deg;F Winter Range</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-amber-400">5,000-lb Box Trailer</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-indigo-400">Teardrop / Boat</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -346,7 +430,15 @@ export default function RangeLossPage() {
                 Warm the 1,000-lb Battery While Plugged In
               </h4>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Set a scheduled departure in your EV app. Drawing AC grid power to bring the traction pack to its optimal electrochemical operating window (68&deg;F&ndash;86&deg;F / 20&deg;C&ndash;30&deg;C) preserves <strong>10% to 15% of battery capacity</strong> and restores 100% full regenerative braking immediately upon departure.
+                Set a scheduled departure in your EV app. Drawing AC grid power from your wall unit (calculate replenish times with our{' '}
+                <Link href="/home-charging" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">
+                  EV home charging time calculator 240V
+                </Link>
+                ) to bring the traction pack to its optimal electrochemical operating window (68&deg;F&ndash;86&deg;F / 20&deg;C&ndash;30&deg;C) via an{' '}
+                <Link href="/preconditioning" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">
+                  EV battery preconditioning calculator
+                </Link>{' '}
+                preserves <strong>10% to 15% of battery capacity</strong> and restores 100% full regenerative braking immediately upon departure.
               </p>
             </div>
 
@@ -361,6 +453,14 @@ export default function RangeLossPage() {
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 Dropping highway cruising speed from 75 mph to 65 mph while towing or driving in freezing weather reduces aerodynamic drag power by <strong>18% to 22%</strong>. This extends driving distance between charging stops by 30 to 50 miles and eliminates an entire charging stop on a 300-mile trip.
               </p>
+              <div className="mt-3 p-3 rounded-xl bg-[#131B2A] border border-cyan-900/40 text-xs text-slate-300">
+                <span className="text-cyan-400 font-semibold">300-Mile Trip Insight:</span>{' '}
+                Maintaining aerodynamic discipline minimizes severe cold pack throttling and allows highway charging stops to hit peak acceptance rates—simulate station charging tapers using our{' '}
+                <Link href="/" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300 font-medium">
+                  DC fast charging curve calculator
+                </Link>
+                .
+              </div>
             </div>
 
             {/* Strategy 3 */}

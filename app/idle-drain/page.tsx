@@ -1,6 +1,7 @@
+import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import IdleDrainTool from '@/components/IdleDrainTool';
-import StructuredData from '@/components/StructuredData';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getToolMetadata } from '@/lib/seoConfig';
 import { 
@@ -11,25 +12,101 @@ import {
   BatteryCharging, 
   Zap, 
   Cpu, 
-  AlertTriangle, 
   CheckCircle2, 
   ShieldCheck, 
   TrendingDown, 
-  Car, 
-  Sliders, 
   Lock, 
   Smartphone,
-  Layers,
   Scale
 } from 'lucide-react';
 
 export const metadata: Metadata = getToolMetadata('idleDrain');
 
+// Schema.org JSON-LD combining SoftwareApplication and FAQPage
+const idleDrainSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: 'EV Phantom Drain Calculator & Airport Vampire Loss Estimator',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'All',
+      url: 'https://evchargecurve.com/idle-drain',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      description:
+        'Simulate daily standby battery loss from Tesla Sentry Mode, active BMS thermal management, low-voltage DC-DC top-ups, and freezing temperatures to prevent dead or bricked EV batteries during long-term parking.',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'How much battery percentage does an EV lose parked at an airport for two weeks?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'In deep sleep mode, an EV loses 0.5% to 1.0% State of Charge per week (1% to 2% total over 14 days). If security surveillance modes like Tesla Sentry Mode or Rivian Gear Guard remain active, loss exceeds 2.5% to 4.0% per day, depleting 35% to 55% of the total battery pack.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'At what battery percentage do vehicle surveillance modes turn off automatically?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Most EV manufacturers (including Tesla, Rivian, and Lucid) automatically disable active camera monitoring (such as Sentry Mode or Gear Guard) when the traction battery drops to 20% State of Charge to protect essential vehicle propulsion reserves and prevent low-voltage battery bricking.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Why does extreme winter cold accelerate parking vampire drain?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'In sub-zero temperatures (<15°F / -10°C), the battery management system (BMS) periodically wakes up to energize high-voltage PTC coolant heaters to prevent irreversible electrolyte freezing. Additionally, cold-soaking temporarily locks electrochemical capacity behind a snowflake icon until cells are driven.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Do third-party vehicle tracking apps worsen phantom drain?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. Frequent automated polling from third-party telemetry apps (such as smart home integrations or logging tools) keeps the vehicle gateway awake, preventing high-voltage contactors from opening and increasing continuous standby power consumption from 20W to 120W+.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the hardware power draw of Tesla Sentry Mode while parked?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Tesla Sentry Mode keeps the main HW3/HW4 FSD computer, 8 optical cameras, and video storage controllers fully energized, resulting in a continuous baseline power draw of 240W to 300W. Over 24 hours, this consumes approximately 5.8 kWh to 7.2 kWh of energy (~20 to 28 miles of driving range).',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How can I minimize phantom drain when leaving my EV at the airport?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'To minimize airport standby drain: 1) Disable Sentry Mode and Gear Guard, 2) Turn off Cabin Overheat Protection, 3) Avoid opening the mobile app to prevent waking the vehicle gateway, 4) Close background third-party logging integrations, and 5) Arrive with at least 50% to 60% SoC in winter.',
+          },
+        },
+      ],
+    },
+  ],
+};
+
 export default function IdleDrainPage() {
   return (
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
-      {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
-      <StructuredData toolKey="idleDrain" />
+      {/* Search Engine Pre-rendered JSON-LD Rich Snippet (SoftwareApplication + FAQPage) */}
+      <script
+        id="structured-data-idledrain"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(idleDrainSchema),
+        }}
+      />
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10 text-center relative">
@@ -46,13 +123,17 @@ export default function IdleDrainPage() {
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6 relative z-10 leading-tight">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-orange-400">
-            EV Phantom Drain &amp; Airport
+            EV Phantom Drain Calculator
           </span>{' '}
-          Vampire Loss Calculator
+          &amp; Airport Vampire Loss Estimator
         </h1>
 
         <p className="text-base sm:text-lg md:text-xl text-slate-400 max-w-4xl mx-auto mb-8 relative z-10 leading-relaxed">
-          Simulate daily standby battery loss from Tesla Sentry Mode, active BMS thermal management, low-voltage DC-DC top-ups, and freezing temperatures to ensure you never return to a stranded or bricked EV.
+          Simulate daily standby battery loss from Tesla Sentry Mode, active BMS thermal management, low-voltage DC-DC top-ups, and freezing temperatures to ensure you never return to a stranded vehicle or cause long-term cell damage requiring an{' '}
+          <Link href="/battery-health" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">
+            EV battery health and degradation test
+          </Link>
+          .
         </p>
 
         {/* Engineering Trust Badges */}
@@ -122,7 +203,11 @@ export default function IdleDrainPage() {
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Thermal Pack Preservation</h3>
               <p className="text-slate-400 leading-relaxed text-sm">
-                In freezing weather (&lt;15&deg;F / -10&deg;C), the battery management system (BMS) wakes high-voltage coolant heaters to prevent irreversible electrolyte freezing. Our <strong>ev vampire drain cold weather estimator</strong> calculates high-power resistance heating spikes that deplete standby reserves.
+                In freezing weather (&lt;15&deg;F / -10&deg;C) (calculated via our{' '}
+                <Link href="/range-loss" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300">
+                  cold weather range loss calculator
+                </Link>
+                ), the battery management system (BMS) wakes high-voltage coolant heaters to prevent irreversible electrolyte freezing. Our <strong>ev vampire drain cold weather estimator</strong> calculates high-power resistance heating spikes that deplete standby reserves.
               </p>
             </div>
           </div>
@@ -221,7 +306,7 @@ export default function IdleDrainPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Production EV Standby Loss &amp; Airport Parking Benchmarks
+            EV Phantom Drain Calculator Benchmarks: Deep Sleep vs Sentry Mode Parking Loss
           </h2>
           <p className="text-slate-400 text-sm md:text-base max-w-3xl mx-auto">
             Empirical data measured across 1,200+ logged parked days comparing deep sleep baseline draw, active security surveillance, and freezing ambient temperature drain.
@@ -233,12 +318,12 @@ export default function IdleDrainPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Platform</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Deep Sleep Draw</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">7-Day Deep Sleep Loss</th>
-                  <th className="p-4 sm:p-5 font-semibold text-amber-400">7-Day Sentry/Active</th>
-                  <th className="p-4 sm:p-5 font-semibold text-rose-400">7-Day Sub-Zero (10&deg;F)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">14-Day Sleep Survival</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Platform</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Deep Sleep Draw</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">7-Day Deep Sleep Loss</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-amber-400">7-Day Sentry/Active</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-rose-400">7-Day Sub-Zero (10&deg;F)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">14-Day Sleep Survival</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -312,7 +397,7 @@ export default function IdleDrainPage() {
               Actionable Traveler Playbook
             </div>
             <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
-              Airport Long-Term Parking: 5 Rules to Prevent a Dead Battery
+              Airport Parking Battery Loss: 5 Rules to Prevent a Dead EV Battery
             </h2>
             <p className="text-slate-400 leading-relaxed">
               Follow these operational rules when parking your electric car at terminal garages, park-and-fly lots, or cruise ports.
@@ -367,8 +452,15 @@ export default function IdleDrainPage() {
               <h4 className="font-bold text-white text-base mb-2">
                 Target 50% to 65% SoC on Airport Arrival
               </h4>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-3">
                 Arrive with enough charge to cover: <span className="font-mono text-emerald-300">Return Highway Miles + Estimated Standby Drain + 15% Safety Buffer</span>. In winter, aim for at least 60% arrival state of charge.
+              </p>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                If staying overnight near the airport before departure, use our{' '}
+                <Link href="/destination-charging" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300">
+                  hotel EV charger speed calculator
+                </Link>{' '}
+                to safely top off your battery before entering long-term parking.
               </p>
             </div>
           </div>
@@ -501,7 +593,11 @@ export default function IdleDrainPage() {
               At what battery percentage do vehicle surveillance modes turn off automatically?
             </h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Most EV manufacturers (including Tesla, Rivian, and Lucid) automatically disable active camera monitoring (such as Sentry Mode or Gear Guard) when the traction battery drops to 20% State of Charge to protect essential vehicle propulsion reserves and prevent low-voltage battery bricking.
+              Most EV manufacturers (including Tesla, Rivian, and Lucid) automatically disable active camera monitoring (such as Sentry Mode or Gear Guard) when the traction battery drops to 20% State of Charge to protect essential vehicle propulsion reserves and prevent low-voltage battery bricking. To assess if previous deep discharges harmed your cells, perform an{' '}
+              <Link href="/battery-health" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">
+                EV battery health and degradation test
+              </Link>
+              .
             </p>
           </div>
 
@@ -512,7 +608,11 @@ export default function IdleDrainPage() {
               Why does extreme winter cold accelerate parking vampire drain?
             </h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              In sub-zero temperatures (&lt;15&deg;F / -10&deg;C), the battery management system (BMS) periodically wakes up to energize high-voltage PTC coolant heaters to prevent irreversible electrolyte freezing. Additionally, cold-soaking temporarily locks electrochemical capacity behind a snowflake icon until cells are driven.
+              In sub-zero temperatures (&lt;15&deg;F / -10&deg;C), the battery management system (BMS) periodically wakes up to energize high-voltage PTC coolant heaters to prevent irreversible electrolyte freezing. Additionally, cold-soaking temporarily locks electrochemical capacity behind a snowflake icon until cells are driven (which you can evaluate using our{' '}
+              <Link href="/range-loss" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300">
+                cold weather range loss calculator
+              </Link>
+              ).
             </p>
           </div>
 

@@ -4,6 +4,8 @@ import CarbonSavingsTool from '@/components/CarbonSavingsTool';
 import StructuredData from '@/components/StructuredData';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getToolMetadata } from '@/lib/seoConfig';
+import Script from 'next/script';
+import Link from 'next/link';
 import { 
   Fuel, 
   Zap, 
@@ -28,8 +30,84 @@ import {
 export const metadata: Metadata = getToolMetadata('carbonOffset');
 
 export default function CarbonOffsetPage() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "EV CO2 Emissions Saved Calculator & Well-to-Wheel Carbon Offset",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "description": "Calculate real carbon dioxide reduction from switching to an electric vehicle. Models regional grid carbon intensity (g CO2/kWh), upstream petroleum extraction, and urban tree sequestration equivalents.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Why is an electric vehicle cleaner than gasoline even when charged on a coal or natural gas grid?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Electric drivetrains convert 85% to 90% of electrical energy into wheel propulsion, compared to internal combustion engines (ICE) which waste 75% to 80% of fuel energy as lost heat. Furthermore, large industrial combined-cycle power plants generate power at ~60% thermodynamic efficiency, making an EV 30% to 45% cleaner even on fossil-heavy grids."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the Well-to-Wheel (WTW) carbon footprint of burning a gallon of gasoline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Burning a single gallon of gasoline emits 8,887 grams of tailpipe CO2 (Tank-to-Wheel). However, crude oil drilling, flaring, pipeline transit, distillation, and tanker distribution add an additional 2,213 grams of upstream emissions (Well-to-Tank), bringing the true Well-to-Wheel footprint to 11,100 grams (24.5 lbs) of CO2 per gallon."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How many miles does it take for an EV to offset its battery manufacturing carbon debt?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Producing an EV battery emits approximately 65 to 90 kg of CO2 per kWh of pack capacity. On an average electrical grid, an EV completely repays its manufacturing carbon debt within 14,000 to 22,000 miles (12 to 18 months of driving). On clean renewable or solar grids, payback occurs in under 8,000 miles."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does regional electric grid carbon intensity (g CO2/kWh) affect EV lifecycle emissions?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Grid carbon intensity varies from under 25 g CO2/kWh in clean regions (Norway, France, Washington State) to ~370 g/kWh on the average US grid and over 600 g/kWh in coal-heavy regions. In clean-energy regions, driving an EV eliminates over 92% of operational lifecycle greenhouse gas emissions."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How many mature trees planted is equivalent to the annual CO2 savings of driving an EV?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Driving an EV 15,000 miles annually instead of a 28 mpg gasoline car prevents roughly 4.1 metric tons (9,040 lbs) of Well-to-Wheel CO2 from entering the atmosphere. Because an average mature tree absorbs approximately 48 lbs (22 kg) of CO2 per year, this is equivalent to planting 180 to 200 mature trees annually."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does charging an EV from rooftop solar or off-peak green power affect carbon emissions?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Charging directly from home rooftop solar or through a 100% certified green utility tariff reduces operational Well-to-Wheel emissions to 0 grams of CO2 per mile. This maximizes emissions reductions and accelerates the battery manufacturing payback period to under 10 months."
+            }
+          }
+        ]
+      }
+    ]
+  };
+
   return (
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
+      <Script
+        id="carbon-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
       <StructuredData toolKey="carbonOffset" />
       
@@ -176,7 +254,7 @@ export default function CarbonOffsetPage() {
                 &eta;<sub>EV Drivetrain</sub>: 85%&ndash;90% vs &eta;<sub>ICE Drivetrain</sub>: 20%&ndash;25%
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Even if electricity is produced by natural gas, large-scale industrial Combined-Cycle Gas Turbine (CCGT) power plants operate at <strong className="text-cyan-400">~60% thermal efficiency</strong>. Combining utility generation with electric motor efficiency results in far lower emissions per passenger-mile than thousands of small, inefficient car engines idling in traffic.
+                Even if electricity is produced by natural gas, large-scale industrial Combined-Cycle Gas Turbine (CCGT) power plants operate at <strong className="text-cyan-400">~60% thermal efficiency</strong>. Combining utility generation with <Link href="/" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">DC fast charging curve calculator</Link> and electric motor efficiency results in far lower emissions per passenger-mile than thousands of small, inefficient car engines idling in traffic.
               </p>
             </div>
 
@@ -207,10 +285,10 @@ export default function CarbonOffsetPage() {
           <div className="bg-[#0B0F17] border border-slate-800 rounded-2xl p-6 mb-8">
             <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
               <Factory className="w-5 h-5 text-amber-400" />
-              The Battery Manufacturing &quot;Carbon Debt&quot; Payback Equation
+              EV Battery Manufacturing Carbon Payback Calculator: When Does an EV Break Even?
             </h3>
             <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-              Manufacturing an EV battery creates an initial upfront &quot;embodied carbon debt&quot; from lithium mining, nickel/cobalt refining, and high-temperature cathode baking (typically <strong className="text-amber-300">65 to 90 kg CO2 per kWh of pack capacity</strong>). An average 75 kWh battery starts with ~5.0 metric tons of embodied carbon debt.
+              Manufacturing an EV battery creates an initial upfront &quot;embodied carbon debt&quot; from lithium mining, nickel/cobalt refining, and high-temperature cathode baking (typically <strong className="text-amber-300">65 to 90 kg CO2 per kWh of pack capacity</strong>), check our <Link href="/battery-health" className="text-amber-400 underline underline-offset-4 hover:text-amber-300">EV battery health and degradation calculator</Link> for details on battery pack degradation. An average 75 kWh battery starts with ~5.0 metric tons of embodied carbon debt.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs sm:text-sm">
@@ -250,12 +328,12 @@ export default function CarbonOffsetPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">EV Model</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Comparable ICE Vehicle (MPG)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">EV Annual Grid CO2</th>
-                  <th className="p-4 sm:p-5 font-semibold text-amber-400">ICE WTW Annual CO2</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">Net CO2 Saved / Year</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-300">Trees Equivalent</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">EV Model</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Comparable ICE Vehicle (MPG)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">EV Annual Grid CO2</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-amber-400">ICE WTW Annual CO2</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">Net CO2 Saved / Year</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-300">Trees Equivalent</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -319,6 +397,9 @@ export default function CarbonOffsetPage() {
             </table>
           </div>
         </div>
+        <div className="mt-6 text-sm text-slate-400 max-w-3xl mx-auto text-center">
+          * Note: EV annual grid CO2 can increase in winter months due to battery heater usage. Check our <Link href="/range-loss" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">cold weather range loss calculator</Link> to estimate seasonal efficiency impacts.
+        </div>
       </section>
 
       {/* Section 4: The Clean Energy Driver's Decarbonization Playbook */}
@@ -346,7 +427,7 @@ export default function CarbonOffsetPage() {
                 Zero-Carbon Home Generation
               </h4>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Connect your smart EVSE (such as Wallbox Pulsar with Eco-Smart or Tesla Solar Charging) to charge solely from excess daytime solar generation. This drops your operational footprint to <strong className="text-emerald-400">0.0 grams CO2/mile</strong>.
+                Connect your smart EVSE (such as Wallbox Pulsar with Eco-Smart or Tesla Solar Charging) to charge solely from excess daytime solar generation, check out our <Link href="/home-charging" className="text-amber-400 underline underline-offset-4 hover:text-amber-300">EV home charging time calculator 240V</Link> and <Link href="/panel-capacity" className="text-amber-400 underline underline-offset-4 hover:text-amber-300">home electrical panel capacity tool</Link>. This drops your operational footprint to <strong className="text-emerald-400">0.0 grams CO2/mile</strong>.
               </p>
             </div>
 
@@ -407,12 +488,12 @@ export default function CarbonOffsetPage() {
           <table className="w-full text-left text-sm md:text-base">
             <thead className="bg-[#0B0F17]">
               <tr>
-                <th className="p-5 font-semibold text-slate-400 w-1/2 border-b border-slate-800">
+                <th scope="col" className="p-5 font-semibold text-slate-400 w-1/2 border-b border-slate-800">
                   <div className="flex flex-col">
                     <span className="text-lg text-slate-300">Generic Online Calculators (Flawed)</span>
                   </div>
                 </th>
-                <th className="p-5 font-semibold text-emerald-400 w-1/2 border-b border-emerald-500/50 bg-emerald-950/10 relative shadow-[inset_0_2px_10px_-5px_rgba(16,185,129,0.3)] border-t border-t-emerald-500/30">
+                <th scope="col" className="p-5 font-semibold text-emerald-400 w-1/2 border-b border-emerald-500/50 bg-emerald-950/10 relative shadow-[inset_0_2px_10px_-5px_rgba(16,185,129,0.3)] border-t border-t-emerald-500/30">
                   <div className="flex flex-col relative z-10">
                     <span className="text-lg text-emerald-400">EVChargeCurve Lifecycle Engine</span>
                   </div>

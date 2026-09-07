@@ -19,20 +19,101 @@ import {
   Car,
   TrendingUp,
   Cpu,
-  Award
+  Award,
+  ArrowRight,
+  Home
 } from 'lucide-react';
 import CompareTool from '@/components/CompareTool';
-import StructuredData from '@/components/StructuredData';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getToolMetadata } from '@/lib/seoConfig';
 
 export const metadata: Metadata = getToolMetadata('compare');
 
+// Schema.org JSON-LD combining SoftwareApplication and FAQPage
+const compareSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: 'EV Charging Curve Comparison Tool & 10-80% Speed Faceoff',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'All',
+      url: 'https://evchargecurve.com/compare',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      description:
+        'Compare electric vehicle DC fast charging curves side-by-side. Calculate 150kW vs 350kW charging times, 800V vs 400V architecture performance, and highway road trip miles added in a 15-minute quick stop.',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Does plugging a 150kW peak EV into a 350kW charger make it charge any faster?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'No. The vehicle onboard Battery Management System (BMS) controls the maximum current intake. A car capped at 150 kW will draw 150 kW regardless of whether the station is rated for 150 kW, 250 kW, or 350 kW.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Why do some EVs with lower peak kW charge faster from 10% to 80%?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Average sustained power across the entire charging session matters far more than short-lived peak power. An EV sustaining a flat 135 kW curve will beat a vehicle that peaks at 220 kW but immediately drops to 70 kW past 40% SoC.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How do 800V vehicles perform on 400V DC fast chargers?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: '800V vehicles use an internal DC-DC booster or rear motor inverter circuit to step up the 400V station voltage to 800V. This typically caps maximum charging throughput to between 50 kW and 135 kW depending on the vehicle hardware design.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How do cold ambient temperatures affect comparative charging speeds?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Without active battery preconditioning in freezing conditions (evaluated using our cold weather range loss calculator), lithium ions move slowly through the liquid electrolyte, creating high internal resistance. The BMS limits charging power (often to under 45 kW) to prevent catastrophic dendrite formation and lithium plating until the pack reaches ~68°F (20°C).',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the optimal highway road trip charging strategy?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Arriving at DC fast chargers with a low state of charge (10%–15%) and departing at 60%–70% state of charge maximizes your average charging power and minimizes total road trip transit time by skipping the slow taper past 80%.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Why do EV charging curves drop off so drastically after 80% SoC?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'As the graphite anode fills with intercalated lithium ions, cell voltage nears its upper physical limit (~4.2V per cell). To avoid cell degradation and thermal runaway, the BMS switches from Constant Current (CC) mode to Constant Voltage (CV) mode, causing power to taper sharply.',
+          },
+        },
+      ],
+    },
+  ],
+};
+
 export default function ComparePage() {
   return (
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
-      {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
-      <StructuredData toolKey="compare" />
+      {/* Search Engine Pre-rendered JSON-LD Rich Snippet (SoftwareApplication + FAQPage) */}
+      <script
+        id="structured-data-compare"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(compareSchema),
+        }}
+      />
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-12 text-center relative">
@@ -150,7 +231,7 @@ export default function ComparePage() {
               Electrical Engineering Principles
             </div>
             <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight mb-4">
-              Why 800-Volt Architecture Outperforms 400V Systems on Road Trips
+              800V vs 400V EV Charging Speed Comparison: Why Platform Voltage Trumps Peak kW
             </h2>
             <p className="text-slate-400 leading-relaxed">
               To understand why vehicles like the Hyundai Ioniq 5, Kia EV6, Porsche Taycan, and Lucid Air charge in under 18 minutes while standard 400V vehicles require 30 to 45 minutes, we must examine the fundamental electrical relationship between power, voltage, and current.
@@ -170,7 +251,7 @@ export default function ComparePage() {
                 Power (kW) = Voltage (V) &times; Current (A) &divide; 1,000
               </div>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Combined Charging System (CCS1/CCS2) liquid-cooled charging cables are capped at a maximum continuous current of <strong>500 Amperes</strong> for safety. Because resistive heat losses scale with the square of the current (<span className="font-mono text-slate-300">P<sub>loss</sub> = I&sup2; &times; R</span>), increasing amperage creates extreme thermal dissipation challenges in the plug, cable, and battery pack busbars.
+                Combined Charging System (CCS1/CCS2) liquid-cooled charging cables are capped at a maximum continuous current of <strong>500 Amperes</strong> for safety. Because resistive heat losses scale with the square of the current (<span className="font-mono text-slate-300">P<sub>loss</sub> = I&sup2; &times; R</span>), increasing amperage creates extreme thermal dissipation challenges in the plug, cable, and battery pack busbars. To monitor and preserve cell health under aggressive high-current cycling, evaluate battery state of health with an <Link href="/battery-health" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">EV battery health and degradation test</Link>.
               </p>
             </div>
 
@@ -203,9 +284,9 @@ export default function ComparePage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0F172A] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Engineering Parameter</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Standard 400V Platform</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400 bg-emerald-950/20">Native 800V Platform</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Engineering Parameter</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Standard 400V Platform</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400 bg-emerald-950/20">Native 800V Platform</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800 text-slate-300">
@@ -236,6 +317,37 @@ export default function ComparePage() {
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          {/* Residential Charging & Electrical Panel Cross-Link Callout */}
+          <div className="mt-6 p-6 rounded-2xl bg-[#0B0F17] border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+            <div className="flex items-start gap-3">
+              <div className="p-2.5 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400 shrink-0 mt-0.5">
+                <Home className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white">Comparing Overnight Residential Charging Speeds?</h3>
+                <p className="text-xs sm:text-sm text-slate-400 mt-1 leading-relaxed">
+                  While 800V systems slash highway dwell times, home replenishment depends on your 240V circuit capacity and electrical breaker headroom.
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <Link
+                href="/home-charging"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs sm:text-sm font-medium text-emerald-400 hover:text-emerald-300 border border-slate-800 transition-colors shadow-sm"
+              >
+                <span>Home Charging Calculator</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                href="/panel-capacity"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs sm:text-sm font-medium text-cyan-400 hover:text-cyan-300 border border-slate-800 transition-colors shadow-sm"
+              >
+                <span>Panel Capacity Calculator</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -307,7 +419,7 @@ export default function ComparePage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            150kW vs 350kW Charging Stations: What Really Happens?
+            150kW vs 350kW Charging Time Calculator: What Really Happens at the Stall?
           </h2>
           <p className="text-lg text-slate-400 max-w-3xl mx-auto leading-relaxed">
             One of the most frequent consumer queries is whether plugging into an ultra-fast 350 kW stall will charge their vehicle twice as fast as a 150 kW station.
@@ -355,7 +467,7 @@ export default function ComparePage() {
               Road Trip Efficiency Metric
             </div>
             <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
-              Why &ldquo;Miles Added per Minute&rdquo; Beats Raw Kilowatts
+              Miles Added per Minute EV Calculator: The True Road Trip Efficiency Metric
             </h2>
             <p className="text-slate-400 leading-relaxed">
               Charging power only tells half the road trip story. The real-world objective of a fast-charging stop is to put <strong>driving range</strong> back into the battery as quickly as possible.
@@ -414,12 +526,12 @@ export default function ComparePage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Model</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Voltage Arch</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Advertised Peak</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Average 10–80% kW</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">10%–80% Dwell Time</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">15-Min Range Added</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Model</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Voltage Arch</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Advertised Peak</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Average 10–80% kW</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">10%–80% Dwell Time</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">15-Min Range Added</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -575,7 +687,11 @@ export default function ComparePage() {
               How do cold ambient temperatures affect comparative charging speeds?
             </h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Without active battery preconditioning in freezing conditions, lithium ions move slowly through the liquid electrolyte, creating high internal resistance. The BMS limits charging power (often to under 45 kW) to prevent catastrophic dendrite formation and lithium plating until the pack reaches ~68&deg;F (20&deg;C).
+              Without active battery preconditioning in freezing conditions (evaluated using our{' '}
+              <Link href="/range-loss" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300">
+                cold weather range loss calculator
+              </Link>
+              ), lithium ions move slowly through the liquid electrolyte, creating high internal resistance. The BMS limits charging power (often to under 45 kW) to prevent catastrophic dendrite formation and lithium plating until the pack reaches ~68&deg;F (20&deg;C).
             </p>
           </div>
 

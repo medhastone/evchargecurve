@@ -111,7 +111,9 @@ export default function CompareTool() {
     params.set('temp', temp);
     
     const url = `${window.location.origin}/compare?${params.toString()}`;
-    navigator.clipboard.writeText(url).catch(e => console.error("Clipboard error", e));
+    navigator.clipboard.writeText(url).catch(() => {
+      // Ignore clipboard error
+    });
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

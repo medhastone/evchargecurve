@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import PreconditioningTool from '@/components/PreconditioningTool';
-import StructuredData from '@/components/StructuredData';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getToolMetadata } from '@/lib/seoConfig';
 import { 
@@ -10,12 +10,10 @@ import {
   CheckCircle2, 
   ShieldAlert, 
   Cpu, 
-  Sparkles, 
   Navigation, 
   Layers,
   ThermometerSnowflake,
   Zap,
-  Gauge,
   AlertTriangle,
   Scale,
   ShieldCheck,
@@ -26,11 +24,91 @@ import {
 
 export const metadata: Metadata = getToolMetadata('preconditioning');
 
+// Schema.org JSON-LD combining SoftwareApplication and FAQPage
+const preconditioningSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: 'EV Battery Preconditioning Calculator & Cold-Gate Time Tradeoff Tool',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'All',
+      url: 'https://evchargecurve.com/preconditioning',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      description:
+        'Calculate if EV battery thermal preconditioning saves net highway travel time. Model energy spent heating the pack against minutes saved at DC fast chargers.',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Does battery thermal preconditioning actually save net road trip travel time?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. Warming a cold-soaked pack from 35°F to 85°F consumes 3 to 5 kWh of range (~12–18 miles) but accelerates 10%–80% fast charging from 55 minutes down to 20 minutes, yielding a net travel time savings of 20 to 35 minutes per stop.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is cold-gating at DC fast charging stations?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Cold-gating occurs when low battery temperatures increase internal cell impedance. To prevent permanent metallic lithium plating and cell destruction, the vehicle BMS caps intake power to 40–55 kW rather than its 150–350 kW rated capability until the pack slowly self-heats.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Should I precondition if arriving at a charger with under 10% battery?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'If your battery is below 10% state of charge, disable preconditioning to preserve range and avoid running out of battery before reaching the station. While initial charging will be slower, resistive Joule heating will warm the pack once plugged in.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How long before arriving at a fast charger should I trigger preconditioning?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'In moderate cold (30°F to 45°F), navigate to the fast charger 20 to 35 minutes prior to arrival. In extreme sub-zero weather (<15°F / -10°C), heating a 500 kg battery mass can require 45 to 60 minutes of active highway thermal conditioning.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Why does preconditioning show high energy consumption on my dashboard?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Elevating hundreds of kilograms of battery cells, coolant, and aluminum plates from sub-freezing temperatures to 85°F requires 4 to 7 kWh of energy. High-voltage 5 kW to 9 kW PTC heaters or octovalve heat pumps draw significant power, but save substantial time at the charger.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How does battery preconditioning protect against lithium plating?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Preconditioning warms cell anodes to the optimal 75°F–90°F range, expanding the graphite lattice and lowering electrolyte viscosity. This allows lithium ions to insert smoothly without depositing as metallic dendrites, preserving long-term battery cycle life and health.',
+          },
+        },
+      ],
+    },
+  ],
+};
+
 export default function PreconditioningPage() {
   return (
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
-      {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
-      <StructuredData toolKey="preconditioning" />
+      {/* Search Engine Pre-rendered JSON-LD Rich Snippet (SoftwareApplication + FAQPage) */}
+      <script
+        id="structured-data-preconditioning"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(preconditioningSchema),
+        }}
+      />
 
       {/* Page Header & Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10 text-center relative">
@@ -105,7 +183,7 @@ export default function PreconditioningPage() {
               <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center mb-6 shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]">
                 <Flame className="w-6 h-6 text-amber-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Preconditioning Energy Cost</h3>
+              <h3 className="text-xl font-bold text-white mb-3">EV Battery Preconditioning Energy Cost &amp; Net Time Savings</h3>
               <p className="text-slate-400 leading-relaxed text-sm">
                 Our <strong>ev battery heating energy cost tool</strong> models the 5 kW to 7 kW thermal load drawn by high-voltage PTC heaters or octovalve heat pumps, calculating exact kilowatt-hours and highway miles sacrificed during transit.
               </p>
@@ -189,7 +267,11 @@ export default function PreconditioningPage() {
                 If a DC fast charger forces 300A+ into a cold battery, lithium ions arrive at the graphite anode faster than they can intercalate (insert) into the graphite lattice layers.
               </p>
               <p className="text-sm text-slate-400 leading-relaxed mb-4">
-                Excess lithium accumulates on the outer anode surface as metallic lithium dendrites. This causes permanent capacity loss, internal micro-shorts, and severe safety risks.
+                Excess lithium accumulates on the outer anode surface as metallic lithium dendrites. This causes{' '}
+                <Link href="/battery-health" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">
+                  EV battery degradation calculator
+                </Link>
+                -evaluated permanent capacity loss, internal micro-shorts, and severe safety risks.
               </p>
               <div className="bg-[#131B2A] rounded-xl p-4 text-center font-mono text-rose-400 text-sm font-bold border border-slate-800">
                 BMS Overpotential Clamping: I<sub>max</sub> dialed down to &lt; 50A
@@ -210,7 +292,11 @@ export default function PreconditioningPage() {
               Q = m &times; c<sub>p</sub> &times; &Delta;T &approx; 500 kg &times; 1.05 kJ/(kg&middot;K) &times; 33 K &approx; 17,325 kJ &approx; 4.81 kWh
             </div>
             <p className="text-xs text-slate-400">
-              When accounting for thermal transfer inefficiencies and convective heat loss under high-speed highway airflow, the vehicle must consume roughly 5.0 to 6.5 kWh of electrical energy to achieve peak charge acceptance.
+              When accounting for thermal transfer inefficiencies and{' '}
+              <Link href="/range-loss" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300">
+                cold weather range loss calculator
+              </Link>{' '}
+              convective heat loss under high-speed highway airflow, the vehicle must consume roughly 5.0 to 6.5 kWh of electrical energy to achieve peak charge acceptance.
             </p>
           </div>
         </div>
@@ -220,7 +306,7 @@ export default function PreconditioningPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Production EV Winter Fast Charge Telemetry Benchmarks
+            Cold Gate vs Preconditioning Benchmarks: 10% to 80% Winter Charging Speeds
           </h2>
           <p className="text-slate-400 text-sm md:text-base max-w-3xl mx-auto">
             Empirical data recorded during 10% to 80% DC fast charging sessions at 20&deg;F (-7&deg;C) on 350 kW dispensers with cold-gated packs vs. preconditioned packs.
@@ -232,12 +318,12 @@ export default function PreconditioningPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Platform</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Heating Mechanism</th>
-                  <th className="p-4 sm:p-5 font-semibold text-amber-400">Precondition Energy</th>
-                  <th className="p-4 sm:p-5 font-semibold text-rose-400">Cold-Gated 10–80%</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">Preconditioned 10–80%</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">Net Time Saved</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Platform</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Heating Mechanism</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-amber-400">Precondition Energy</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-rose-400">Cold-Gated 10–80%</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">Preconditioned 10–80%</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">Net Time Saved</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -367,7 +453,15 @@ export default function PreconditioningPage() {
                 Departure from Home or Hotel Level 2
               </h4>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Always set a departure timer while plugged into home or hotel Level 2 AC power. The vehicle will heat the battery directly from the electrical grid, preserving 100% of your onboard battery range for the highway.
+                Always set a departure timer while plugged into{' '}
+                <Link href="/home-charging" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">
+                  Level 2 home charging calculator
+                </Link>{' '}
+                power or a{' '}
+                <Link href="/destination-charging" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300">
+                  hotel destination charging sizer
+                </Link>
+                . The vehicle will heat the battery directly from the electrical grid, preserving 100% of your onboard battery range for the highway.
               </p>
             </div>
           </div>
@@ -552,3 +646,4 @@ export default function PreconditioningPage() {
     </div>
   );
 }
+

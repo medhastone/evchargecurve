@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import DestinationChargingTool from '@/components/DestinationChargingTool';
-import StructuredData from '@/components/StructuredData';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getToolMetadata } from '@/lib/seoConfig';
 import { 
@@ -9,14 +9,11 @@ import {
   Zap, 
   Sparkles, 
   Building2, 
-  HelpCircle, 
   ShieldCheck, 
   DollarSign, 
   Info,
   Clock,
-  BatteryCharging,
   CheckCircle2,
-  ArrowRight,
   Plug,
   Layers,
   Scale,
@@ -26,11 +23,91 @@ import {
 
 export const metadata: Metadata = getToolMetadata('destinationCharging');
 
+// Schema.org JSON-LD combining SoftwareApplication and FAQPage
+const destinationChargingSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: 'Hotel EV Charger Speed Calculator & Overnight Charging Sizer',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'All',
+      url: 'https://evchargecurve.com/destination-charging',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      description:
+        'Calculate if hotel Level 2 destination chargers will fully recharge your EV overnight. Models 208V commercial voltage drop, dual-pedestal power sharing, and eliminated morning highway fast charging stops.',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Why do hotel EV chargers charge slower than residential home Level 2 chargers?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Hotels and commercial facilities use 208V 3-phase electrical services rather than residential 240V split-phase power. At the same 32A current, 208V delivers 6.65 kW compared to 7.68 kW at home—an automatic 13.3% reduction in charging speed.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How does dual-pedestal power sharing affect overnight hotel charging times?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Shared commercial pedestals split circuit amperage when two vehicles plug in simultaneously. A shared 40A circuit provides 16A (3.3 kW) per car, extending full 10%–100% recharge times from 7.5 hours to 14+ hours until one car completes charging.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How many miles of range does a hotel destination charger add per hour?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'A standard 208V 30A hotel pedestal adds 18 to 22 miles of range per hour. Over an 8 to 10-hour overnight stay, it delivers 150 to 220 miles of driving range (48 to 65 kWh), ensuring a full battery for morning departure.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can relying on hotel destination charging reduce total road trip travel costs?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. Recharging a 60–80 kWh battery pack overnight on complimentary or flat-rate hotel chargers saves $25 to $45 compared to highway DC fast charging sessions while eliminating 35 to 50 minutes of morning travel stops.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What adapters are needed to use hotel destination chargers on road trips?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Carrying both a NACS-to-J1772 adapter and a J1772-to-NACS adapter ensures compatibility with both Tesla Destination Chargers and standard universal Level 2 pedestals (ChargePoint, Blink, FLO, ClipperCreek) at hotels nationwide.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is proper hotel EV charging etiquette if all stalls are occupied?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Check in on PlugShare, leave a courteous dashboard note with your contact number, lock your charge port if supported, and move your vehicle promptly once fully charged in the morning to free the pedestal for other guests.',
+          },
+        },
+      ],
+    },
+  ],
+};
+
 export default function DestinationChargingPage() {
   return (
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
-      {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
-      <StructuredData toolKey="destinationCharging" />
+      {/* Search Engine Pre-rendered JSON-LD Rich Snippet (SoftwareApplication + FAQPage) */}
+      <script
+        id="structured-data-destinationcharging"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(destinationChargingSchema),
+        }}
+      />
 
       {/* Page Header */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-14 md:pb-10 text-center relative">
@@ -139,7 +216,11 @@ export default function DestinationChargingPage() {
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">Eliminate Highway Fast Charge Stops</h3>
               <p className="text-slate-400 leading-relaxed text-sm">
-                Our <strong>destination charger kw to miles calculator</strong> reveals net driving miles added by morning and highlights the exact high-cost DC fast charge stop eliminated from your highway route.
+                Our <strong>destination charger kw to miles calculator</strong> reveals net driving miles added by morning and highlights the exact high-cost DC fast charge stop eliminated from your highway route, directly cutting daytime charging sessions modeled in our{' '}
+                <Link href="/" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">
+                  DC fast charging curve calculator
+                </Link>
+                .
               </p>
             </div>
           </div>
@@ -154,7 +235,7 @@ export default function DestinationChargingPage() {
               Commercial Electrical Systems
             </div>
             <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight mb-4">
-              The 208V Commercial Voltage Reality vs 240V Residential Power
+              Commercial 208V EV Charging vs 240V Residential: Why Hotel Charging is Slower
             </h2>
             <p className="text-slate-400 leading-relaxed">
               Why do EV drivers experience slower charging at hotels compared to their home Level 2 wall boxes? The answer lies in commercial 3-phase wye electrical infrastructure.
@@ -169,7 +250,11 @@ export default function DestinationChargingPage() {
                 208V 3-Phase vs 240V Split-Phase
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed mb-4">
-                Commercial buildings (hotels, convention centers, office garages) receive 120V/208V 3-phase electrical service. Connecting single-phase EV charging equipment across two phases yields <strong className="text-slate-200">208 volts</strong> rather than residential 240 volts:
+                Commercial buildings (hotels, convention centers, office garages) receive 120V/208V 3-phase electrical service. Connecting single-phase EV charging equipment across two phases yields <strong className="text-slate-200">208 volts</strong> rather than residential 240 volts (modeled in our{' '}
+                <Link href="/home-charging" className="text-amber-400 underline underline-offset-4 hover:text-amber-300">
+                  EV home charging time calculator 240V
+                </Link>
+                ):
               </p>
               <div className="bg-[#131B2A] rounded-xl p-3 text-center font-mono text-amber-300 text-sm font-bold border border-slate-800 mb-3">
                 P<sub>208V</sub> = 208V &times; 32A = 6.65 kW &nbsp;|&nbsp; P<sub>240V</sub> = 240V &times; 32A = 7.68 kW
@@ -209,7 +294,11 @@ export default function DestinationChargingPage() {
               P<sub>battery_net</sub> = [ V<sub>commercial</sub> &times; I<sub>effective</sub> &times; &eta;<sub>OBC</sub> ] - P<sub>BMS_parasitic</sub>
             </div>
             <p className="text-xs text-slate-400">
-              Where <span className="font-mono text-slate-300">V<sub>commercial</sub></span> models line voltage under load (198V–208V), <span className="font-mono text-slate-300">I<sub>effective</sub></span> accounts for power sharing, and <span className="font-mono text-slate-300">P<sub>BMS_parasitic</sub></span> accounts for active battery coolant pumping (~200W–400W).
+              Where <span className="font-mono text-slate-300">V<sub>commercial</sub></span> models line voltage under load (198V–208V), <span className="font-mono text-slate-300">I<sub>effective</sub></span> accounts for power sharing, and <span className="font-mono text-slate-300">P<sub>BMS_parasitic</sub></span> accounts for active battery coolant pumping and standby cooling draw (estimated via our{' '}
+              <Link href="/idle-drain" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300">
+                EV phantom drain calculator
+              </Link>
+              , typically ~200W–400W).
             </p>
           </div>
         </div>
@@ -219,7 +308,7 @@ export default function DestinationChargingPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Production EV Hotel Overnight Charging Benchmarks (8-Hour Stay)
+            Hotel EV Charger Speed Calculator Benchmarks: Range Recovered Over 8 Hours
           </h2>
           <p className="text-slate-400 max-w-3xl mx-auto leading-relaxed text-sm md:text-base">
             Compare real overnight range delivery across leading electric vehicles under standard hotel electrical hardware tiers (calculated over an 8-hour sleep window).
@@ -231,12 +320,12 @@ export default function DestinationChargingPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Model</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Battery / OBC</th>
-                  <th className="p-4 sm:p-5 font-semibold text-amber-400">Shared 16A (3.3 kW)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">Standard 32A (6.6 kW)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">Full 40A/48A (8.3+ kW)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-indigo-400">Fast Stops Saved</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Model</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Battery / OBC</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-amber-400">Shared 16A (3.3 kW)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">Standard 32A (6.6 kW)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">Full 40A/48A (8.3+ kW)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-indigo-400">Fast Stops Saved</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">

@@ -43,7 +43,7 @@ export function VehicleProvider({ children }: { children: React.ReactNode }) {
         }
       }
     } catch (e) {
-      console.error('Failed to load custom vehicles from localStorage', e);
+      console.error('Failed to load custom vehicles from localStorage');
     } finally {
       setIsLoaded(true);
     }
@@ -54,7 +54,7 @@ export function VehicleProvider({ children }: { children: React.ReactNode }) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(vehicles));
     } catch (e) {
-      console.error('Failed to persist custom vehicles', e);
+      console.error('Failed to persist custom vehicles');
     }
   }, []);
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import PanelCapacityTool from '@/components/PanelCapacityTool';
-import StructuredData from '@/components/StructuredData';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getToolMetadata } from '@/lib/seoConfig';
 import { 
@@ -26,11 +26,91 @@ import {
 
 export const metadata: Metadata = getToolMetadata('panelCapacity');
 
+// Schema.org JSON-LD combining SoftwareApplication and FAQPage
+const panelCapacitySchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: 'EV Charger Breaker Size Calculator & Panel Capacity Tool',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'All',
+      url: 'https://evchargecurve.com/panel-capacity',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      description:
+        'Avoid unnecessary $4,000 electrical service upgrades. Calculate real household continuous demand, assess 100A or 200A panel headroom, and determine safe circuit breaker amperage under NEC Article 625 standards.',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Can My 100 Amp Panel Handle an EV Charger Without Upgrading to 200A?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. Most 100A panels can safely accommodate a 20A or 30A dedicated circuit (delivering 16A or 24A continuous / 3.8 kW to 5.7 kW). This adds 130 to 200 miles of range in an 8-hour overnight charging window, completely fulfilling daily driving needs while avoiding a $4,000 service upgrade.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the National Electrical Code (NEC) 80% continuous load rule for EV chargers?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Under NEC Article 625, EV charging is classified as a continuous load (drawing maximum current for 3 hours or more). To prevent thermal accumulation and nuisance breaker tripping, the continuous charging current must not exceed 80% of the branch circuit breaker rating (e.g., 32A max on a 40A breaker, 40A max on a 50A breaker).',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is an EV Energy Management System (EVEMS) / Smart Load Shedder?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'An EVEMS (such as a DCC-12, SimpleSwitch, or Wallbox Power Meter) dynamically monitors real-time whole-home amperage via CT clamps. If total household demand approaches the main panel threshold, it automatically throttles or pauses EV charging, resuming full power once heavy appliances finish.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What size wire is required for 40-amp and 48-amp EV charger installations?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'A 50A breaker (40A continuous draw) requires 6 AWG copper conductor wire. A 60A breaker (48A continuous draw) requires 4 AWG copper NM-B Romex or 6 AWG THHN copper wire in conduit rated for 75°C/90°C terminals, and must be direct-hardwired per NEC code.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Why do master electricians recommend direct hardwiring over NEMA 14-50 receptacles?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Hardwiring eliminates plug prong contact resistance, avoids thermal degradation and melting hazards associated with builder-grade receptacles under sustained continuous 40A loads, and eliminates nuisance tripping caused by double-GFCI breaker conflicts.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How do I calculate residential electrical load under NEC Article 220?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'NEC Article 220 Optional Method (220.82) sums general lighting (3 VA/sq ft), two 1,500 VA small appliance circuits, nameplate ratings of fixed appliances (HVAC, dryer, range, water heater), applying a 40% demand factor to loads above 10 kVA, plus 125% of the EV charger continuous load.',
+          },
+        },
+      ],
+    },
+  ],
+};
+
 export default function PanelCapacityPage() {
   return (
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
-      {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
-      <StructuredData toolKey="panelCapacity" />
+      {/* Search Engine Pre-rendered JSON-LD Rich Snippet (SoftwareApplication + FAQPage) */}
+      <script
+        id="structured-data-panelcapacity"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(panelCapacitySchema),
+        }}
+      />
 
       {/* Page Header */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-14 md:pb-10 text-center relative">
@@ -208,7 +288,7 @@ export default function PanelCapacityPage() {
             <p className="text-sm text-slate-400 leading-relaxed mb-3">
               Master electricians overwhelmingly recommend <strong className="text-slate-200">direct hardwiring</strong> rather than plug-in NEMA 14-50 receptacles for daily EV charging:
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300 mb-4">
               <div className="bg-[#131B2A] p-3.5 rounded-xl border border-slate-800">
                 <strong className="text-white block mb-1">No Prong Resistance:</strong>
                 Eliminates plug-blade friction contact points that degrade and overheat under continuous 32A/40A current.
@@ -222,6 +302,13 @@ export default function PanelCapacityPage() {
                 NEC 625.44 caps plug-in receptacles to 40A continuous (50A breaker). 48A charging requires hardwiring on a 60A breaker.
               </div>
             </div>
+            <p className="text-xs text-slate-400 leading-relaxed border-t border-slate-800/80 pt-3">
+              Consistent voltage delivery and thermal protection from dedicated hardwired circuits also prevents excessive thermal stress on your vehicle&apos;s internal power electronics—monitor your pack&apos;s long-term retention using our{' '}
+              <Link href="/battery-health" className="text-amber-400 underline underline-offset-4 hover:text-amber-300">
+                EV battery degradation calculator
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </section>
@@ -233,7 +320,11 @@ export default function PanelCapacityPage() {
             NEC Dedicated EV Circuit Sizing &amp; Conductor Gauge Matrix
           </h2>
           <p className="text-slate-400 max-w-3xl mx-auto leading-relaxed text-sm md:text-base">
-            Reference official National Electrical Code branch circuit ratings, copper wire gauge specifications (NEC Table 310.16), and overnight range delivery at 240V.
+            Reference official National Electrical Code branch circuit ratings, copper wire gauge specifications (NEC Table 310.16), and overnight range delivery at 240V modeled in our{' '}
+            <Link href="/home-charging" className="text-emerald-400 underline underline-offset-4 hover:text-emerald-300">
+              EV home charging time calculator 240V
+            </Link>
+            .
           </p>
         </div>
 
@@ -242,12 +333,12 @@ export default function PanelCapacityPage() {
             <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Breaker Size</th>
-                  <th className="p-4 sm:p-5 font-semibold text-emerald-400">Continuous Draw (80%)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-cyan-400">Power Delivery (240V)</th>
-                  <th className="p-4 sm:p-5 font-semibold text-slate-300">Min Copper Conductor</th>
-                  <th className="p-4 sm:p-5 font-semibold text-amber-400">Range Added / Hour</th>
-                  <th className="p-4 sm:p-5 font-semibold text-indigo-400">100A Panel Feasibility</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Breaker Size</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-emerald-400">Continuous Draw (80%)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-cyan-400">Power Delivery (240V)</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Min Copper Conductor</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-amber-400">Range Added / Hour</th>
+                  <th scope="col" className="p-4 sm:p-5 font-semibold text-indigo-400">100A Panel Feasibility</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -318,9 +409,9 @@ export default function PanelCapacityPage() {
               <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm uppercase mb-3">
                 <Lightbulb className="w-4 h-4" /> Strategy 1: The 24-Amp Sizing Sweet Spot
               </div>
-              <h4 className="font-bold text-white text-base mb-2">
-                Derate Your EVSE to a 30A Circuit
-              </h4>
+              <h3 className="font-bold text-white text-base mb-2">
+                32 Amp vs 48 Amp EV Charger Charging Time: Why 24A on a 30A Breaker is the Sweet Spot
+              </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 Most homeowners overestimate their charging needs. A 24A charger (5.7 kW on a 30A breaker) adds <strong>180 to 200 miles in an 8-hour overnight window</strong>. For the average 35-mile daily American commute, the car reaches 100% in under 2 hours with zero panel upgrades required.
               </p>
@@ -334,8 +425,15 @@ export default function PanelCapacityPage() {
               <h4 className="font-bold text-white text-base mb-2">
                 Automatic Current Monitoring (DCC-12 / Wallbox Power Meter)
               </h4>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-3">
                 Under NEC Article 625.42/750, installing an approved EV Energy Management System (EVEMS) uses CT current clamps at the main lugs. The system permits a full 40A/48A charger, automatically throttling or pausing vehicle charging when the HVAC or electric stove turns on.
+              </p>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                Planning bidirectional power flow or whole-home emergency backup alongside your load management? Simulate whole-home emergency resilience with our{' '}
+                <Link href="/v2h-backup" className="text-cyan-400 underline underline-offset-4 hover:text-cyan-300">
+                  EV V2H backup calculator
+                </Link>
+                .
               </p>
             </div>
 
@@ -427,7 +525,7 @@ export default function PanelCapacityPage() {
                 <CheckCircle2 className="w-5 h-5 shrink-0" />
               </div>
               <h3 className="font-semibold text-white text-lg">
-                Can I add a Level 2 EV charger to an existing 100-amp main breaker panel without upgrading to 200A?
+                Can My 100 Amp Panel Handle an EV Charger Without Upgrading to 200A?
               </h3>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed">
@@ -514,4 +612,5 @@ export default function PanelCapacityPage() {
     </div>
   );
 }
+
 
