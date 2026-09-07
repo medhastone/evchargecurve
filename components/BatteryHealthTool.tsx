@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { VEHICLES } from '@/data/evModels';
 import { calculateBatteryDegradation } from '@/lib/evCalculations';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Zap, Activity, ShieldCheck, ShieldAlert, HeartPulse, Battery, Info } from 'lucide-react';
+import { Zap, Activity, ShieldCheck, ShieldAlert, HeartPulse, Battery, Info, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 import { useSettings } from '@/components/providers/SettingsProvider';
+import { useVehicles } from '@/components/providers/VehicleContext';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -25,8 +25,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export default function BatteryHealthTool() {
   const { unit, distanceLabel } = useSettings();
   const isKm = unit === 'km';
-  const evModels = Object.values(VEHICLES);
-  const [vehicleId, setVehicleId] = useState(evModels[0].id);
+  const { allVehicles, vehiclesMap, openStudio, customVehicles, isCustomVehicle } = useVehicles();
+  const [vehicleId, setVehicleId] = useState(allVehicles[0]?.id || 'tesla-model-y-lr');
   const [modelYear, setModelYear] = useState(2022);
   const [mileage, setMileage] = useState(40000);
   
@@ -36,11 +36,13 @@ export default function BatteryHealthTool() {
   const ageYears = Math.max(0, currentYear - modelYear);
   const mileageMiles = isKm ? mileage * 0.621371 : mileage;
 
-  const vehicle = useMemo(() => evModels.find((v: any) => v.id === vehicleId) || evModels[0], [vehicleId, evModels]);
+  const vehicle = useMemo(() => vehiclesMap[vehicleId] || allVehicles[0], [vehicleId, vehiclesMap, allVehicles]);
 
   const degradation = useMemo(() => {
+    const rawChem = vehicle.chemistry?.toUpperCase() || 'NMC';
+    const normalizedChem: 'NMC' | 'LFP' | 'NCA' = rawChem.includes('LFP') ? 'LFP' : rawChem.includes('NCA') ? 'NCA' : 'NMC';
     return calculateBatteryDegradation(
-      vehicle.batteryChemistry || vehicle.chemistry || 'NMC',
+      normalizedChem,
       ageYears,
       mileageMiles,
       habit,
@@ -67,19 +69,38 @@ export default function BatteryHealthTool() {
         <div className="xl:col-span-5 space-y-6">
           
           <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl">
-            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <Battery className="w-5 h-5 text-emerald-400" /> Vehicle Configuration
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Battery className="w-5 h-5 text-emerald-400" /> Vehicle Configuration
+              </h3>
+              <button
+                type="button"
+                onClick={() => openStudio()}
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                + Custom EV
+              </button>
+            </div>
             
             <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Select Model</label>
             <select 
               value={vehicleId}
               onChange={(e) => setVehicleId(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors mb-6 appearance-none"
+              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors mb-6 appearance-none font-medium text-sm"
             >
-              {evModels.map((v: any) => (
-                <option key={v.id} value={v.id}>{v.name} ({v.batteryChemistry || v.chemistry} - {v.usablePackKwh || v.batteryCapacity} kWh)</option>
-              ))}
+              {customVehicles.length > 0 && (
+                <optgroup label="⭐ My Custom Vehicles">
+                  {customVehicles.map(v => (
+                    <option key={v.id} value={v.id}>[Custom] {v.name} ({v.chemistry || 'NMC'} - {v.usablePackKwh || v.batteryCapacity} kWh)</option>
+                  ))}
+                </optgroup>
+              )}
+              <optgroup label="🚘 Production Vehicles">
+                {allVehicles.filter(v => !isCustomVehicle(v.id)).map((v: any) => (
+                  <option key={v.id} value={v.id}>{v.name} ({v.chemistry || 'NMC'} - {v.usablePackKwh || v.batteryCapacity} kWh)</option>
+                ))}
+              </optgroup>
             </select>
 
             <div className="space-y-6">
@@ -246,11 +267,11 @@ export default function BatteryHealthTool() {
 
           {/* Dynamic Advice */}
           <div className="bg-blue-500/10 border border-blue-500/20 p-5 rounded-2xl flex items-start gap-3">
-            <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+            <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-2">BMS Engineering Insight</h4>
-              <p className="text-sm text-blue-200/80 leading-relaxed">
-                {(vehicle.batteryChemistry || vehicle.chemistry) === 'LFP' 
+              <h4 className="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wider mb-2">BMS Engineering Insight</h4>
+              <p className="text-sm text-slate-800 dark:text-blue-100 leading-relaxed font-normal">
+                {vehicle.chemistry === 'LFP' 
                   ? "Lithium Iron Phosphate (LFP) cells exhibit extremely low cycle degradation and robust thermal stability. Charging to 100% daily is actually recommended by manufacturers to keep the Battery Management System (BMS) calibrated without causing excessive wear."
                   : "Nickel Manganese Cobalt (NMC) cells suffer from increased stress at high voltages and temperatures. For maximum longevity, it is recommended to limit daily AC charging to 80% and avoid deep discharges below 10%, minimizing both calendar aging and dendrite formation."}
               </p>

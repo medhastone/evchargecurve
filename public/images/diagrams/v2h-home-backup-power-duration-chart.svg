@@ -1,0 +1,58 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0B111E"/>
+  <defs>
+    <linearGradient id="gridGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="lineGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </linearGradient>
+    <linearGradient id="lineGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#FBBF24"/>
+    </linearGradient>
+  </defs>
+  <rect x="40" y="40" width="1120" height="550" rx="16" fill="#131B2A" stroke="#1E293B" stroke-width="2"/>
+  <text x="80" y="95" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="24" font-weight="bold">V2H Bidirectional Power Discharge & Outage Duration Modeling</text>
+  <text x="80" y="125" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">Estimated run-time days for 131 kWh (Ford F-150 Lightning) vs 77 kWh (Ioniq 5) across varying home load profiles</text>
+  
+  <!-- Grid Lines -->
+  <line x1="120" y1="180" x2="1080" y2="180" stroke="#1E293B" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="120" y1="260" x2="1080" y2="260" stroke="#1E293B" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="120" y1="340" x2="1080" y2="340" stroke="#1E293B" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="120" y1="420" x2="1080" y2="420" stroke="#1E293B" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="120" y1="500" x2="1080" y2="500" stroke="#334155" stroke-width="2"/>
+  
+  <!-- Axes Labels -->
+  <text x="80" y="185" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">100%</text>
+  <text x="80" y="265" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">75%</text>
+  <text x="80" y="345" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">50%</text>
+  <text x="80" y="425" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">25%</text>
+  <text x="80" y="505" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">0%</text>
+
+  <text x="120" y="530" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">Day 0</text>
+  <text x="312" y="530" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">Day 2.5</text>
+  <text x="504" y="530" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">Day 5.0</text>
+  <text x="696" y="530" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">Day 7.5</text>
+  <text x="888" y="530" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">Day 10.0</text>
+  <text x="1060" y="530" fill="#64748B" font-family="system-ui, sans-serif" font-size="12">Day 12.0</text>
+
+  <!-- Curve 1: Critical Loads (131 kWh) -->
+  <path d="M 120 180 Q 500 240, 1060 480" fill="none" stroke="url(#lineGrad1)" stroke-width="4"/>
+  <circle cx="1060" cy="480" r="6" fill="#10B981"/>
+  <text x="910" y="465" fill="#34D399" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Critical Circuits (11.2 Days)</text>
+
+  <!-- Curve 2: Whole Home + HVAC (131 kWh) -->
+  <path d="M 120 180 Q 300 320, 480 500" fill="none" stroke="url(#lineGrad2)" stroke-width="4"/>
+  <circle cx="480" cy="500" r="6" fill="#F59E0B"/>
+  <text x="360" y="475" fill="#FBBF24" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Full HVAC Home (3.8 Days)</text>
+
+  <!-- Legend -->
+  <rect x="800" y="80" width="280" height="50" rx="8" fill="#0F172A" stroke="#334155"/>
+  <circle cx="820" cy="105" r="5" fill="#10B981"/>
+  <text x="835" y="109" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12">Critical Loads (8 kWh/day)</text>
+  <circle cx="960" cy="105" r="5" fill="#F59E0B"/>
+  <text x="975" y="109" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12">Full Home (28 kWh/day)</text>
+</svg>

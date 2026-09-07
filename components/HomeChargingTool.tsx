@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { VEHICLES } from '@/data/evModels';
 import { 
-  Zap, Plug, Home, Battery, Fuel, DollarSign, Clock, CheckCircle2, AlertCircle, ArrowRight
+  Zap, Plug, Home, Battery, Fuel, DollarSign, Clock, CheckCircle2, AlertCircle, ArrowRight, PlusCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/components/providers/SettingsProvider';
+import { useVehicles } from '@/components/providers/VehicleContext';
 
 const CHARGERS = [
   { id: 'l1', name: 'Standard Outlet (L1)', specs: '120V / 12A', kw: 1.4 },
@@ -17,8 +17,8 @@ const CHARGERS = [
 
 export default function HomeChargingTool() {
   const { currency, unit, distanceLabel, speedLabel } = useSettings();
-  const evModels = Object.values(VEHICLES);
-  const [vehicleId, setVehicleId] = useState(evModels[0].id);
+  const { allVehicles, vehiclesMap, openStudio, customVehicles, isCustomVehicle } = useVehicles();
+  const [vehicleId, setVehicleId] = useState(allVehicles[0]?.id || 'tesla-model-y-lr');
   
   const [chargerId, setChargerId] = useState('wallbox');
   const [startSoc, setStartSoc] = useState(20);
@@ -31,7 +31,7 @@ export default function HomeChargingTool() {
   const [gasPrice, setGasPrice] = useState(3.80);
   const [annualMiles, setAnnualMiles] = useState(12000);
 
-  const vehicle = useMemo(() => evModels.find(v => v.id === vehicleId) || evModels[0], [vehicleId, evModels]);
+  const vehicle = useMemo(() => vehiclesMap[vehicleId] || allVehicles[0], [vehicleId, vehiclesMap, allVehicles]);
   const charger = CHARGERS.find(c => c.id === chargerId) || CHARGERS[2];
 
   // Enforce Start < End
@@ -97,15 +97,34 @@ export default function HomeChargingTool() {
           
           {/* Vehicle */}
           <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl">
-            <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Select EV Model</label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs text-slate-400 uppercase tracking-wider block font-semibold">Select EV Model</label>
+              <button
+                type="button"
+                onClick={() => openStudio()}
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                + Custom EV
+              </button>
+            </div>
             <select 
               value={vehicleId}
               onChange={(e) => setVehicleId(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors appearance-none"
+              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors appearance-none font-medium text-sm"
             >
-              {evModels.map((v: any) => (
-                <option key={v.id} value={v.id}>{v.name} ({v.batteryCapacity} kWh)</option>
-              ))}
+              {customVehicles.length > 0 && (
+                <optgroup label="⭐ My Custom Vehicles">
+                  {customVehicles.map(v => (
+                    <option key={v.id} value={v.id}>[Custom] {v.name} ({v.usablePackKwh || v.batteryCapacity} kWh)</option>
+                  ))}
+                </optgroup>
+              )}
+              <optgroup label="🚘 Production Vehicles">
+                {allVehicles.filter(v => !isCustomVehicle(v.id)).map((v: any) => (
+                  <option key={v.id} value={v.id}>{v.name} ({v.usablePackKwh || v.batteryCapacity} kWh)</option>
+                ))}
+              </optgroup>
             </select>
           </div>
 
@@ -272,10 +291,10 @@ export default function HomeChargingTool() {
           </div>
 
           <div className="bg-blue-500/10 border border-blue-500/20 p-5 rounded-2xl flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-1">AC Inverter Loss Factored In</h4>
-              <p className="text-sm text-blue-200/80 leading-relaxed">
+              <h4 className="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wider mb-1">AC Inverter Loss Factored In</h4>
+              <p className="text-sm text-slate-800 dark:text-blue-100 leading-relaxed font-normal">
                 Home chargers supply AC power, but the battery stores DC power. The vehicle&apos;s onboard converter handles this conversion, resulting in approximately <strong>10% energy loss as heat</strong>. This calculator automatically bills you for {results.actualEnergyNeededKwh.toFixed(1)} kWh drawn from the wall to safely put {(results.actualEnergyNeededKwh * 0.9).toFixed(1)} kWh into the pack.
               </p>
             </div>

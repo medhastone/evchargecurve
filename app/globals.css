@@ -1,13 +1,410 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ==========================================================================
+   THEMING ENGINE: DUAL LIGHT & DARK MODE SUPPORT
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Global Transitions
+   -------------------------------------------------------------------------- */
+body, header, footer, nav, input, select, textarea, button, table {
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.15s ease-in-out;
 }
 
-@layer base {
-  :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-  }
+/* --------------------------------------------------------------------------
+   LIGHT MODE RULES (Scoped to html.light)
+   -------------------------------------------------------------------------- */
+html.light {
+  color-scheme: light;
+}
+
+html.light body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Global Navigation & Footer in Light Mode */
+html.light header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+html.light footer {
+  background-color: #f1f5f9 !important;
+  border-top-color: #e2e8f0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Background Surface Overrides (All Dark Hex & Slate Boxes become White/Light)
+   -------------------------------------------------------------------------- */
+html.light .bg-\[\#0B0F17\],
+html.light .bg-\[\#0B0F17\]\/80,
+html.light .bg-\[\#080B10\],
+html.light .bg-\[\#0d131f\],
+html.light .bg-\[\#0a0e17\],
+html.light .bg-\[\#0B101A\],
+html.light .bg-\[\#0B101A\]\/80,
+html.light .bg-\[\#0F141E\],
+html.light .bg-\[\#131B2A\],
+html.light .bg-\[\#131B2A\]\/80,
+html.light .bg-\[\#131C2D\],
+html.light .bg-\[\#0F172A\],
+html.light .bg-\[\#1E293B\],
+html.light .bg-\[\#151D2A\],
+html.light .bg-\[\#182234\],
+html.light .bg-\[\#1a2333\],
+html.light .bg-\[\#111827\] {
+  background-color: #ffffff !important;
+}
+
+/* Subtle inner/nested boxes in light mode */
+html.light .bg-\[\#1E293B\] {
+  background-color: #f1f5f9 !important;
+}
+
+/* Slate background containers */
+html.light .bg-slate-950,
+html.light .bg-slate-900,
+html.light .bg-slate-900\/40,
+html.light .bg-slate-900\/50,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/70,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/90 {
+  background-color: #ffffff !important;
+}
+
+html.light .bg-slate-800,
+html.light .bg-slate-800\/40,
+html.light .bg-slate-800\/50,
+html.light .bg-slate-800\/60,
+html.light .bg-slate-800\/70,
+html.light .bg-slate-800\/80,
+html.light .bg-slate-800\/90 {
+  background-color: #ffffff !important;
+}
+
+html.light .bg-slate-700,
+html.light .bg-slate-700\/40,
+html.light .bg-slate-700\/50,
+html.light .bg-slate-700\/60 {
+  background-color: #f1f5f9 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Card & Section Shadows & Borders in Light Mode
+   -------------------------------------------------------------------------- */
+html.light .rounded-2xl,
+html.light .rounded-3xl,
+html.light .rounded-xl {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.03);
+}
+
+html.light .border-slate-800,
+html.light .border-slate-800\/60,
+html.light .border-slate-700,
+html.light .border-slate-600 {
+  border-color: #e2e8f0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Typography & Contrast in Light Mode
+   -------------------------------------------------------------------------- */
+html.light h1,
+html.light h2,
+html.light h3,
+html.light h4,
+html.light h5,
+html.light h6,
+html.light .text-white,
+html.light .text-slate-100,
+html.light .text-slate-200 {
+  color: #0f172a !important;
+}
+
+html.light p.text-slate-400,
+html.light span.text-slate-400,
+html.light div.text-slate-400,
+html.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+html.light .text-slate-300 {
+  color: #1e293b !important;
+}
+
+html.light .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* --------------------------------------------------------------------------
+   Decorative Background Step Numbers & Watermarks
+   -------------------------------------------------------------------------- */
+html.light .select-none.font-black,
+html.light .text-\[12rem\].font-black,
+html.light .text-\[10rem\].font-black,
+html.light .text-\[8rem\].font-black {
+  color: #f1f5f9 !important;
+  opacity: 0.9 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Form Inputs, Selects, and Controls in Light Mode
+   -------------------------------------------------------------------------- */
+html.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.light select,
+html.light textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+html.light select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Range Slider */
+html.light input[type="range"] {
+  accent-color: #10b981;
+}
+
+/* --------------------------------------------------------------------------
+   Interactive Hover & Active States in Light Mode
+   -------------------------------------------------------------------------- */
+html.light .hover\:bg-slate-800:hover,
+html.light .hover\:bg-slate-800\/20:hover,
+html.light .hover\:bg-slate-800\/50:hover,
+html.light .hover\:bg-slate-700:hover,
+html.light .hover\:bg-slate-700\/70:hover,
+html.light .hover\:bg-slate-700\/80:hover {
+  background-color: #f8fafc !important;
+}
+
+html.light .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+html.light .hover\:border-slate-700:hover,
+html.light .hover\:border-slate-600:hover {
+  border-color: #cbd5e1 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Color Accents & Themed Badges in Light Mode
+   -------------------------------------------------------------------------- */
+html.light .text-emerald-400,
+html.light .text-emerald-500 {
+  color: #059669 !important;
+}
+html.light .text-emerald-300,
+html.light .text-emerald-300\/70,
+html.light .text-emerald-300\/80,
+html.light .text-emerald-200 {
+  color: #065f46 !important;
+}
+
+html.light .text-blue-400,
+html.light .text-blue-500,
+html.light .text-blue-600,
+html.light .text-blue-700 {
+  color: #1d4ed8 !important;
+}
+html.light .text-blue-300,
+html.light .text-blue-200,
+html.light .text-blue-200\/70,
+html.light .text-blue-200\/80 {
+  color: #1e293b !important;
+}
+
+html.light .text-cyan-400,
+html.light .text-cyan-500 {
+  color: #0e7490 !important;
+}
+html.light .text-cyan-300,
+html.light .text-cyan-300\/50,
+html.light .text-cyan-300\/70,
+html.light .text-cyan-200 {
+  color: #155e75 !important;
+}
+
+html.light .text-amber-400,
+html.light .text-amber-500,
+html.light .text-yellow-400 {
+  color: #b45309 !important;
+}
+html.light .text-amber-300,
+html.light .text-amber-200 {
+  color: #78350f !important;
+}
+
+html.light .text-orange-400,
+html.light .text-orange-500 {
+  color: #c2410c !important;
+}
+html.light .text-orange-300,
+html.light .text-orange-300\/70,
+html.light .text-orange-300\/80,
+html.light .text-orange-200 {
+  color: #9a3412 !important;
+}
+
+html.light .text-rose-400,
+html.light .text-red-400,
+html.light .text-red-500 {
+  color: #b91c1c !important;
+}
+html.light .text-rose-300,
+html.light .text-red-300,
+html.light .text-red-300\/80,
+html.light .text-red-200 {
+  color: #7f1d1d !important;
+}
+
+/* Tinted Backgrounds */
+html.light .bg-emerald-500\/10,
+html.light .bg-emerald-950\/5,
+html.light .bg-emerald-950\/10,
+html.light .bg-emerald-950\/20,
+html.light .bg-emerald-950\/30,
+html.light .bg-emerald-500\/20 {
+  background-color: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+}
+
+html.light .bg-blue-500\/10,
+html.light .bg-blue-950\/5,
+html.light .bg-blue-950\/10,
+html.light .bg-blue-950\/20,
+html.light .bg-blue-950\/30,
+html.light .bg-blue-500\/20 {
+  background-color: #eff6ff !important;
+  border-color: #bfdbfe !important;
+}
+
+html.light .bg-cyan-500\/10,
+html.light .bg-cyan-950\/5,
+html.light .bg-cyan-950\/10,
+html.light .bg-cyan-950\/20,
+html.light .bg-cyan-950\/30,
+html.light .bg-cyan-500\/20 {
+  background-color: #ecfeff !important;
+  border-color: #a5f3fc !important;
+}
+
+html.light .bg-amber-500\/10,
+html.light .bg-yellow-500\/10,
+html.light .bg-amber-950\/10,
+html.light .bg-amber-950\/20,
+html.light .bg-amber-950\/30,
+html.light .bg-amber-500\/20 {
+  background-color: #fffbeb !important;
+  border-color: #fde68a !important;
+}
+
+html.light .bg-rose-500\/10,
+html.light .bg-red-500\/10 {
+  background-color: #fef2f2 !important;
+  border-color: #fecaca !important;
+}
+
+/* Insight and Advice Callout Boxes in Light Mode */
+html.light .bg-blue-500\/10 p {
+  color: #1e293b !important;
+}
+
+html.light .bg-emerald-500\/10 p {
+  color: #064e3b !important;
+}
+
+html.light .bg-amber-500\/10 p {
+  color: #78350f !important;
+}
+
+html.light .bg-orange-500\/10 p {
+  color: #7c2d12 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Tables, FAQ Accordions, and Comparison Matrices in Light Mode
+   -------------------------------------------------------------------------- */
+html.light table {
+  background-color: #ffffff !important;
+}
+
+html.light thead,
+html.light thead th,
+html.light thead tr {
+  background-color: #f8fafc !important;
+  color: #1e293b !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light thead th .text-slate-300 {
+  color: #1e293b !important;
+}
+
+html.light tbody tr {
+  border-color: #e2e8f0 !important;
+}
+
+html.light tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+html.light tbody td {
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+html.light tbody td.text-white,
+html.light tbody td strong {
+  color: #0f172a !important;
+}
+
+/* --------------------------------------------------------------------------
+   Data Visualization / Recharts in Light Mode
+   -------------------------------------------------------------------------- */
+html.light .recharts-cartesian-grid line {
+  stroke: #cbd5e1 !important;
+  opacity: 0.7 !important;
+}
+
+html.light .recharts-cartesian-axis line {
+  stroke: #94a3b8 !important;
+}
+
+html.light .recharts-text,
+html.light .recharts-cartesian-axis-tick text,
+html.light .recharts-cartesian-axis-tick-value,
+html.light .recharts-label {
+  fill: #1e293b !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+}
+
+html.light .recharts-legend-item-text {
+  color: #1e293b !important;
+  font-weight: 500 !important;
+}
+
+html.light .recharts-default-tooltip {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Gradients in Light Mode
+   -------------------------------------------------------------------------- */
+html.light .bg-\[radial-gradient\(ellipse_at_top.*\)\] {
+  opacity: 0.25 !important;
 }

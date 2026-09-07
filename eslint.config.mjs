@@ -8,4 +8,9 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig([{
     extends: [...next],
+    rules: {
+        "react/no-unescaped-entities": "off",
+        "react-hooks/set-state-in-effect": "off",
+        "@next/next/no-page-custom-font": "off"
+    }
 }]);

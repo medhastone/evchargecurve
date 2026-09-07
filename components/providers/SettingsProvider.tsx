@@ -27,11 +27,16 @@ export const CURRENCIES: Currency[] = [
   { label: 'AUD', symbol: 'A$' },
 ];
 
+type Theme = 'dark' | 'light';
+
 type SettingsContextType = {
   currency: Currency;
   setCurrency: (c: Currency) => void;
   unit: 'mi' | 'km';
   setUnit: (u: 'mi' | 'km') => void;
+  theme: Theme;
+  setTheme: (t: Theme) => void;
+  toggleTheme: () => void;
   // Helpers
   formatDistance: (mi: number) => number; // Returns mi or km
   distanceLabel: string; // 'mi' or 'km'
@@ -44,6 +49,7 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrencyState] = useState<Currency>(CURRENCIES[0]);
   const [unit, setUnitState] = useState<'mi' | 'km'>('mi');
+  const [theme, setThemeState] = useState<Theme>('dark');
 
   useEffect(() => {
     try {
@@ -58,8 +64,35 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       if (savedUnit && (savedUnit === 'mi' || savedUnit === 'km') && savedUnit !== 'mi') {
         setUnitState(savedUnit);
       }
+      const savedTheme = window.localStorage.getItem('ev_theme') as Theme | null;
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        setThemeState(savedTheme);
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(savedTheme);
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
     } catch(e) {}
   }, []);
+
+  const setTheme = (t: Theme) => {
+    setThemeState(t);
+    try {
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(t);
+      document.documentElement.setAttribute('data-theme', t);
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('ev_theme', t);
+      }
+    } catch(e) {}
+  };
+
+  const toggleTheme = () => {
+    const nextTheme: Theme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+  };
 
   const setCurrency = (c: Currency) => {
     setCurrencyState(c);
@@ -86,7 +119,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   return (
     <SettingsContext.Provider value={{ 
       currency, setCurrency, 
-      unit, setUnit, 
+      unit, setUnit,
+      theme, setTheme, toggleTheme,
       formatDistance, distanceLabel, speedLabel, efficiencyLabel 
     }}>
       {children}

@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { VEHICLES } from '@/data/evModels';
 import FastChargeSimulator from '@/components/FastChargeSimulator';
-import { ChevronRight, Clock, Zap, AlertTriangle } from 'lucide-react';
+import Breadcrumb from '@/components/Breadcrumb';
+import { Clock, Zap, AlertTriangle } from 'lucide-react';
 import { calculateChargingSession } from '@/lib/evCalculations';
 
 export async function generateStaticParams() {
@@ -67,11 +68,35 @@ export default async function CurvePage({ params }: { params: Promise<{ slug: st
         "name": `${vehicle.brand} ${vehicle.model} Charging Calculator`,
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any",
+        "url": `https://evchargecurve.com/curve/${slug}`,
         "offers": {
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD"
         }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://evchargecurve.com"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Charging Curves",
+            "item": "https://evchargecurve.com/curve"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": `${vehicle.year} ${vehicle.brand} ${vehicle.model}`,
+            "item": `https://evchargecurve.com/curve/${slug}`
+          }
+        ]
       },
       {
         "@type": "FAQPage",
@@ -89,18 +114,24 @@ export default async function CurvePage({ params }: { params: Promise<{ slug: st
 
   return (
     <div className="w-full">
+      {/* Search Engine Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+
       {/* Breadcrumbs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 flex items-center gap-2 text-sm text-slate-400 overflow-x-auto whitespace-nowrap">
-        <Link href="/" className="hover:text-emerald-400 transition-colors">Home</Link>
-        <ChevronRight className="w-4 h-4 shrink-0" />
-        <Link href="/curves" className="hover:text-emerald-400 transition-colors">Charging Curves</Link>
-        <ChevronRight className="w-4 h-4 shrink-0" />
-        <span className="text-slate-300">{vehicle.brand}</span>
-        <ChevronRight className="w-4 h-4 shrink-0" />
-        <span className="text-slate-100 font-medium">{vehicle.model}</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
+        <Breadcrumb
+          className="justify-start mb-0"
+          items={[
+            { label: 'Charging Curves', href: '/curve' },
+            { label: `${vehicle.year} ${vehicle.brand} ${vehicle.model}` }
+          ]}
+        />
       </div>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6">
           {vehicle.year} {vehicle.brand} {vehicle.model} Charging Curve
         </h1>

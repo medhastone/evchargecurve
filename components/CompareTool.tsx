@@ -2,9 +2,9 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
-import { Share2, Zap, Snowflake, Sun, Settings2, Info } from 'lucide-react';
-import { VEHICLES } from '@/data/evModels';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart, ReferenceArea } from 'recharts';
+import { Share2, Zap, Snowflake, Sun, Settings2, Info, PlusCircle } from 'lucide-react';
+import { useVehicles } from '@/components/providers/VehicleContext';
 
 function interpolateKw(curve: {soc: number, kw: number}[], targetSoc: number) {
   if (!curve || curve.length === 0) return 0;
@@ -23,24 +23,24 @@ function interpolateKw(curve: {soc: number, kw: number}[], targetSoc: number) {
 }
 
 function calculateChargingStats(
-  vehicle: /* eslint-disable-next-line @typescript-eslint/no-explicit-any */ any,
+  vehicle: any,
   startSoc: number,
   endSoc: number,
   chargerCap: number,
   tempMultiplier: number
 ) {
   let totalMinutes = 0;
-  let energyAdded = 0;
-  let currentSoc = startSoc;
-  const efficiency = vehicle.epaRangeMiles / vehicle.usablePackKwh; // miles per kWh
+  const packKwh = vehicle.usablePackKwh || vehicle.batteryCapacity || 75;
+  const epaRange = vehicle.epaRangeMiles || 300;
+  const efficiency = epaRange / packKwh; // miles per kWh
+  const curve = vehicle.curve || vehicle.curvePoints || [];
   
   // Calculate time for Start -> End SOC
   for (let s = startSoc; s < endSoc; s++) {
-    const rawKw = interpolateKw(vehicle.curve, s);
+    const rawKw = interpolateKw(curve, s);
     const actualKw = Math.min(rawKw * tempMultiplier, chargerCap);
-    // time to add 1% = (pack * 0.01) / kw (hours) * 60 = mins
     if (actualKw > 0) {
-      const minsFor1Percent = ((vehicle.usablePackKwh * 0.01) / actualKw) * 60;
+      const minsFor1Percent = ((packKwh * 0.01) / actualKw) * 60;
       totalMinutes += minsFor1Percent;
     }
   }
@@ -50,24 +50,25 @@ function calculateChargingStats(
   let energy15 = 0;
   for (let m = 0; m < 15; m++) {
     if (tempSoc15 >= 100) break;
-    const rawKw = interpolateKw(vehicle.curve, Math.floor(tempSoc15));
+    const rawKw = interpolateKw(curve, Math.floor(tempSoc15));
     const actualKw = Math.min(rawKw * tempMultiplier, chargerCap);
     const energyThisMin = actualKw / 60;
     energy15 += energyThisMin;
-    tempSoc15 += (energyThisMin / vehicle.usablePackKwh) * 100;
+    tempSoc15 += (energyThisMin / packKwh) * 100;
   }
   const milesAdded15Min = energy15 * efficiency;
 
   return {
     timeMinutes: Math.round(totalMinutes),
     miles15Min: Math.round(milesAdded15Min),
-    avgKw: totalMinutes > 0 ? Math.round(((endSoc - startSoc) / 100 * vehicle.usablePackKwh) / (totalMinutes / 60)) : 0
+    avgKw: totalMinutes > 0 ? Math.round(((endSoc - startSoc) / 100 * packKwh) / (totalMinutes / 60)) : 0
   };
 }
 
 export default function CompareTool() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { allVehicles, vehiclesMap, openStudio, customVehicles, isCustomVehicle } = useVehicles();
 
   const [carAId, setCarAId] = useState(searchParams?.get('carA') || 'tesla-model-y-lr');
   const [carBId, setCarBId] = useState(searchParams?.get('carB') || 'hyundai-ioniq-5');
@@ -77,8 +78,8 @@ export default function CompareTool() {
   const [temp, setTemp] = useState(searchParams?.get('temp') || 'mild');
   const [copied, setCopied] = useState(false);
 
-  const carA = VEHICLES[carAId];
-  const carB = VEHICLES[carBId];
+  const carA = vehiclesMap[carAId] || allVehicles[0];
+  const carB = vehiclesMap[carBId] || allVehicles[1] || allVehicles[0];
   const tempMultiplier = temp === 'mild' ? 1.0 : 0.65;
 
   const chartData = useMemo(() => {
@@ -86,8 +87,8 @@ export default function CompareTool() {
     if (!carA || !carB) return [];
     
     for (let i = 0; i <= 100; i++) {
-      const kwA = Math.min(interpolateKw(carA.curve, i) * tempMultiplier, chargerCap);
-      const kwB = Math.min(interpolateKw(carB.curve, i) * tempMultiplier, chargerCap);
+      const kwA = Math.min(interpolateKw(carA.curve || carA.curvePoints || [], i) * tempMultiplier, chargerCap);
+      const kwB = Math.min(interpolateKw(carB.curve || carB.curvePoints || [], i) * tempMultiplier, chargerCap);
       data.push({
         soc: i,
         carA_kw: Math.round(kwA),
@@ -115,12 +116,27 @@ export default function CompareTool() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!carA || !carB) return <div className="text-white p-8">Loading...</div>;
+  if (!carA || !carB) return <div className="text-white p-8">Loading comparison models...</div>;
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-8">
       {/* Pickers & Controls */}
       <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+        <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+          <div>
+            <h2 className="text-lg font-bold text-white">Compare EV Fast-Charging Telemetry</h2>
+            <p className="text-xs text-slate-400">Head-to-head comparison of BMS taper curves, average speeds, and 15-minute range gains.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => openStudio()}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-all"
+          >
+            <PlusCircle className="w-3.5 h-3.5" />
+            + Add Custom EV
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Vehicle Pickers */}
           <div className="space-y-4">
@@ -130,13 +146,23 @@ export default function CompareTool() {
             <select 
               value={carAId} 
               onChange={(e) => setCarAId(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 font-medium text-sm"
             >
-              {Object.values(VEHICLES).map((v: any) => (
-                <option key={v.id} value={v.id}>{v.name}</option>
-              ))}
+              {customVehicles.length > 0 && (
+                <optgroup label="⭐ My Custom Vehicles">
+                  {customVehicles.map(v => (
+                    <option key={v.id} value={v.id}>[Custom] {v.name}</option>
+                  ))}
+                </optgroup>
+              )}
+              <optgroup label="🚘 Production Vehicles">
+                {allVehicles.filter(v => !isCustomVehicle(v.id)).map((v: any) => (
+                  <option key={v.id} value={v.id}>{v.name} ({v.architecture})</option>
+                ))}
+              </optgroup>
             </select>
           </div>
+
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
               <Zap className="w-4 h-4 text-cyan-400" /> Vehicle B (Cyan)
@@ -144,11 +170,20 @@ export default function CompareTool() {
             <select 
               value={carBId} 
               onChange={(e) => setCarBId(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+              className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 font-medium text-sm"
             >
-              {Object.values(VEHICLES).map((v: any) => (
-                <option key={v.id} value={v.id}>{v.name}</option>
-              ))}
+              {customVehicles.length > 0 && (
+                <optgroup label="⭐ My Custom Vehicles">
+                  {customVehicles.map(v => (
+                    <option key={v.id} value={v.id}>[Custom] {v.name}</option>
+                  ))}
+                </optgroup>
+              )}
+              <optgroup label="🚘 Production Vehicles">
+                {allVehicles.filter(v => !isCustomVehicle(v.id)).map((v: any) => (
+                  <option key={v.id} value={v.id}>{v.name} ({v.architecture})</option>
+                ))}
+              </optgroup>
             </select>
           </div>
         </div>
@@ -251,140 +286,76 @@ export default function CompareTool() {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
-              <XAxis 
-                dataKey="soc" 
-                stroke="#64748B" 
-                tick={{fill: '#64748B'}} 
-                tickFormatter={(val) => `${val}%`} 
-                minTickGap={20}
-              />
-              <YAxis 
-                stroke="#64748B" 
-                tick={{fill: '#64748B'}} 
-                tickFormatter={(val) => `${val} kW`} 
-              />
+              <XAxis dataKey="soc" stroke="#64748B" tickFormatter={(v) => `${v}%`} />
+              <YAxis stroke="#64748B" unit=" kW" domain={[0, Math.max(350, (carA.maxChargeKw || 250), (carB.maxChargeKw || 250)) + 20]} />
               <Tooltip 
-                contentStyle={{ backgroundColor: '#0F172A', borderColor: '#1E293B', borderRadius: '8px' }}
-                itemStyle={{ color: '#F8FAFC' }}
-                labelStyle={{ color: '#94A3B8', marginBottom: '4px' }}
-                formatter={(value: any, name: any) => {
-                  return [`${value} kW`, name === 'carA_kw' ? carA.name : carB.name];
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="bg-slate-900 border border-slate-700 p-3 rounded-xl shadow-xl text-xs space-y-1">
+                        <p className="font-bold text-white">SoC: {label}%</p>
+                        <p className="text-emerald-400 font-semibold">{carA.name}: {payload[0]?.value} kW</p>
+                        <p className="text-cyan-400 font-semibold">{carB.name}: {payload[1]?.value} kW</p>
+                      </div>
+                    );
+                  }
+                  return null;
                 }}
-                labelFormatter={(label) => `State of Charge: ${label}%`}
               />
-              {/* Highlight active charging region */}
-              {startSoc > 0 && (
-                <rect x="0" y="0" width={`${startSoc}%`} height="100%" fill="#000000" fillOpacity={0.5} />
-              )}
-              {endSoc < 100 && (
-                <rect x={`${endSoc}%`} y="0" width={`${100 - endSoc}%`} height="100%" fill="#000000" fillOpacity={0.5} />
-              )}
-
-              <Area type="monotone" dataKey="carB_kw" stroke="#0EA5E9" strokeWidth={3} fillOpacity={1} fill="url(#colorCarB)" activeDot={{ r: 6 }} />
-              <Area type="monotone" dataKey="carA_kw" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorCarA)" activeDot={{ r: 6 }} />
+              <ReferenceArea x1={startSoc} x2={endSoc} fill="#334155" fillOpacity={0.1} stroke="#475569" strokeDasharray="3 3" />
+              <Area type="monotone" dataKey="carA_kw" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorCarA)" name={carA.name} />
+              <Area type="monotone" dataKey="carB_kw" stroke="#0EA5E9" strokeWidth={3} fillOpacity={1} fill="url(#colorCarB)" name={carB.name} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Scorecard */}
+      {/* Head to Head Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Time Delta Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-            <Zap className="w-24 h-24" />
+        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500"></div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-white">{carA.name}</h3>
+            <span className="text-xs px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded-full font-bold border border-emerald-500/20">
+              {carA.architecture} &bull; {carA.usablePackKwh || carA.batteryCapacity} kWh
+            </span>
           </div>
-          <h3 className="text-slate-400 font-medium mb-1">Time to Charge ({startSoc}% to {endSoc}%)</h3>
-          <div className="flex items-end gap-3 mt-4">
-            <div className="text-emerald-400">
-              <span className="text-4xl font-bold">{statsA.timeMinutes}</span>
-              <span className="text-sm ml-1">mins</span>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/50">
+              <p className="text-xs text-slate-400 mb-1">Time ({startSoc}-{endSoc}%)</p>
+              <p className="text-xl font-bold text-emerald-400">{statsA.timeMinutes} min</p>
             </div>
-            <div className="text-slate-500 pb-1">vs</div>
-            <div className="text-cyan-400">
-              <span className="text-4xl font-bold">{statsB.timeMinutes}</span>
-              <span className="text-sm ml-1">mins</span>
+            <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/50">
+              <p className="text-xs text-slate-400 mb-1">Avg Power</p>
+              <p className="text-xl font-bold text-white">{statsA.avgKw} kW</p>
+            </div>
+            <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/50">
+              <p className="text-xs text-slate-400 mb-1">15-Min Range</p>
+              <p className="text-xl font-bold text-amber-400">+{statsA.miles15Min} mi</p>
             </div>
           </div>
-          <p className="text-sm text-slate-300 mt-4 leading-relaxed">
-            {statsA.timeMinutes < statsB.timeMinutes ? (
-              <span className="text-white font-medium">{carA.name} charges {statsB.timeMinutes - statsA.timeMinutes} minutes faster</span>
-            ) : statsA.timeMinutes > statsB.timeMinutes ? (
-              <span className="text-white font-medium">{carB.name} charges {statsA.timeMinutes - statsB.timeMinutes} minutes faster</span>
-            ) : (
-              <span className="text-white font-medium">Both vehicles take exactly the same time</span>
-            )} for this session.
-          </p>
         </div>
 
-        {/* 15-Min Miles Added */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-            <Settings2 className="w-24 h-24" />
+        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-1.5 h-full bg-cyan-500"></div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-white">{carB.name}</h3>
+            <span className="text-xs px-2.5 py-1 bg-cyan-500/10 text-cyan-400 rounded-full font-bold border border-cyan-500/20">
+              {carB.architecture} &bull; {carB.usablePackKwh || carB.batteryCapacity} kWh
+            </span>
           </div>
-          <h3 className="text-slate-400 font-medium mb-1">Miles Added in a 15-Min Quick Stop</h3>
-          <div className="flex items-end gap-3 mt-4">
-            <div className="text-emerald-400">
-              <span className="text-4xl font-bold">{statsA.miles15Min}</span>
-              <span className="text-sm ml-1">mi</span>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/50">
+              <p className="text-xs text-slate-400 mb-1">Time ({startSoc}-{endSoc}%)</p>
+              <p className="text-xl font-bold text-cyan-400">{statsB.timeMinutes} min</p>
             </div>
-            <div className="text-slate-500 pb-1">vs</div>
-            <div className="text-cyan-400">
-              <span className="text-4xl font-bold">{statsB.miles15Min}</span>
-              <span className="text-sm ml-1">mi</span>
+            <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/50">
+              <p className="text-xs text-slate-400 mb-1">Avg Power</p>
+              <p className="text-xl font-bold text-white">{statsB.avgKw} kW</p>
             </div>
-          </div>
-          <p className="text-sm text-slate-400 mt-4 leading-relaxed">
-            Starting at {startSoc}%, the <span className="text-white">{statsA.miles15Min > statsB.miles15Min ? carA.name : carB.name}</span> adds more range in a 15-minute bio-break, thanks to its {statsA.miles15Min > statsB.miles15Min ? 'efficiency and curve' : 'efficiency and curve'}.
-          </p>
-        </div>
-
-        {/* Avg kW */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-            <Zap className="w-24 h-24" />
-          </div>
-          <h3 className="text-slate-400 font-medium mb-1">Average Sustained Power</h3>
-          <div className="flex items-end gap-3 mt-4">
-            <div className="text-emerald-400">
-              <span className="text-3xl font-bold">{statsA.avgKw}</span>
-              <span className="text-sm ml-1">kW</span>
-            </div>
-            <div className="text-slate-500 pb-1">vs</div>
-            <div className="text-cyan-400">
-              <span className="text-3xl font-bold">{statsB.avgKw}</span>
-              <span className="text-sm ml-1">kW</span>
-            </div>
-          </div>
-          <p className="text-xs text-slate-500 mt-4">
-            Peak kW is for marketing. Average kW dictates your wait time.
-          </p>
-        </div>
-
-        {/* Architecture */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-            <Info className="w-24 h-24" />
-          </div>
-          <h3 className="text-slate-400 font-medium mb-4">Architecture Breakdown</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-              <div>
-                <span className="block text-sm font-semibold text-emerald-400">{carA.name}</span>
-                <span className="block text-xs text-slate-500">Max: {carA.maxChargeKw} kW</span>
-              </div>
-              <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-full font-bold">
-                {carA.architecture}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <div>
-                <span className="block text-sm font-semibold text-cyan-400">{carB.name}</span>
-                <span className="block text-xs text-slate-500">Max: {carB.maxChargeKw} kW</span>
-              </div>
-              <span className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs rounded-full font-bold">
-                {carB.architecture}
-              </span>
+            <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/50">
+              <p className="text-xs text-slate-400 mb-1">15-Min Range</p>
+              <p className="text-xl font-bold text-amber-400">+{statsB.miles15Min} mi</p>
             </div>
           </div>
         </div>

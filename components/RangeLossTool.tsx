@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { VEHICLES } from '@/data/evModels';
 import { 
   ThermometerSnowflake, ThermometerSun, Wind, 
-  Car, Briefcase, Zap, AlertTriangle, Route, MapPin
+  Car, Briefcase, Zap, AlertTriangle, Route, MapPin, PlusCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
 import { useSettings } from '@/components/providers/SettingsProvider';
+import { useVehicles } from '@/components/providers/VehicleContext';
 
 type ClimateMode = 'heat_pump' | 'resistive' | 'ac' | 'off';
 type Accessory = 'none' | 'roof_box' | 'bike_rack';
@@ -16,18 +15,17 @@ type Accessory = 'none' | 'roof_box' | 'bike_rack';
 export default function RangeLossTool() {
   const { unit, distanceLabel, speedLabel } = useSettings();
   const isMetric = unit === 'km';
-  const evModels = Object.values(VEHICLES);
-  const [vehicleId, setVehicleId] = useState(evModels[0].id);
+  const { allVehicles, vehiclesMap, openStudio, customVehicles, isCustomVehicle } = useVehicles();
+  const [vehicleId, setVehicleId] = useState(allVehicles[0]?.id || 'tesla-model-y-lr');
   
   const [tempF, setTempF] = useState(70);
-  
   
   const [speedMph, setSpeedMph] = useState(65);
   const [climateMode, setClimateMode] = useState<ClimateMode>('heat_pump');
   const [payloadLbs, setPayloadLbs] = useState(0);
   const [accessory, setAccessory] = useState<Accessory>('none');
 
-  const vehicle = useMemo(() => evModels.find(v => v.id === vehicleId) || evModels[0], [vehicleId, evModels]);
+  const vehicle = useMemo(() => vehiclesMap[vehicleId] || allVehicles[0], [vehicleId, vehiclesMap, allVehicles]);
 
   const applyPreset = (preset: 'winter' | 'towing' | 'normal') => {
     if (preset === 'winter') {
@@ -146,15 +144,34 @@ export default function RangeLossTool() {
         <div className="xl:col-span-6 space-y-6">
           
           <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl">
-            <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Select EV Model</label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs text-slate-400 uppercase tracking-wider block font-semibold">Select EV Model</label>
+              <button
+                type="button"
+                onClick={() => openStudio()}
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                + Custom EV
+              </button>
+            </div>
             <select 
               value={vehicleId}
               onChange={(e) => setVehicleId(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors appearance-none"
+              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors appearance-none font-medium text-sm"
             >
-              {evModels.map((v: any) => (
-                <option key={v.id} value={v.id}>{v.name} (EPA: {Math.round(isMetric ? v.epaRangeMiles * 1.609 : v.epaRangeMiles)} {distanceLabel})</option>
-              ))}
+              {customVehicles.length > 0 && (
+                <optgroup label="⭐ My Custom Vehicles">
+                  {customVehicles.map(v => (
+                    <option key={v.id} value={v.id}>[Custom] {v.name} (EPA: {Math.round(isMetric ? (v.epaRangeMiles || 300) * 1.609 : (v.epaRangeMiles || 300))} {distanceLabel})</option>
+                  ))}
+                </optgroup>
+              )}
+              <optgroup label="🚘 Production Vehicles">
+                {allVehicles.filter(v => !isCustomVehicle(v.id)).map((v: any) => (
+                  <option key={v.id} value={v.id}>{v.name} (EPA: {Math.round(isMetric ? v.epaRangeMiles * 1.609 : v.epaRangeMiles)} {distanceLabel})</option>
+                ))}
+              </optgroup>
             </select>
           </div>
 
@@ -348,10 +365,10 @@ export default function RangeLossTool() {
           </div>
 
           <div className="bg-blue-500/10 border border-blue-500/20 p-5 rounded-2xl flex items-start gap-3">
-            <MapPin className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+            <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-2">Trip Planning Insight</h4>
-              <p className="text-sm text-blue-200/80 leading-relaxed">
+              <h4 className="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wider mb-2">Trip Planning Insight</h4>
+              <p className="text-sm text-slate-800 dark:text-blue-100 leading-relaxed font-normal">
                 A {isMetric ? "500-km" : "300-mile"} highway journey in these exact conditions will require charging stops to break up the drive. Relying on your vehicle&apos;s built-in navigation is highly recommended, as it will precondition the battery pack before arrival at the DC fast charger, ensuring you get optimal charging speeds upon plug-in.
               </p>
             </div>

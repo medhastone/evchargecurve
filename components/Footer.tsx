@@ -17,7 +17,7 @@ export default function Footer() {
  {/* Brand & Description */}
  <div className="col-span-1 md:col-span-2">
  <Link href="/" className="flex items-center gap-2 group mb-4 w-max">
- <Image src="/logo.png" alt="EVChargeCurve Logo" width={24} height={24} className="rounded object-contain" referrerPolicy="no-referrer" />
+ <Image src="/logo.png" alt="EVChargeCurve Logo" width={40} height={40} className="rounded object-contain" referrerPolicy="no-referrer" />
  <span className="font-bold text-xl tracking-tight text-white">
  EVCharge<span className="text-emerald-400">Curve</span>
  </span>
