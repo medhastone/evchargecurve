@@ -147,7 +147,7 @@ export default function V2HBackupTool() {
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Select Your EV
                 </label>
-                <select 
+                <select aria-label="Select option" 
                   value={selectedEvId}
                   onChange={(e) => setSelectedEvId(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
@@ -170,7 +170,7 @@ export default function V2HBackupTool() {
                   </span>
                 </div>
                 <input 
-                  type="range" 
+                  aria-label="Adjust slider" type="range" 
                   min="0" 
                   max="50" 
                   step="5"

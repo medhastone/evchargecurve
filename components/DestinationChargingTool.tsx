@@ -124,7 +124,7 @@ export default function DestinationChargingTool() {
                   <span className="text-blue-400 font-bold">{arrivalSoc}%</span>
                 </div>
                 <input
-                  type="range"
+                  aria-label="Adjust slider" type="range"
                   min="1"
                   max="50"
                   step="1"

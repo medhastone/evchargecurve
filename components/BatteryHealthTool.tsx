@@ -84,7 +84,7 @@ export default function BatteryHealthTool() {
             </div>
             
             <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Select Model</label>
-            <select 
+            <select aria-label="Select option" 
               value={vehicleId}
               onChange={(e) => setVehicleId(e.target.value)}
               className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors mb-6 appearance-none font-medium text-sm"
@@ -109,7 +109,7 @@ export default function BatteryHealthTool() {
                   <span className="text-sm font-semibold text-slate-300">Model Year</span>
                   <span className="text-sm font-bold text-emerald-400">{modelYear}</span>
                 </div>
-                <input 
+                <input aria-label="Adjust slider" 
                   type="range" min="2017" max="2026" step="1"
                   value={modelYear} onChange={(e) => setModelYear(Number(e.target.value))}
                   className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
@@ -129,7 +129,7 @@ export default function BatteryHealthTool() {
                     </button>
                   </div>
                 </div>
-                <input 
+                <input aria-label="Adjust slider" 
                   type="range" min="0" max="200000" step="1000"
                   value={mileage} onChange={(e) => setMileage(Number(e.target.value))}
                   className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
@@ -250,6 +250,7 @@ export default function BatteryHealthTool() {
                     strokeWidth={3} 
                     dot={{ r: 4, fill: '#10B981', strokeWidth: 0 }} 
                     activeDot={{ r: 6 }} 
+                    isAnimationActive={false}
                   />
                   <Line 
                     type="stepAfter" 
@@ -259,6 +260,7 @@ export default function BatteryHealthTool() {
                     strokeWidth={2} 
                     strokeDasharray="5 5" 
                     dot={false} 
+                    isAnimationActive={false}
                   />
                 </LineChart>
               </ResponsiveContainer>

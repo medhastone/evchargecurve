@@ -31,35 +31,46 @@ export function calculateChargingSession(
     throw new Error("Invalid parameters: Ensure 0 <= startSoc < endSoc <= 100 and valid pack/charger ratings.");
   }
 
-  const sortedCurve = [...curvePoints].sort((a, b) => a.soc - b.soc);
+  const sortedCurve = curvePoints.length > 1
+    ? [...curvePoints].sort((a, b) => a.soc - b.soc)
+    : curvePoints;
 
-  const getKwAtSoc = (soc: number): number => {
-    if (sortedCurve.length === 0) return 0;
-    if (soc <= sortedCurve[0].soc) return sortedCurve[0].kw;
-    if (soc >= sortedCurve[sortedCurve.length - 1].soc) return sortedCurve[sortedCurve.length - 1].kw;
+  const len = sortedCurve.length;
+  const lookupKw = new Float64Array(101);
 
-    for (let i = 0; i < sortedCurve.length - 1; i++) {
-      const p1 = sortedCurve[i];
-      const p2 = sortedCurve[i + 1];
-      if (soc >= p1.soc && soc <= p2.soc) {
-        if (p2.soc === p1.soc) return p1.kw;
-        const fraction = (soc - p1.soc) / (p2.soc - p1.soc);
-        return p1.kw + fraction * (p2.kw - p1.kw);
+  if (len === 0) {
+    // defaults to 0
+  } else if (len === 1) {
+    lookupKw.fill(sortedCurve[0].kw);
+  } else {
+    let segIdx = 0;
+    for (let s = 0; s <= 100; s++) {
+      while (segIdx < len - 2 && s > sortedCurve[segIdx + 1].soc) {
+        segIdx++;
+      }
+      const p1 = sortedCurve[segIdx];
+      const p2 = sortedCurve[segIdx + 1];
+      if (s <= p1.soc) {
+        lookupKw[s] = p1.kw;
+      } else if (s >= p2.soc) {
+        lookupKw[s] = p2.kw;
+      } else {
+        const fraction = (s - p1.soc) / ((p2.soc - p1.soc) || 1);
+        lookupKw[s] = p1.kw + fraction * (p2.kw - p1.kw);
       }
     }
-    return 0;
-  };
+  }
 
   let totalMinutes = 0;
   let totalKwSum = 0;
   let stepCount = 0;
   let kwhAdded = 0;
-  const chartData = [];
+  const chartData = new Array(101);
 
   let sessionSocCount = 0;
 
   for (let soc = 0; soc <= 100; soc++) {
-    let rawKw = getKwAtSoc(soc);
+    let rawKw = lookupKw[soc];
 
     if (isColdWeather && soc >= startSoc && sessionSocCount < 15) {
       rawKw *= 0.60;
@@ -72,11 +83,11 @@ export function calculateChargingSession(
     const cappedKw = Math.min(rawKw, chargerMaxKw);
     const active = soc >= startSoc && soc <= endSoc;
 
-    chartData.push({
+    chartData[soc] = {
       soc,
-      kw: Number(cappedKw.toFixed(1)),
+      kw: Math.round(cappedKw * 10) / 10,
       active
-    });
+    };
 
     if (active && soc < endSoc) {
       const stepEnergyKwh = packKwh * 0.01;
@@ -92,10 +103,10 @@ export function calculateChargingSession(
   const sessionCost = kwhAdded * userRatePerKwh;
 
   return {
-    totalMinutes: Number(totalMinutes.toFixed(1)),
-    avgKw: Number(avgKw.toFixed(1)),
-    kwhAdded: Number(kwhAdded.toFixed(2)),
-    sessionCost: Number(sessionCost.toFixed(2)),
+    totalMinutes: Math.round(totalMinutes * 10) / 10,
+    avgKw: Math.round(avgKw * 10) / 10,
+    kwhAdded: Math.round(kwhAdded * 100) / 100,
+    sessionCost: Math.round(sessionCost * 100) / 100,
     chartData
   };
 }
@@ -150,15 +161,15 @@ export function calculateBatteryDegradation(
     const projectedMiles = averageMilesPerYear * y;
     projectionPoints.push({
       year: y,
-      sohPct: Number(calcSoh(y, projectedMiles, habitPenalty).toFixed(2)),
+      sohPct: Math.round(calcSoh(y, projectedMiles, habitPenalty) * 100) / 100,
       warrantyThreshold: 70
     });
   }
 
   return {
-    currentSohPct: Number(currentSohPct.toFixed(2)),
-    remainingKwh: Number(remainingKwh.toFixed(2)),
-    lostMiles: Number(lostMiles.toFixed(1)),
+    currentSohPct: Math.round(currentSohPct * 100) / 100,
+    remainingKwh: Math.round(remainingKwh * 100) / 100,
+    lostMiles: Math.round(lostMiles * 10) / 10,
     isUnderWarranty,
     projectionPoints
   };
@@ -225,9 +236,9 @@ export function calculateRealWorldRange(
   const recommendedExtraStops = usableRangePerLeg > 0 ? Math.max(0, Math.ceil((300 - adjustedRangeMiles) / usableRangePerLeg)) : 0;
 
   return {
-    adjustedRangeMiles: Number(adjustedRangeMiles.toFixed(1)),
-    percentageLoss: Number(percentageLoss.toFixed(1)),
-    whPerMile: Number(whPerMile.toFixed(1)),
+    adjustedRangeMiles: Math.round(adjustedRangeMiles * 10) / 10,
+    percentageLoss: Math.round(percentageLoss * 10) / 10,
+    whPerMile: Math.round(whPerMile * 10) / 10,
     recommendedExtraStops
   };
 }
@@ -278,12 +289,12 @@ export function calculateHomeCharging(
   const annualDollarSavings = (gasCostPerMonth - monthlyCost) * 12;
 
   return {
-    chargeHours: Number(chargeHours.toFixed(2)),
-    milesAddedPerHour: Number(milesAddedPerHour.toFixed(1)),
-    offPeakSessionCost: Number(offPeakSessionCost.toFixed(2)),
-    peakSessionCost: Number(peakSessionCost.toFixed(2)),
-    monthlyCost: Number(monthlyCost.toFixed(2)),
-    annualDollarSavings: Number(annualDollarSavings.toFixed(2))
+    chargeHours: Math.round(chargeHours * 100) / 100,
+    milesAddedPerHour: Math.round(milesAddedPerHour * 10) / 10,
+    offPeakSessionCost: Math.round(offPeakSessionCost * 100) / 100,
+    peakSessionCost: Math.round(peakSessionCost * 100) / 100,
+    monthlyCost: Math.round(monthlyCost * 100) / 100,
+    annualDollarSavings: Math.round(annualDollarSavings * 100) / 100
   };
 }
 

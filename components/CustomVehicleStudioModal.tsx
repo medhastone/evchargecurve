@@ -443,7 +443,7 @@ export default function CustomVehicleStudioModal() {
                     className="w-full bg-[#0B0F17] border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono mb-2"
                   />
                   <input 
-                    type="range"
+                    aria-label="Adjust slider" type="range"
                     min="30"
                     max="150"
                     step="1"
@@ -468,7 +468,7 @@ export default function CustomVehicleStudioModal() {
                     className="w-full bg-[#0B0F17] border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono mb-2"
                   />
                   <input 
-                    type="range"
+                    aria-label="Adjust slider" type="range"
                     min="50"
                     max="350"
                     step="5"
@@ -493,7 +493,7 @@ export default function CustomVehicleStudioModal() {
                     className="w-full bg-[#0B0F17] border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono mb-2"
                   />
                   <input 
-                    type="range"
+                    aria-label="Adjust slider" type="range"
                     min="120"
                     max="500"
                     step="5"

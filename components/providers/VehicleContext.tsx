@@ -1,8 +1,14 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { VEHICLES, Vehicle, ChargingCurvePoint } from '@/data/evModels';
 import { synthesizeChargingCurve } from '@/lib/curveSynthesizer';
+
+const CustomVehicleStudioModal = dynamic(
+  () => import('@/components/CustomVehicleStudioModal'),
+  { ssr: false }
+);
 
 interface VehicleContextType {
   allVehicles: Vehicle[];
@@ -279,6 +285,7 @@ export function VehicleProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
+      {isStudioOpen && <CustomVehicleStudioModal />}
     </VehicleContext.Provider>
   );
 }

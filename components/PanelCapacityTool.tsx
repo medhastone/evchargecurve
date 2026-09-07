@@ -191,7 +191,7 @@ export default function PanelCapacityTool() {
                 <span className="text-cyan-400 font-bold">{Math.round(displayCommute)} {distanceLabel}</span>
               </div>
               <input 
-                type="range" min="5" max={unit === 'mi' ? 150 : 240} step="5"
+                aria-label="Adjust slider" type="range" min="5" max={unit === 'mi' ? 150 : 240} step="5"
                 value={displayCommute}
                 onChange={(e) => handleCommuteChange(Number(e.target.value))}
                 className="w-full accent-cyan-500 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"

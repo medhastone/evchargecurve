@@ -155,7 +155,7 @@ export default function RangeLossTool() {
                 + Custom EV
               </button>
             </div>
-            <select 
+            <select aria-label="Select option" 
               value={vehicleId}
               onChange={(e) => setVehicleId(e.target.value)}
               className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors appearance-none font-medium text-sm"
@@ -190,7 +190,7 @@ export default function RangeLossTool() {
                 </div>
               </div>
               <input 
-                type="range" min="-20" max="105" step="1"
+                aria-label="Adjust slider" type="range" min="-20" max="105" step="1"
                 value={tempF} onChange={(e) => setTempF(Number(e.target.value))}
                 className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
               />
@@ -250,7 +250,7 @@ export default function RangeLossTool() {
                 <span className="text-sm font-bold text-emerald-400">{payloadLbs.toLocaleString()} lbs</span>
               </div>
               <input 
-                type="range" min="0" max="7500" step="100"
+                aria-label="Adjust slider" type="range" min="0" max="7500" step="100"
                 value={payloadLbs} onChange={(e) => setPayloadLbs(Number(e.target.value))}
                 className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
               />

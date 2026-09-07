@@ -12,6 +12,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/components/providers/SettingsProvider';
 import { useVehicles } from '@/components/providers/VehicleContext';
+import SimulatorSkeleton from '@/components/SimulatorSkeleton';
 
 const CHARGER_TIERS = [50, 150, 250, 350];
 
@@ -135,7 +136,7 @@ export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehic
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  if (!isMounted) return null;
+  if (!isMounted) return <SimulatorSkeleton />;
 
   const isCustom = isCustomVehicle(vehicle.id);
   const usablePack = vehicle.usablePackKwh || vehicle.batteryCapacity || 75;

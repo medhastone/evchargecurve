@@ -5,7 +5,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { SettingsProvider } from '@/components/providers/SettingsProvider';
 import { VehicleProvider } from '@/components/providers/VehicleContext';
-import CustomVehicleStudioModal from '@/components/CustomVehicleStudioModal';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -17,6 +16,7 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-jetbrains-mono',
   display: 'swap',
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -32,7 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link rel="icon" type="image/png" href="/icon.png" />
         <script
           dangerouslySetInnerHTML={{
@@ -60,7 +59,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
             </main>
             <Footer />
-            <CustomVehicleStudioModal />
           </VehicleProvider>
         </SettingsProvider>
       </body>

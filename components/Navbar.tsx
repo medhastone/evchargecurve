@@ -49,7 +49,7 @@ export default function Navbar() {
           <div className="flex-shrink-0 flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2 group">
               <div className="bg-emerald-500/10 p-1.5 rounded-lg border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
-                <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded object-contain" referrerPolicy="no-referrer" />
+                <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded object-contain" referrerPolicy="no-referrer" priority />
               </div>
               <span className="font-bold text-lg tracking-tight text-white">
                 EVCharge<span className="text-emerald-400">Curve</span>
@@ -189,6 +189,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 text-slate-400 hover:text-white focus:outline-none"
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>

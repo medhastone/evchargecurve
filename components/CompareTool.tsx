@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -145,7 +144,7 @@ export default function CompareTool() {
             <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
               <Zap className="w-4 h-4 text-emerald-400" /> Vehicle A (Emerald)
             </h3>
-            <select 
+            <select aria-label="Select option" 
               value={carAId} 
               onChange={(e) => setCarAId(e.target.value)}
               className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 font-medium text-sm"
@@ -169,7 +168,7 @@ export default function CompareTool() {
             <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
               <Zap className="w-4 h-4 text-cyan-400" /> Vehicle B (Cyan)
             </h3>
-            <select 
+            <select aria-label="Select option" 
               value={carBId} 
               onChange={(e) => setCarBId(e.target.value)}
               className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 font-medium text-sm"
@@ -216,7 +215,7 @@ export default function CompareTool() {
               Charge Window ({startSoc}% - {endSoc}%)
             </label>
             <div className="flex items-center gap-4 px-2">
-              <input 
+              <input aria-label="Adjust slider" 
                 type="range" 
                 min="0" max="40" 
                 value={startSoc} 
@@ -224,7 +223,7 @@ export default function CompareTool() {
                 className="w-full accent-slate-500"
               />
               <span className="text-slate-500">to</span>
-              <input 
+              <input aria-label="Adjust slider" 
                 type="range" 
                 min="50" max="100" 
                 value={endSoc} 
@@ -305,8 +304,8 @@ export default function CompareTool() {
                 }}
               />
               <ReferenceArea x1={startSoc} x2={endSoc} fill="#334155" fillOpacity={0.1} stroke="#475569" strokeDasharray="3 3" />
-              <Area type="monotone" dataKey="carA_kw" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorCarA)" name={carA.name} />
-              <Area type="monotone" dataKey="carB_kw" stroke="#0EA5E9" strokeWidth={3} fillOpacity={1} fill="url(#colorCarB)" name={carB.name} />
+              <Area type="monotone" dataKey="carA_kw" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorCarA)" name={carA.name} isAnimationActive={false} />
+              <Area type="monotone" dataKey="carB_kw" stroke="#0EA5E9" strokeWidth={3} fillOpacity={1} fill="url(#colorCarB)" name={carB.name} isAnimationActive={false} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

@@ -108,7 +108,7 @@ export default function IdleDrainTool() {
                   + Custom EV
                 </button>
               </div>
-              <select 
+              <select aria-label="Select option" 
                 value={vehicleId}
                 onChange={(e) => setVehicleId(e.target.value)}
                 className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-emerald-500 font-medium text-sm"
@@ -135,7 +135,7 @@ export default function IdleDrainTool() {
                 <span className="text-emerald-400 font-bold">{days} Days</span>
               </div>
               <input 
-                type="range" min="1" max="45" step="1"
+                aria-label="Adjust slider" type="range" min="1" max="45" step="1"
                 value={days}
                 onChange={(e) => setDays(Number(e.target.value))}
                 className="w-full accent-emerald-500 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
@@ -149,7 +149,7 @@ export default function IdleDrainTool() {
                 <span className="text-cyan-400 font-bold">{startSoc}%</span>
               </div>
               <input 
-                type="range" min="5" max="100" step="1"
+                aria-label="Adjust slider" type="range" min="5" max="100" step="1"
                 value={startSoc}
                 onChange={(e) => setStartSoc(Number(e.target.value))}
                 className="w-full accent-cyan-500 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
@@ -241,7 +241,7 @@ export default function IdleDrainTool() {
                 <span className="text-slate-300 font-bold">{Math.round(displayBufferDistance)} {distanceLabel}</span>
               </div>
               <input 
-                type="range" min="5" max={unit === 'mi' ? 100 : 160} step="1"
+                aria-label="Adjust slider" type="range" min="5" max={unit === 'mi' ? 100 : 160} step="1"
                 value={displayBufferDistance}
                 onChange={(e) => handleBufferChange(Number(e.target.value))}
                 className="w-full accent-slate-500 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"

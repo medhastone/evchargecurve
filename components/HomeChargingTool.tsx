@@ -109,7 +109,7 @@ export default function HomeChargingTool() {
                 + Custom EV
               </button>
             </div>
-            <select 
+            <select aria-label="Select option" 
               value={vehicleId}
               onChange={(e) => setVehicleId(e.target.value)}
               className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors appearance-none font-medium text-sm"
@@ -182,7 +182,7 @@ export default function HomeChargingTool() {
                   <span className="text-sm font-bold text-white">{startSoc}%</span>
                 </div>
                 <input 
-                  type="range" min="0" max="99" 
+                  aria-label="Adjust slider" type="range" min="0" max="99" 
                   value={startSoc} onChange={(e) => handleStartChange(Number(e.target.value))}
                   className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                 />
@@ -194,7 +194,7 @@ export default function HomeChargingTool() {
                   <span className="text-sm font-bold text-white">{endSoc}%</span>
                 </div>
                 <input 
-                  type="range" min="1" max="100" 
+                  aria-label="Adjust slider" type="range" min="1" max="100" 
                   value={endSoc} onChange={(e) => handleEndChange(Number(e.target.value))}
                   className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
                 />
@@ -250,7 +250,7 @@ export default function HomeChargingTool() {
                 <span className="text-sm font-bold text-white">{annualMiles.toLocaleString()} {distanceLabel}</span>
               </div>
               <input 
-                type="range" min="5000" max="35000" step="500"
+                aria-label="Adjust slider" type="range" min="5000" max="35000" step="500"
                 value={annualMiles} onChange={(e) => setAnnualMiles(Number(e.target.value))}
                 className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
               />

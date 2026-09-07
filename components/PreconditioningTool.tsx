@@ -165,7 +165,7 @@ export default function PreconditioningTool() {
                 <span className="text-white font-bold">{displayTemp}{tempLabel}</span>
               </div>
               <input 
-                type="range" min={unit === 'mi' ? 0 : -18} max={unit === 'mi' ? 60 : 15} step="1"
+                aria-label="Adjust slider" type="range" min={unit === 'mi' ? 0 : -18} max={unit === 'mi' ? 60 : 15} step="1"
                 value={displayTemp}
                 onChange={(e) => handleTempChange(Number(e.target.value))}
                 className="w-full accent-cyan-500 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
@@ -179,7 +179,7 @@ export default function PreconditioningTool() {
                 <span className="text-white font-bold">{displayDistance} {distanceLabel}</span>
               </div>
               <input 
-                type="range" min="5" max={unit === 'mi' ? 60 : 100} step="1"
+                aria-label="Adjust slider" type="range" min="5" max={unit === 'mi' ? 60 : 100} step="1"
                 value={displayDistance}
                 onChange={(e) => handleDistanceChange(Number(e.target.value))}
                 className="w-full accent-cyan-500 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
@@ -193,7 +193,7 @@ export default function PreconditioningTool() {
                 <span className="text-emerald-400 font-bold">{currency.symbol}{chargingCost.toFixed(2)} / kWh</span>
               </div>
               <input 
-                type="range" min="0.10" max="0.90" step="0.01"
+                aria-label="Adjust slider" type="range" min="0.10" max="0.90" step="0.01"
                 value={chargingCost}
                 onChange={(e) => setChargingCost(Number(e.target.value))}
                 className="w-full accent-emerald-500 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"

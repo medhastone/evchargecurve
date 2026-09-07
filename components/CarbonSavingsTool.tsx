@@ -119,7 +119,7 @@ export default function CarbonSavingsTool() {
               <span className="text-emerald-400 font-bold">{annualDistance.toLocaleString()} {distanceLabel}</span>
             </div>
             <input
-              type="range"
+              aria-label="Adjust slider" type="range"
               min={unit === 'mi' ? "5000" : "8000"}
               max={unit === 'mi' ? "30000" : "50000"}
               step={unit === 'mi' ? "1000" : "1000"}
@@ -135,7 +135,7 @@ export default function CarbonSavingsTool() {
               <span className="text-amber-400 font-bold">{displayEfficiency}</span>
             </div>
             <input
-              type="range"
+              aria-label="Adjust slider" type="range"
               min="15"
               max="55"
               step="1"
