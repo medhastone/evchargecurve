@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import FastChargeSimulator from '@/components/FastChargeSimulator';
 import StructuredData from '@/components/StructuredData';
+import OrganizationSchema from '@/components/OrganizationSchema';
 import { getToolMetadata } from '@/lib/seoConfig';
 import { 
   Cpu, 
@@ -32,6 +33,7 @@ export default function Home() {
     <div className="w-full bg-[#0B0F17] min-h-screen pb-24 text-slate-100">
       {/* Search Engine Pre-rendered JSON-LD Rich Snippet */}
       <StructuredData toolKey="dcFastCharge" />
+      <OrganizationSchema />
       
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-12 text-center relative">

@@ -2,14 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { VEHICLES } from '@/data/evModels';
-
 export default function Footer() {
  const currentYear = new Date().getFullYear();
  
- // Extract a few popular vehicles for the footer links
- const popularVehicles = Object.values(VEHICLES).slice(0, 5);
-
  return (
  <footer className="bg-[#080B10] border-t border-slate-800 pt-16 pb-8 mt-auto">
  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,20 +47,43 @@ export default function Footer() {
  Home Charging Economics
  </Link>
  </li>
+ <li>
+ <Link href="/panel-capacity" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+ Panel Capacity
+ </Link>
+ </li>
+ <li>
+ <Link href="/v2h-backup" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+ V2H Backup Simulator
+ </Link>
+ </li>
  </ul>
  </div>
 
- {/* Popular Vehicles Links */}
+ {/* More Tools */}
  <div>
- <h3 className="text-white font-semibold text-sm tracking-wider uppercase mb-4">Popular Curves</h3>
+ <h3 className="text-white font-semibold text-sm tracking-wider uppercase mb-4">More Tools</h3>
  <ul className="space-y-3">
- {popularVehicles.map((vehicle) => (
- <li key={vehicle.id}>
- <Link href={`/curve/${vehicle.id}`} className="text-slate-400 hover:text-emerald-400 text-sm transition-colors truncate block">
- {vehicle.name}
+ <li>
+ <Link href="/idle-drain" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+ Vampire Drain Calculator
  </Link>
  </li>
- ))}
+ <li>
+ <Link href="/destination-charging" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+ Destination Charging
+ </Link>
+ </li>
+ <li>
+ <Link href="/preconditioning" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+ Preconditioning Energy
+ </Link>
+ </li>
+ <li>
+ <Link href="/carbon-offset" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+ Carbon Offset Matrix
+ </Link>
+ </li>
  </ul>
  </div>
  </div>
@@ -75,9 +93,16 @@ export default function Footer() {
  <p className="text-slate-500 text-xs text-center md:text-left max-w-2xl">
  <strong>Disclaimer:</strong> Charging curves, range calculations, and battery health projections are estimates based on physical modeling and aggregated real-world data. Actual vehicle performance varies based on exact BMS software versions, environmental conditions, and individual usage patterns.
  </p>
+ <div className="flex flex-col items-center md:items-end gap-2">
+ <div className="flex items-center gap-4 text-slate-500 text-xs">
+ <Link href="/about" className="hover:text-slate-300 transition-colors">About Us</Link>
+ <Link href="/privacy" className="hover:text-slate-300 transition-colors">Privacy Policy</Link>
+ <Link href="/terms" className="hover:text-slate-300 transition-colors">Terms of Use</Link>
+ </div>
  <p className="text-slate-500 text-xs font-medium whitespace-nowrap">
  &copy; {currentYear} EVChargeCurve. All rights reserved.
  </p>
+ </div>
  </div>
  </div>
  </footer>
