@@ -80,8 +80,8 @@ export default function Home() {
         
         {/* Trust Badge */}
         <div className="mt-8 flex flex-col md:flex-row items-center justify-center gap-3 bg-[#131B2A]/80 border border-slate-800 rounded-2xl p-4 max-w-4xl mx-auto backdrop-blur-sm shadow-sm">
-          <ShieldCheck className="w-5 h-5 text-emerald-500 dark:text-emerald-400 flex-shrink-0" />
-          <p className="text-sm text-slate-800 dark:text-slate-300 font-semibold md:font-medium text-center md:text-left tracking-wide">
+          <ShieldCheck className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+          <p className="text-sm text-slate-300 font-medium text-center md:text-left tracking-wide">
             100% Client-Side Piecewise Integration &bull; Accurate 10%–80% Dwell Modeling &bull; No Marketing Fluff
           </p>
         </div>
@@ -101,7 +101,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1 */}
           <div className="relative overflow-hidden bg-[#131B2A] border border-slate-800 rounded-2xl p-8 group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -bottom-8 text-[12rem] font-black text-[#0B0F17] select-none group-hover:text-slate-900/50 transition-colors">1</div>
+            <div className="absolute -right-4 -bottom-8 text-[12rem] font-black text-[#0B0F17] select-none group-hover:text-slate-900/50 transition-colors" aria-hidden="true">1</div>
             <div className="relative z-10">
               <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center mb-6 shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]">
                 <Cpu className="w-6 h-6 text-amber-400" />
@@ -115,7 +115,7 @@ export default function Home() {
 
           {/* Card 2 */}
           <div className="relative overflow-hidden bg-[#131B2A] border border-slate-800 rounded-2xl p-8 group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -bottom-8 text-[12rem] font-black text-[#0B0F17] select-none group-hover:text-slate-900/50 transition-colors">2</div>
+            <div className="absolute -right-4 -bottom-8 text-[12rem] font-black text-[#0B0F17] select-none group-hover:text-slate-900/50 transition-colors" aria-hidden="true">2</div>
             <div className="relative z-10">
               <div className="w-12 h-12 bg-cyan-500/10 border border-cyan-500/20 rounded-xl flex items-center justify-center mb-6 shadow-[0_0_15px_-3px_rgba(6,182,212,0.2)]">
                 <Zap className="w-6 h-6 text-cyan-400" />
@@ -129,7 +129,7 @@ export default function Home() {
 
           {/* Card 3 */}
           <div className="relative overflow-hidden bg-[#131B2A] border border-slate-800 rounded-2xl p-8 group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -bottom-8 text-[12rem] font-black text-[#0B0F17] select-none group-hover:text-slate-900/50 transition-colors">3</div>
+            <div className="absolute -right-4 -bottom-8 text-[12rem] font-black text-[#0B0F17] select-none group-hover:text-slate-900/50 transition-colors" aria-hidden="true">3</div>
             <div className="relative z-10">
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mb-6 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]">
                 <CheckCircle2 className="w-6 h-6 text-emerald-400" />
@@ -284,6 +284,7 @@ export default function Home() {
         <div className="overflow-hidden rounded-2xl border border-slate-800 bg-[#131B2A] shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
+              <caption className="sr-only">Production EV 10% to 80% DC Fast Charge Time Benchmarks and Taper Data</caption>
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
                   <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle &amp; Pack Size</th>

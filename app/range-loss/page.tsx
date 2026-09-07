@@ -118,7 +118,7 @@ export default function RangeLossPage() {
       
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-14 md:pb-10 text-center relative">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/20 via-[#0B0F17]/0 to-transparent pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/20 via-[#0B0F17]/0 to-transparent pointer-events-none" aria-hidden="true"></div>
 
         {/* Visual Breadcrumb Navigation */}
         <Breadcrumb items={[{ label: 'Cold Weather & Towing Range Loss' }]} />
@@ -136,7 +136,7 @@ export default function RangeLossPage() {
           &amp; Highway Towing Estimator
         </h1>
 
-        <p className="text-base sm:text-lg md:text-xl text-slate-400 max-w-4xl mx-auto leading-relaxed mb-8 relative z-10">
+        <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-4xl mx-auto leading-relaxed mb-8 relative z-10">
           Official EPA window stickers assume warm 77&deg;F lab conditions. Project real-world sub-zero highway drops, thermodynamic HVAC drain, and aerodynamic trailer towing consumption before your next trip.
         </p>
 
@@ -182,7 +182,7 @@ export default function RangeLossPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               1
             </div>
             <div className="relative z-10">
@@ -198,7 +198,7 @@ export default function RangeLossPage() {
 
           {/* Card 2 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               2
             </div>
             <div className="relative z-10">
@@ -214,7 +214,7 @@ export default function RangeLossPage() {
 
           {/* Card 3 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               3
             </div>
             <div className="relative z-10">
@@ -332,6 +332,9 @@ export default function RangeLossPage() {
         <div className="bg-[#131B2A] border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
+              <caption className="sr-only">
+                EV Cold Weather Range Loss and Trailer Towing Benchmarks Matrix
+              </caption>
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
                   <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle &amp; Battery Size</th>

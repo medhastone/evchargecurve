@@ -47,9 +47,9 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo Section */}
           <div className="flex-shrink-0 flex items-center gap-2">
-            <Link href="/" className="flex items-center gap-2 group">
+            <Link href="/" className="flex items-center gap-2 group" aria-label="EVChargeCurve Home">
               <div className="bg-emerald-500/10 p-1.5 rounded-lg border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
-                <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded object-contain" referrerPolicy="no-referrer" priority />
+                <Image src="/logo.png" alt="EVChargeCurve Logo" width={40} height={40} priority className="rounded object-contain" referrerPolicy="no-referrer" />
               </div>
               <span className="font-bold text-lg tracking-tight text-white">
                 EVCharge<span className="text-emerald-400">Curve</span>
@@ -58,22 +58,29 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-6" aria-label="Main Navigation">
             <div className="relative group">
-              <button className={cn(
-                "flex items-center gap-1 text-sm font-medium transition-colors py-2",
-                isToolActive ? "text-emerald-400" : "text-slate-300 hover:text-emerald-400"
-              )}>
-                Tools <ChevronDown className="w-4 h-4 opacity-70" />
+              <button 
+                type="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="Toggle Tools Menu"
+                className={cn(
+                  "flex items-center gap-1 text-sm font-medium transition-colors py-2",
+                  isToolActive ? "text-emerald-400" : "text-slate-300 hover:text-emerald-400"
+                )}
+              >
+                Tools <ChevronDown className="w-4 h-4 opacity-70" aria-hidden="true" />
               </button>
               <div className="absolute top-full left-0 mt-0 pt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                <div className="bg-[#0F141E] border border-slate-700 rounded-lg shadow-xl py-2">
+                <div className="bg-[#0F141E] border border-slate-700 rounded-lg shadow-xl py-2" role="menu" aria-label="Tools Navigation">
                   {TOOL_LINKS.map(link => {
                     const isActive = pathname === link.path || (link.path !== '/' && pathname?.startsWith(link.path));
                     return (
                       <Link 
                         key={link.path} 
                         href={link.path} 
+                        role="menuitem"
                         className={cn(
                           "block px-4 py-2 text-sm transition-colors",
                           isActive ? "text-emerald-400 bg-slate-800/50" : "text-slate-300 hover:bg-slate-800 hover:text-white"
@@ -109,7 +116,9 @@ export default function Navbar() {
             
             {/* Custom EV Studio Quick Button */}
             <button
+              type="button"
               onClick={() => openStudio()}
+              aria-label="Open Custom Electric Vehicle Studio"
               className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold transition-all"
               title="Add any custom EV or upload telemetry"
             >
@@ -118,9 +127,12 @@ export default function Navbar() {
             </button>
             
             {/* Unit Toggle (Desktop) */}
-            <div className="hidden sm:flex bg-slate-800/50 p-1 rounded-lg border border-slate-700">
+            <div className="hidden sm:flex bg-slate-800/50 p-1 rounded-lg border border-slate-700" role="group" aria-label="Distance unit selection">
               <button
+                type="button"
                 onClick={() => setUnit('mi')}
+                aria-label="Set distance unit to miles"
+                aria-pressed={unit === 'mi'}
                 className={cn(
                   "px-2.5 py-1 text-xs font-bold rounded-md transition-all",
                   unit === 'mi' ? "bg-slate-700 text-white shadow-sm" : "text-slate-400 hover:text-slate-200"
@@ -129,7 +141,10 @@ export default function Navbar() {
                 MI
               </button>
               <button
+                type="button"
                 onClick={() => setUnit('km')}
+                aria-label="Set distance unit to kilometers"
+                aria-pressed={unit === 'km'}
                 className={cn(
                   "px-2.5 py-1 text-xs font-bold rounded-md transition-all",
                   unit === 'km' ? "bg-slate-700 text-white shadow-sm" : "text-slate-400 hover:text-slate-200"
@@ -142,20 +157,27 @@ export default function Navbar() {
             {/* Currency Selector (Desktop) */}
             <div className="relative hidden sm:block">
               <button
+                type="button"
                 onClick={() => setIsCurrencyDropdownOpen(!isCurrencyDropdownOpen)}
+                aria-label={`Select Currency. Currently ${currency.label} ${currency.symbol}`}
+                aria-expanded={isCurrencyDropdownOpen}
+                aria-haspopup="true"
                 className="flex items-center gap-1.5 text-sm font-medium text-slate-300 hover:text-white transition-colors bg-slate-800/50 px-3 py-1.5 rounded-md border border-slate-700 hover:border-slate-600"
               >
                 <span>{currency.label}</span>
-                <span className="text-slate-500">{currency.symbol}</span>
-                <ChevronDown className="w-4 h-4 text-slate-400" />
+                <span className="text-slate-400">{currency.symbol}</span>
+                <ChevronDown className="w-4 h-4 text-slate-400" aria-hidden="true" />
               </button>
               {isCurrencyDropdownOpen && (
                 <>
-                  <div className="fixed inset-0 z-40" onClick={() => setIsCurrencyDropdownOpen(false)} />
-                  <div className="absolute right-0 mt-2 w-32 bg-[#0F141E] border border-slate-700 rounded-lg shadow-xl py-1 z-50">
+                  <div className="fixed inset-0 z-40" onClick={() => setIsCurrencyDropdownOpen(false)} aria-hidden="true" />
+                  <div className="absolute right-0 mt-2 w-32 bg-[#0F141E] border border-slate-700 rounded-lg shadow-xl py-1 z-50" role="menu">
                     {CURRENCIES.map((c) => (
                       <button
                         key={c.label}
+                        type="button"
+                        role="menuitem"
+                        aria-label={`Change currency to ${c.label} (${c.symbol})`}
                         className="w-full text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors flex justify-between items-center"
                         onClick={() => {
                           setCurrency(c);
@@ -163,7 +185,7 @@ export default function Navbar() {
                         }}
                       >
                         <span>{c.label}</span>
-                        <span className="text-slate-500">{c.symbol}</span>
+                        <span className="text-slate-400">{c.symbol}</span>
                       </button>
                     ))}
                   </div>
@@ -173,6 +195,7 @@ export default function Navbar() {
 
             {/* Theme Toggle (Desktop) */}
             <button
+              type="button"
               onClick={toggleTheme}
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
               title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
@@ -187,9 +210,11 @@ export default function Navbar() {
 
             {/* Mobile Menu Toggle */}
             <button
+              type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 text-slate-400 hover:text-white focus:outline-none"
-              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>

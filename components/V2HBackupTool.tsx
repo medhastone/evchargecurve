@@ -1,13 +1,11 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { motion } from 'motion/react';
 import { 
   Zap, 
   Home, 
   Battery, 
   Clock,
-  Settings2,
   Car,
   CheckCircle2,
   AlertTriangle,
@@ -17,7 +15,12 @@ import {
   Droplets,
   Tv,
   Thermometer,
-  Coffee
+  Coffee,
+  PlusCircle,
+  ShieldCheck,
+  Share2,
+  Copy,
+  Check
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -28,40 +31,58 @@ import {
   Tooltip, 
   ResponsiveContainer
 } from 'recharts';
+import { useVehicles } from '@/components/providers/VehicleContext';
 
-const EVS = [
-  { id: 'f150-sr', name: 'Ford F-150 Lightning (SR)', capacity: 98, brand: 'Ford' },
-  { id: 'f150-er', name: 'Ford F-150 Lightning (ER)', capacity: 131, brand: 'Ford' },
-  { id: 'cybertruck', name: 'Cybertruck (AWD)', capacity: 123, brand: 'Tesla' },
-  { id: 'ioniq5', name: 'Hyundai Ioniq 5', capacity: 77.4, brand: 'Hyundai' },
-  { id: 'ev6', name: 'Kia EV6 (LR)', capacity: 77.4, brand: 'Kia' },
-  { id: 'blazer', name: 'Chevy Blazer EV', capacity: 85, brand: 'Chevrolet' },
-  { id: 'silverado', name: 'Chevy Silverado EV', capacity: 205, brand: 'Chevrolet' },
-  { id: 'leaf', name: 'Nissan Leaf (Plus)', capacity: 60, brand: 'Nissan' }
-];
+interface ApplianceItem {
+  id: string;
+  name: string;
+  dailyKwh: number;
+  icon: React.ComponentType<{ className?: string }>;
+  category: string;
+  defaultChecked: boolean;
+}
 
-const APPLIANCES = [
-  { id: 'fridge', name: 'Refrigerator', dailyKwh: 1.5, icon: Snowflake, defaultChecked: true },
-  { id: 'internet', name: 'Internet & LED Lights', dailyKwh: 0.8, icon: Wifi, defaultChecked: true },
-  { id: 'sump', name: 'Sump Pump', dailyKwh: 1.2, icon: Droplets, defaultChecked: false },
-  { id: 'well', name: 'Well Pump', dailyKwh: 1.5, icon: Droplets, defaultChecked: false },
-  { id: 'tv', name: 'TV & Entertainment', dailyKwh: 0.5, icon: Tv, defaultChecked: true },
-  { id: 'microwave', name: 'Microwave (15 mins/day)', dailyKwh: 0.4, icon: Coffee, defaultChecked: true },
-  { id: 'space-heater', name: 'Portable Space Heater', dailyKwh: 12.0, icon: Flame, defaultChecked: false },
-  { id: 'mini-split', name: 'Mini-Split A/C & Heat', dailyKwh: 8.0, icon: Thermometer, defaultChecked: false },
-  { id: 'water-heater', name: 'Electric Water Heater', dailyKwh: 14.0, icon: Flame, defaultChecked: false }
+const APPLIANCES: ApplianceItem[] = [
+  { id: 'fridge', name: 'ENERGY STAR Refrigerator', dailyKwh: 1.5, icon: Snowflake, category: 'Essential', defaultChecked: true },
+  { id: 'internet', name: 'Wi-Fi Router & LED Lighting', dailyKwh: 0.8, icon: Wifi, category: 'Essential', defaultChecked: true },
+  { id: 'sump', name: 'Sump Pump (Intermittent)', dailyKwh: 1.2, icon: Droplets, category: 'Critical', defaultChecked: false },
+  { id: 'well', name: 'Well Water Pump', dailyKwh: 1.5, icon: Droplets, category: 'Critical', defaultChecked: false },
+  { id: 'tv', name: 'Smart TV & Home Workstation', dailyKwh: 0.6, icon: Tv, category: 'Comfort', defaultChecked: true },
+  { id: 'microwave', name: 'Microwave & Induction (20m)', dailyKwh: 0.5, icon: Coffee, category: 'Comfort', defaultChecked: true },
+  { id: 'furnace', name: 'Gas Furnace Blower Fan', dailyKwh: 2.4, icon: Flame, category: 'Critical', defaultChecked: false },
+  { id: 'mini-split', name: 'Mini-Split Heat Pump (1 Zone)', dailyKwh: 7.5, icon: Thermometer, category: 'HVAC', defaultChecked: false },
+  { id: 'water-heater', name: 'Electric Water Heater', dailyKwh: 12.0, icon: Flame, category: 'Heavy Load', defaultChecked: false }
 ];
 
 export default function V2HBackupTool() {
-  const [selectedEvId, setSelectedEvId] = useState(EVS[1].id);
-  const [reserveBuffer, setReserveBuffer] = useState(20);
-  const [activeAppliances, setActiveAppliances] = useState<Record<string, boolean>>(
+  const { allVehicles, vehiclesMap, openStudio, customVehicles, isCustomVehicle } = useVehicles();
+
+  // Pick default vehicle if available, or Ford F-150 Lightning
+  const [selectedVehicleId, setSelectedVehicleId] = useState<string>(() => {
+    const f150 = allVehicles.find(v => v.id.includes('f-150') || v.id.includes('lightning') || v.id.includes('cybertruck'));
+    return f150 ? f150.id : (allVehicles[0]?.id || 'ford-f150-lightning-er');
+  });
+
+  const [reserveBuffer, setReserveBuffer] = useState<number>(20);
+  const [activeAppliances, setActiveAppliances] = useState<Record<string, boolean>>(() =>
     APPLIANCES.reduce((acc, app) => ({ ...acc, [app.id]: app.defaultChecked }), {})
   );
+  const [copied, setCopied] = useState(false);
 
-  const selectedEv = EVS.find(ev => ev.id === selectedEvId) || EVS[0];
-  const usableCapacity = selectedEv.capacity * (1 - reserveBuffer / 100);
-  
+  const vehicle = useMemo(() => {
+    return vehiclesMap[selectedVehicleId] || allVehicles[0] || {
+      id: 'custom',
+      name: 'Ford F-150 Lightning Extended',
+      usablePackKwh: 131,
+      batteryCapacity: 131
+    };
+  }, [selectedVehicleId, vehiclesMap, allVehicles]);
+
+  const totalBatteryCapacity = vehicle.usablePackKwh || vehicle.batteryCapacity || 100;
+  // Apply reserve driving buffer & 88% roundtrip inverter efficiency
+  const usableCapacityForHome = Math.max(0, (totalBatteryCapacity * (1 - reserveBuffer / 100)) * 0.88);
+  const reservedForDrivingKwh = totalBatteryCapacity * (reserveBuffer / 100);
+
   const dailyLoad = useMemo(() => {
     return APPLIANCES.reduce((total, app) => {
       if (activeAppliances[app.id]) {
@@ -71,37 +92,42 @@ export default function V2HBackupTool() {
     }, 0);
   }, [activeAppliances]);
 
-  const durationDays = dailyLoad > 0 ? usableCapacity / dailyLoad : 0;
+  const durationDays = dailyLoad > 0 ? usableCapacityForHome / dailyLoad : 0;
   const fullDays = Math.floor(durationDays);
   const remainingHours = Math.round((durationDays - fullDays) * 24);
 
+  // Fast-rendering, lightweight timeline data
   const chartData = useMemo(() => {
+    if (dailyLoad === 0) return [];
     const data = [];
-    let currentEnergy = usableCapacity;
+    let currentEnergy = usableCapacityForHome;
     const hourlyLoad = dailyLoad / 24;
     
-    if (dailyLoad === 0) return [];
-
     let hour = 0;
-    while (currentEnergy > 0 && hour <= 24 * 30) {
+    const maxHours = Math.min(24 * 30, Math.ceil(durationDays * 24));
+    const step = Math.max(6, Math.floor(maxHours / 10));
+
+    while (hour <= maxHours && currentEnergy >= 0) {
       data.push({
         hour,
-        displayTime: hour < 24 ? `${hour}h` : `Day ${Math.floor(hour / 24)}`,
+        displayTime: hour < 24 ? `${hour}h` : `D${Math.floor(hour / 24)} +${hour % 24}h`,
         energy: Number(Math.max(0, currentEnergy).toFixed(1)),
       });
-      currentEnergy -= (hourlyLoad * 6); // Step by 6 hours for chart clarity
-      hour += 6;
+      currentEnergy -= (hourlyLoad * step);
+      hour += step;
     }
     
-    // Ensure final point hits 0 precisely
-    data.push({
-      hour: durationDays * 24,
-      displayTime: 'Empty',
-      energy: 0
-    });
+    // Terminal point
+    if (data.length > 0 && data[data.length - 1].energy > 0) {
+      data.push({
+        hour: Math.round(durationDays * 24),
+        displayTime: '0 kWh (Reserve)',
+        energy: 0
+      });
+    }
     
     return data;
-  }, [usableCapacity, dailyLoad, durationDays]);
+  }, [usableCapacityForHome, dailyLoad, durationDays]);
 
   const toggleAppliance = (id: string) => {
     setActiveAppliances(prev => ({
@@ -110,274 +136,289 @@ export default function V2HBackupTool() {
     }));
   };
 
-  const isHighLoad = dailyLoad > 20;
+  const handleCopy = () => {
+    if (typeof navigator !== 'undefined') {
+      const text = `⚡ EV V2H Outage Runtime: Driving a ${vehicle.name} (${totalBatteryCapacity} kWh) with ${reserveBuffer}% driving reserve provides ${fullDays} days, ${remainingHours} hours of whole-home emergency power at ${dailyLoad.toFixed(1)} kWh/day. Calculated via EVChargeCurve V2H Calculator.`;
+      navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
+
+  const isHighLoad = dailyLoad > 18;
 
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 text-sm font-medium">
-            <Home className="w-4 h-4" />
-            Vehicle-to-Home (V2H) Sizer
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
-            Power Outage Survival Calculator
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 max-w-2xl text-lg">
-            Calculate exactly how many days your EV can keep your home running during a blackout.
-          </p>
-        </div>
-      </div>
-
+    <div className="bg-[#131B2A] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl w-full max-w-7xl mx-auto" role="region" aria-label="EV V2H Home Power Outage Calculator">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        {/* Left Column: Inputs */}
+        {/* Left Column: Inputs & Configuration */}
         <div className="lg:col-span-5 space-y-6">
           
-          {/* EV Selection & Buffer */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-              <Car className="w-5 h-5 text-blue-500" />
-              Vehicle Configuration
-            </h3>
-            
-            <div className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Select Your EV
-                </label>
-                <select aria-label="Select option" 
-                  value={selectedEvId}
-                  onChange={(e) => setSelectedEvId(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                >
-                  {EVS.map(ev => (
-                    <option key={ev.id} value={ev.id}>
-                      {ev.name} ({ev.capacity} kWh)
-                    </option>
+          {/* EV Selection & Reserve Buffer */}
+          <div className="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl">
+            <div className="flex items-center justify-between mb-2">
+              <label htmlFor="v2h-vehicle-select" className="text-xs text-slate-400 uppercase tracking-wider block font-semibold">
+                Select EV Platform
+              </label>
+              <button
+                type="button"
+                onClick={() => openStudio()}
+                aria-label="Open Custom Electric Vehicle Studio"
+                className="text-xs text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition-colors"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                + Custom EV
+              </button>
+            </div>
+            <select
+              id="v2h-vehicle-select"
+              aria-label="Select Electric Vehicle for V2H Home Backup"
+              value={selectedVehicleId}
+              onChange={(e) => setSelectedVehicleId(e.target.value)}
+              className="w-full bg-[#0B0F17] border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 transition-colors font-medium text-sm appearance-none"
+            >
+              {customVehicles.length > 0 && (
+                <optgroup label="⭐ My Custom Vehicles">
+                  {customVehicles.map(v => (
+                    <option key={v.id} value={v.id}>[Custom] {v.name} ({v.usablePackKwh || v.batteryCapacity} kWh)</option>
                   ))}
-                </select>
-              </div>
+                </optgroup>
+              )}
+              <optgroup label="⚡ Bidirectional V2H & High Capacity EVs">
+                {allVehicles.filter(v => !isCustomVehicle(v.id)).map(v => (
+                  <option key={v.id} value={v.id}>
+                    {v.name} ({v.usablePackKwh || v.batteryCapacity} kWh)
+                  </option>
+                ))}
+              </optgroup>
+            </select>
 
-              <div>
-                <div className="flex justify-between mb-2">
-                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                    Reserve Driving Buffer
-                  </label>
-                  <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
-                    {reserveBuffer}%
-                  </span>
-                </div>
-                <input 
-                  aria-label="Adjust slider" type="range" 
-                  min="0" 
-                  max="50" 
-                  step="5"
-                  value={reserveBuffer}
-                  onChange={(e) => setReserveBuffer(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-                />
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-                  Keep some energy reserved so you can still drive to safety or a charging station after the outage.
-                </p>
+            {/* Reserve Slider */}
+            <div className="mt-5 pt-4 border-t border-slate-800/80">
+              <div className="flex justify-between items-center mb-2">
+                <label htmlFor="reserve-buffer-slider" className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+                  Driving Evacuation Reserve
+                </label>
+                <span className="text-amber-400 font-bold text-sm">{reserveBuffer}% ({reservedForDrivingKwh.toFixed(1)} kWh)</span>
               </div>
-            </div>
-          </div>
-
-          {/* Appliances */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
-             <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-amber-500" />
-                  Essential Appliances
-                </h3>
-                <span className="text-sm font-medium text-slate-500 bg-slate-100 dark:bg-slate-700 dark:text-slate-300 px-3 py-1 rounded-full">
-                  {dailyLoad.toFixed(1)} kWh / day
-                </span>
-             </div>
-
-             <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                {APPLIANCES.map((app) => {
-                  const Icon = app.icon;
-                  const isActive = activeAppliances[app.id];
-                  return (
-                    <button
-                      key={app.id}
-                      onClick={() => toggleAppliance(app.id)}
-                      className={`w-full flex items-center justify-between p-4 rounded-xl border text-left transition-all ${
-                        isActive 
-                          ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800' 
-                          : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className={`p-2 rounded-lg ${isActive ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400' : 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400'}`}>
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <p className={`font-medium ${isActive ? 'text-blue-900 dark:text-blue-100' : 'text-slate-700 dark:text-slate-300'}`}>
-                            {app.name}
-                          </p>
-                          <p className="text-sm text-slate-500 dark:text-slate-400">
-                            {app.dailyKwh} kWh/day
-                          </p>
-                        </div>
-                      </div>
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                        isActive 
-                          ? 'bg-blue-500 border-blue-500 text-white' 
-                          : 'border-slate-300 dark:border-slate-600'
-                      }`}>
-                        {isActive && <CheckCircle2 className="w-3.5 h-3.5" />}
-                      </div>
-                    </button>
-                  );
-                })}
-             </div>
-             
-             {isHighLoad && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl flex gap-3"
-                >
-                  <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-300">High Energy Load</h4>
-                    <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
-                      Heating and cooling appliances drain batteries rapidly. Consider running them only intermittently to extend your survival time.
-                    </p>
-                  </div>
-                </motion.div>
-             )}
-          </div>
-        </div>
-
-        {/* Right Column: Results & Graph */}
-        <div className="lg:col-span-7 space-y-6">
-          
-          {/* Top Result Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-6 opacity-10">
-                <Clock className="w-24 h-24" />
-              </div>
-              <div className="relative z-10">
-                <p className="text-blue-100 font-medium mb-2">Estimated Runtime</p>
-                <div className="flex items-baseline gap-2">
-                  {fullDays > 0 && (
-                    <>
-                      <span className="text-5xl font-bold tracking-tight">{fullDays}</span>
-                      <span className="text-xl font-medium text-blue-200">days</span>
-                    </>
-                  )}
-                  {remainingHours > 0 && (
-                    <>
-                      <span className="text-4xl font-bold tracking-tight ml-1">{remainingHours}</span>
-                      <span className="text-lg font-medium text-blue-200">hrs</span>
-                    </>
-                  )}
-                  {fullDays === 0 && remainingHours === 0 && (
-                    <span className="text-4xl font-bold tracking-tight">0 hrs</span>
-                  )}
-                </div>
-                <p className="text-blue-200 text-sm mt-4">
-                  Based on {dailyLoad.toFixed(1)} kWh daily consumption.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm flex flex-col justify-center">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-slate-600 dark:text-slate-400 font-medium">Usable Battery</p>
-                <Battery className="w-5 h-5 text-emerald-500" />
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
-                  {usableCapacity.toFixed(1)}
-                </span>
-                <span className="text-lg font-medium text-slate-500 dark:text-slate-400">kWh</span>
-              </div>
-              <div className="mt-4 flex items-center gap-2">
-                <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-emerald-500 rounded-full" 
-                    style={{ width: `${100 - reserveBuffer}%` }}
-                  />
-                </div>
-                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 w-10 text-right">
-                  {100 - reserveBuffer}%
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-                {reserveBuffer}% reserved for driving.
+              <input
+                id="reserve-buffer-slider"
+                aria-label="Driving evacuation reserve slider percentage"
+                type="range"
+                min="0"
+                max="50"
+                step="5"
+                value={reserveBuffer}
+                onChange={(e) => setReserveBuffer(Number(e.target.value))}
+                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+              />
+              <p className="text-[11px] text-slate-400 mt-2 leading-normal">
+                Locks {reserveBuffer}% state-of-charge so you always retain ~{Math.round((reserveBuffer / 100) * 300)} miles of driving range for emergency evacuation.
               </p>
             </div>
           </div>
 
-          {/* Graph */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-6">
-              Battery Discharge Curve
-            </h3>
-            
-            {dailyLoad > 0 ? (
-              <div className="h-[350px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="colorEnergy" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#cbd5e1" opacity={0.2} />
-                    <XAxis 
-                      dataKey="displayTime" 
-                      stroke="#94a3b8" 
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                      minTickGap={30}
-                    />
-                    <YAxis 
-                      stroke="#94a3b8" 
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                      tickFormatter={(value) => `${value}`}
-                    />
-                    <Tooltip
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(15, 23, 42, 0.9)', 
-                        border: 'none',
-                        borderRadius: '12px',
-                        color: '#fff',
-                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-                      }}
-                      itemStyle={{ color: '#bae6fd' }}
-                      formatter={(value: any) => [`${value} kWh`, 'Remaining Energy']}
-                      labelStyle={{ color: '#94a3b8', marginBottom: '4px' }}
-                    />
-                    <Area 
-                      type="monotone" 
-                      dataKey="energy" 
-                      stroke="#3b82f6" 
-                      strokeWidth={3}
-                      fillOpacity={1} 
-                      fill="url(#colorEnergy)" 
-                      animationDuration={1500}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+          {/* Active Appliances Checklist */}
+          <div className="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                <span>Outage Appliance Loads</span>
               </div>
-            ) : (
-              <div className="h-[350px] w-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-400">
-                <Settings2 className="w-12 h-12 mb-4 opacity-20" />
-                <p>Select at least one appliance to see the discharge curve.</p>
+              <span className="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
+                {dailyLoad.toFixed(1)} kWh / day
+              </span>
+            </div>
+
+            <div className="space-y-2.5 max-h-[320px] overflow-y-auto pr-1">
+              {APPLIANCES.map((app) => {
+                const Icon = app.icon;
+                const isActive = activeAppliances[app.id];
+                return (
+                  <button
+                    key={app.id}
+                    type="button"
+                    role="switch"
+                    aria-checked={isActive}
+                    aria-label={`Toggle ${app.name} (${app.dailyKwh} kWh/day)`}
+                    onClick={() => toggleAppliance(app.id)}
+                    className={`w-full flex items-center justify-between p-3 rounded-xl border text-left transition-colors ${
+                      isActive 
+                        ? 'bg-amber-950/20 border-amber-500/50 text-white' 
+                        : 'bg-[#0B0F17] border-slate-800 text-slate-400 hover:border-slate-700'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg ${isActive ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-500'}`}>
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className={`text-xs font-semibold ${isActive ? 'text-slate-100' : 'text-slate-400'}`}>
+                          {app.name}
+                        </div>
+                        <div className="text-[11px] text-slate-500">
+                          {app.category} &bull; {app.dailyKwh} kWh/day
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 ${
+                      isActive 
+                        ? 'bg-amber-500 border-amber-500 text-slate-950' 
+                        : 'border-slate-700 bg-slate-900'
+                    }`}>
+                      {isActive && <CheckCircle2 className="w-3.5 h-3.5" />}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {isHighLoad && (
+              <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-start gap-2.5 text-xs text-amber-300">
+                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <span>Heavy thermal loads (heat pumps, water heaters) consume high energy. Running them intermittently extends blackout autonomy by 3x.</span>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Right Column: Runtime Results & Battery Discharge Curve */}
+        <div className="lg:col-span-7 space-y-6">
+          
+          {/* Key Metric Highlights */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="bg-[#0B0F17] border border-slate-800 rounded-2xl p-4 text-center">
+              <div className="text-slate-400 text-xs uppercase tracking-wider mb-1 font-semibold flex items-center justify-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-amber-400" />
+                <span>Emergency Runtime</span>
+              </div>
+              <div className="text-2xl sm:text-3xl font-black text-amber-400">
+                {fullDays} <span className="text-sm font-normal text-slate-300">days</span> {remainingHours > 0 ? `${remainingHours}h` : ''}
+              </div>
+              <div className="text-[11px] text-slate-400 mt-1">
+                {dailyLoad > 0 ? `@ ${dailyLoad.toFixed(1)} kWh/day` : 'No loads selected'}
+              </div>
+            </div>
+
+            <div className="bg-[#0B0F17] border border-slate-800 rounded-2xl p-4 text-center">
+              <div className="text-slate-400 text-xs uppercase tracking-wider mb-1 font-semibold flex items-center justify-center gap-1">
+                <Battery className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Usable for Home</span>
+              </div>
+              <div className="text-2xl sm:text-3xl font-black text-emerald-400">
+                {usableCapacityForHome.toFixed(1)} <span className="text-sm font-normal text-slate-300">kWh</span>
+              </div>
+              <div className="text-[11px] text-slate-400 mt-1">
+                After 88% inverter conversion
+              </div>
+            </div>
+
+            <div className="col-span-2 sm:col-span-1 bg-[#0B0F17] border border-slate-800 rounded-2xl p-4 text-center">
+              <div className="text-slate-400 text-xs uppercase tracking-wider mb-1 font-semibold flex items-center justify-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Powerwall Equivalent</span>
+              </div>
+              <div className="text-2xl sm:text-3xl font-black text-cyan-400">
+                {(totalBatteryCapacity / 13.5).toFixed(1)}x
+              </div>
+              <div className="text-[11px] text-slate-400 mt-1">
+                vs 13.5 kWh Powerwall units
+              </div>
+            </div>
+          </div>
+
+          {/* Discharge Curve Chart with isAnimationActive={false} for instant LCP/Speed Index */}
+          <div className="h-[280px] w-full bg-[#0B0F17] border border-slate-800 rounded-2xl p-4 pt-6">
+            <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-2 px-1">
+              Hourly Battery Depletion Curve (V2H Inverter Output)
+            </div>
+            {dailyLoad > 0 ? (
+              <ResponsiveContainer width="100%" height="88%">
+                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="v2hEnergyGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
+                  <XAxis 
+                    dataKey="displayTime" 
+                    stroke="#94a3b8" 
+                    fontSize={11}
+                    tick={{ fill: '#94a3b8' }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis 
+                    stroke="#94a3b8" 
+                    fontSize={11}
+                    tick={{ fill: '#94a3b8' }}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => `${value}k`}
+                  />
+                  <Tooltip
+                    contentStyle={{ 
+                      backgroundColor: '#131B2A', 
+                      borderColor: '#334155', 
+                      borderRadius: '12px', 
+                      color: '#f8fafc',
+                      boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)'
+                    }}
+                    itemStyle={{ color: '#fbbf24', fontSize: '13px' }}
+                    formatter={(value: any) => [`${value} kWh`, 'Remaining Usable Energy']}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="energy" 
+                    stroke="#f59e0b" 
+                    strokeWidth={2.5}
+                    fillOpacity={1} 
+                    fill="url(#v2hEnergyGrad)" 
+                    isAnimationActive={false}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-slate-500 text-sm">
+                Select at least one appliance load to calculate discharge curve.
+              </div>
+            )}
+          </div>
+
+          {/* Action / Share Slip */}
+          <div className="flex flex-col sm:flex-row gap-3 pt-1">
+            <button 
+              type="button"
+              onClick={handleCopy}
+              aria-label="Copy V2H blackout survival calculation to clipboard"
+              className="flex-1 flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-4 rounded-xl border border-slate-700 transition-colors text-sm"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  <span className="text-emerald-400">Calculation Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4 text-slate-400" />
+                  <span>Copy Emergency Plan Slip</span>
+                </>
+              )}
+            </button>
+            <button 
+              type="button"
+              onClick={() => {
+                const text = `⚡ V2H Emergency Power: Driving a ${vehicle.name} provides ${fullDays} days, ${remainingHours} hours of blackout power for my home! Check your EV at EVChargeCurve.`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+              }}
+              aria-label="Share V2H outage plan on WhatsApp"
+              className="flex-1 flex items-center justify-center gap-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-amber-400 font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
+            >
+              <Share2 className="w-4 h-4" />
+              <span>Share Plan on WhatsApp</span>
+            </button>
           </div>
 
         </div>

@@ -114,7 +114,7 @@ export default function HomeChargingPage() {
       
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-14 md:pb-10 text-center relative">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-[#0B0F17]/0 to-transparent pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-[#0B0F17]/0 to-transparent pointer-events-none" aria-hidden="true"></div>
 
         {/* Visual Breadcrumb Navigation */}
         <Breadcrumb items={[{ label: 'Home Charging Time Calculator' }]} />
@@ -132,7 +132,7 @@ export default function HomeChargingPage() {
           &amp; Level 2 Cost Estimator
         </h1>
 
-        <p className="text-base sm:text-lg md:text-xl text-slate-400 max-w-4xl mx-auto leading-relaxed mb-8 relative z-10">
+        <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-4xl mx-auto leading-relaxed mb-8 relative z-10">
           Calculate overnight replenishment hours, electrical panel amperage requirements, and Time-of-Use (TOU) off-peak utility savings with our <strong>ev home charging time calculator 240v</strong>.
         </p>
 
@@ -188,7 +188,7 @@ export default function HomeChargingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               1
             </div>
             <div className="relative z-10">
@@ -196,7 +196,7 @@ export default function HomeChargingPage() {
                 <PlugZap className="w-6 h-6 text-blue-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">Circuit Amperage Sizing</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">
+              <p className="text-slate-300 leading-relaxed text-sm">
                 Choose between standard 120V Level 1 (12A) or 240V circuits (NEMA 14-50 32A vs hardwired 48A). Our <strong>ev home charging time calculator 240v</strong> applies the NEC 80% continuous breaker limit.
               </p>
             </div>
@@ -204,7 +204,7 @@ export default function HomeChargingPage() {
 
           {/* Card 2 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               2
             </div>
             <div className="relative z-10">
@@ -212,7 +212,7 @@ export default function HomeChargingPage() {
                 <Clock className="w-6 h-6 text-emerald-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">Onboard Inverter Efficiency</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">
+              <p className="text-slate-300 leading-relaxed text-sm">
                 Acting as an <strong>ev level 2 charging calculator</strong>, our engine models 88%&ndash;93% AC-to-DC conversion efficiency and vehicle OBC limits (7.7 kW to 11.5 kW) to project true hours to full.
               </p>
             </div>
@@ -220,7 +220,7 @@ export default function HomeChargingPage() {
 
           {/* Card 3 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               3
             </div>
             <div className="relative z-10">
@@ -228,7 +228,7 @@ export default function HomeChargingPage() {
                 <PiggyBank className="w-6 h-6 text-amber-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">Time-of-Use Cost Savings</h3>
-              <p className="text-slate-400 leading-relaxed text-sm mb-3">
+              <p className="text-slate-300 leading-relaxed text-sm mb-3">
                 Using an integrated <strong>electric car charge cost per kwh calculator</strong>, our system simulates off-peak utility tariffs ($0.08&ndash;$0.14/kWh) to calculate exact annual savings over gasoline.
               </p>
               <div className="pt-2 border-t border-slate-800/80 text-xs text-slate-400">
@@ -269,6 +269,9 @@ export default function HomeChargingPage() {
 
             <div className="overflow-x-auto bg-[#0B0F17] border border-slate-800 rounded-2xl">
               <table className="w-full text-left text-xs sm:text-sm">
+                <caption className="sr-only">
+                  NEC Article 625.42 Circuit Breaker Sizing and Continuous Load Capacity Guidelines
+                </caption>
                 <thead className="border-b border-slate-800 text-slate-400 font-semibold bg-slate-900/60">
                   <tr>
                     <th scope="col" className="p-3.5">Breaker Rating</th>
@@ -387,6 +390,9 @@ export default function HomeChargingPage() {
         <div className="bg-[#131B2A] border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
+              <caption className="sr-only">
+                EV Level 2 Charging Benchmarks: 240V Speeds and Overnight Cost by Model
+              </caption>
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
                   <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Vehicle Model</th>
@@ -550,6 +556,9 @@ export default function HomeChargingPage() {
 
         <div className="overflow-hidden rounded-2xl border border-slate-800 bg-[#131B2A] shadow-2xl">
           <table className="w-full text-left text-sm md:text-base">
+            <caption className="sr-only">
+              Technical Specifications: Level 1 120V vs Level 2 240V Charging Comparison
+            </caption>
             <thead className="bg-[#0B0F17]">
               <tr>
                 <th scope="col" className="p-5 font-semibold text-slate-400 w-1/2 border-b border-slate-800">

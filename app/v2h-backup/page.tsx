@@ -112,7 +112,7 @@ export default function V2HBackupPage() {
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-14 md:pb-10 text-center relative">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-[#0B0F17]/0 to-transparent pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-[#0B0F17]/0 to-transparent pointer-events-none" aria-hidden="true"></div>
 
         {/* Visual Breadcrumb Navigation */}
         <Breadcrumb items={[{ label: 'V2H Home Emergency Power' }]} />
@@ -130,7 +130,7 @@ export default function V2HBackupPage() {
           &amp; Home Emergency Run-Time Sizer
         </h1>
 
-        <p className="text-base sm:text-lg md:text-xl text-slate-400 max-w-4xl mx-auto leading-relaxed mb-8 relative z-10">
+        <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-4xl mx-auto leading-relaxed mb-8 relative z-10">
           Transform your electric vehicle into an emergency whole-home microgrid generator. Calculate exact blackout survival days, household appliance run-time, and battery reserve thresholds using our comprehensive <strong>how long can an ev power my house calculator</strong> and <strong>vehicle to home bidirectional power sizer</strong>.
         </p>
 
@@ -168,7 +168,7 @@ export default function V2HBackupPage() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             How Our V2H Backup Duration Calculator Models Real Blackout Autonomy
           </h2>
-          <p className="text-slate-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-slate-300 max-w-3xl mx-auto leading-relaxed">
             Eliminate noisy, hazardous combustion generators. Here is how our <strong>f150 lightning home power outage calculator</strong> and <strong>vehicle to home bidirectional power sizer</strong> compute whole-house microgrid resilience.
           </p>
         </div>
@@ -176,7 +176,7 @@ export default function V2HBackupPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               1
             </div>
             <div className="relative z-10">
@@ -184,7 +184,7 @@ export default function V2HBackupPage() {
                 <BatteryCharging className="w-6 h-6 text-amber-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">Usable Pack &amp; Evacuation Floor</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">
+              <p className="text-slate-300 leading-relaxed text-sm">
                 Select your EV platform (e.g., Ford F-150 Lightning 131 kWh, Cybertruck 123 kWh, or Ioniq 5 77.4 kWh). The engine locks an emergency driving reserve (15%–25% SoC) so you always retain 35–60 miles of escape range for highway charging evacuation (plan stops with our <Link href="/" className="text-amber-400 hover:text-amber-300 underline underline-offset-4">DC fast charging curve calculator</Link>).
               </p>
             </div>
@@ -192,7 +192,7 @@ export default function V2HBackupPage() {
 
           {/* Card 2 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               2
             </div>
             <div className="relative z-10">
@@ -200,7 +200,7 @@ export default function V2HBackupPage() {
                 <Home className="w-6 h-6 text-cyan-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">Appliance Duty Cycles &amp; Inrush</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">
+              <p className="text-slate-300 leading-relaxed text-sm">
                 Configure real residential loads: French-door refrigeration (1.2–1.8 kWh/day), Wi-Fi &amp; LED lighting (0.8 kWh/day), sump pump cycles (1.4 kWh/day), and variable-speed heat pumps (12–25 kWh/day).
               </p>
             </div>
@@ -208,7 +208,7 @@ export default function V2HBackupPage() {
 
           {/* Card 3 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               3
             </div>
             <div className="relative z-10">
@@ -216,7 +216,7 @@ export default function V2HBackupPage() {
                 <ShieldAlert className="w-6 h-6 text-emerald-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">Depletion Curve &amp; Days of Power</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">
+              <p className="text-slate-300 leading-relaxed text-sm">
                 Our <strong>how long can an ev power my house calculator</strong> produces hour-by-hour discharge curves, peak kW surge margins, and total survival days across critical, moderate, and full whole-home modes.
               </p>
             </div>
@@ -321,7 +321,7 @@ export default function V2HBackupPage() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             How Long Can an EV Power My House? V2H Backup Duration Benchmarks by Model
           </h2>
-          <p className="text-slate-400 max-w-3xl mx-auto leading-relaxed text-sm md:text-base">
+          <p className="text-slate-300 max-w-3xl mx-auto leading-relaxed text-sm md:text-base">
             Detailed engineering comparison of factory bidirectional charging power, battery capacity, discharge protocol, and home backup hardware requirements across top electric vehicles.
           </p>
         </div>
@@ -329,6 +329,9 @@ export default function V2HBackupPage() {
         <div className="bg-[#131B2A] border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
+              <caption className="sr-only">
+                V2H Backup Duration Benchmarks: Bidirectional Power and Emergency Days by Model
+              </caption>
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
                   <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">EV Model</th>
@@ -584,7 +587,7 @@ export default function V2HBackupPage() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Technical Comparison: Bidirectional EV vs Stationary Battery vs Standby Generator
           </h2>
-          <p className="text-slate-400 text-sm leading-relaxed max-w-3xl mx-auto">
+          <p className="text-slate-300 text-sm leading-relaxed max-w-3xl mx-auto">
             Comparing total stored energy, continuous output power, operating noise, safety, and cost economics.
           </p>
         </div>
@@ -592,6 +595,9 @@ export default function V2HBackupPage() {
         <div className="bg-[#131B2A] border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
+              <caption className="sr-only">
+                Technical Comparison: Bidirectional EV vs Stationary Battery vs Standby Generator
+              </caption>
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
                   <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">Feature / Specification</th>

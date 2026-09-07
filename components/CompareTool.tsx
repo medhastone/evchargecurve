@@ -215,16 +215,16 @@ export default function CompareTool() {
               Charge Window ({startSoc}% - {endSoc}%)
             </label>
             <div className="flex items-center gap-4 px-2">
-              <input aria-label="Adjust slider" 
-                type="range" 
+              <input 
+                aria-label="Adjust slider" type="range" 
                 min="0" max="40" 
                 value={startSoc} 
                 onChange={(e) => setStartSoc(Number(e.target.value))}
                 className="w-full accent-slate-500"
               />
               <span className="text-slate-500">to</span>
-              <input aria-label="Adjust slider" 
-                type="range" 
+              <input 
+                aria-label="Adjust slider" type="range" 
                 min="50" max="100" 
                 value={endSoc} 
                 onChange={(e) => setEndSoc(Number(e.target.value))}
@@ -304,8 +304,8 @@ export default function CompareTool() {
                 }}
               />
               <ReferenceArea x1={startSoc} x2={endSoc} fill="#334155" fillOpacity={0.1} stroke="#475569" strokeDasharray="3 3" />
-              <Area type="monotone" dataKey="carA_kw" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorCarA)" name={carA.name} isAnimationActive={false} />
-              <Area type="monotone" dataKey="carB_kw" stroke="#0EA5E9" strokeWidth={3} fillOpacity={1} fill="url(#colorCarB)" name={carB.name} isAnimationActive={false} />
+              <Area type="monotone" dataKey="carA_kw" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorCarA)" name={carA.name} />
+              <Area type="monotone" dataKey="carB_kw" stroke="#0EA5E9" strokeWidth={3} fillOpacity={1} fill="url(#colorCarB)" name={carB.name} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

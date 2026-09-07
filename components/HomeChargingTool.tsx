@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
-  Zap, Plug, Home, Battery, Fuel, DollarSign, Clock, CheckCircle2, AlertCircle, ArrowRight, PlusCircle
+  Zap, Home, Fuel, DollarSign, Clock, AlertCircle, PlusCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/components/providers/SettingsProvider';
@@ -17,7 +17,7 @@ const CHARGERS = [
 ];
 
 export default function HomeChargingTool() {
-  const { currency, unit, distanceLabel, speedLabel } = useSettings();
+  const { currency, distanceLabel, speedLabel } = useSettings();
   const { allVehicles, vehiclesMap, openStudio, customVehicles, isCustomVehicle } = useVehicles();
   const [vehicleId, setVehicleId] = useState(allVehicles[0]?.id || 'tesla-model-y-lr');
   
@@ -46,8 +46,8 @@ export default function HomeChargingTool() {
   };
 
   const results = useMemo(() => {
-    const packKwh = vehicle.usablePackKwh || vehicle.batteryCapacity || 75;
-    const epaRange = vehicle.epaRangeMiles || 300;
+    const packKwh = vehicle?.usablePackKwh || vehicle?.batteryCapacity || 75;
+    const epaRange = vehicle?.epaRangeMiles || 300;
     const miPerKwh = epaRange / packKwh;
     
     // Session calculations
@@ -90,7 +90,7 @@ export default function HomeChargingTool() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="region" aria-label="EV Home Charging Time and Level 2 Cost Calculator">
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         
         {/* LEFT COLUMN: CONTROLS */}
@@ -99,17 +99,22 @@ export default function HomeChargingTool() {
           {/* Vehicle */}
           <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl">
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs text-slate-400 uppercase tracking-wider block font-semibold">Select EV Model</label>
+              <label htmlFor="home-charging-vehicle-select" className="text-xs text-slate-400 uppercase tracking-wider block font-semibold">
+                Select EV Model
+              </label>
               <button
                 type="button"
                 onClick={() => openStudio()}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1"
+                aria-label="Open Custom Electric Vehicle Studio"
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 transition-colors"
               >
                 <PlusCircle className="w-3.5 h-3.5" />
                 + Custom EV
               </button>
             </div>
-            <select aria-label="Select option" 
+            <select 
+              id="home-charging-vehicle-select"
+              aria-label="Select Electric Vehicle Model"
               value={vehicleId}
               onChange={(e) => setVehicleId(e.target.value)}
               className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 focus:outline-none focus:border-emerald-500 transition-colors appearance-none font-medium text-sm"
@@ -122,7 +127,7 @@ export default function HomeChargingTool() {
                 </optgroup>
               )}
               <optgroup label="🚘 Production Vehicles">
-                {allVehicles.filter(v => !isCustomVehicle(v.id)).map((v: any) => (
+                {allVehicles.filter(v => !isCustomVehicle(v.id)).map(v => (
                   <option key={v.id} value={v.id}>{v.name} ({v.usablePackKwh || v.batteryCapacity} kWh)</option>
                 ))}
               </optgroup>
@@ -131,11 +136,15 @@ export default function HomeChargingTool() {
 
           {/* Charger Types */}
           <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl">
-            <h3 className="text-lg font-bold text-white mb-4">Home Setup</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <h3 id="home-charger-setup-title" className="text-lg font-bold text-white mb-4">Home Setup</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="radiogroup" aria-labelledby="home-charger-setup-title">
               {CHARGERS.map(c => (
                 <button
                   key={c.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={chargerId === c.id}
+                  aria-label={`Select ${c.name} charger: ${c.specs} at ${c.kw} kW`}
                   onClick={() => setChargerId(c.id)}
                   className={cn(
                     "p-3 rounded-xl border text-left transition-all flex flex-col gap-1",
@@ -146,11 +155,11 @@ export default function HomeChargingTool() {
                 >
                   <div className="flex justify-between items-center w-full">
                     <span className="font-bold text-sm">{c.name}</span>
-                    <Zap className={cn("w-4 h-4", chargerId === c.id ? "text-emerald-400" : "text-slate-500")} />
+                    <Zap className={cn("w-4 h-4", chargerId === c.id ? "text-emerald-400" : "text-slate-400")} />
                   </div>
                   <div className="flex justify-between items-center w-full">
-                    <span className="text-xs text-slate-500">{c.specs}</span>
-                    <span className="text-xs font-bold bg-slate-800 px-2 py-0.5 rounded">{c.kw} kW</span>
+                    <span className="text-xs text-slate-400">{c.specs}</span>
+                    <span className="text-xs font-bold bg-slate-800 px-2 py-0.5 rounded text-slate-200">{c.kw} kW</span>
                   </div>
                 </button>
               ))}
@@ -178,24 +187,38 @@ export default function HomeChargingTool() {
             <div className="space-y-6">
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm text-slate-300">Plug-in SOC</span>
+                  <label htmlFor="plugin-soc-slider" className="text-sm font-semibold text-slate-300">
+                    Plug-in SOC
+                  </label>
                   <span className="text-sm font-bold text-white">{startSoc}%</span>
                 </div>
                 <input 
-                  aria-label="Adjust slider" type="range" min="0" max="99" 
-                  value={startSoc} onChange={(e) => handleStartChange(Number(e.target.value))}
+                  id="plugin-soc-slider"
+                  aria-label="Plug-in State of Charge percentage slider"
+                  type="range" 
+                  min="0" 
+                  max="99" 
+                  value={startSoc} 
+                  onChange={(e) => handleStartChange(Number(e.target.value))}
                   className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                 />
               </div>
               
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm text-slate-300">Target SOC</span>
+                  <label htmlFor="target-soc-slider" className="text-sm font-semibold text-slate-300">
+                    Target SOC
+                  </label>
                   <span className="text-sm font-bold text-white">{endSoc}%</span>
                 </div>
                 <input 
-                  aria-label="Adjust slider" type="range" min="1" max="100" 
-                  value={endSoc} onChange={(e) => handleEndChange(Number(e.target.value))}
+                  id="target-soc-slider"
+                  aria-label="Target State of Charge percentage slider"
+                  type="range" 
+                  min="1" 
+                  max="100" 
+                  value={endSoc} 
+                  onChange={(e) => handleEndChange(Number(e.target.value))}
                   className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
                 />
               </div>
@@ -204,54 +227,90 @@ export default function HomeChargingTool() {
 
           {/* Economics Inputs */}
           <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl">
-            <h3 className="text-lg font-bold text-white mb-4">Utility & Fuel Costs</h3>
+            <h3 className="text-lg font-bold text-white mb-4">Utility &amp; Fuel Costs</h3>
             
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div>
-                <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Off-Peak Rate</label>
+                <label htmlFor="off-peak-rate-input" className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">
+                  Off-Peak Rate ({currency.symbol}/kWh)
+                </label>
                 <input 
-                  type="number" step="0.01" min="0"
-                  value={offPeakRate} onChange={(e) => setOffPeakRate(Number(e.target.value))}
-                  className="w-full bg-slate-900 border border-slate-700 text-emerald-400 font-bold rounded-xl p-2 focus:outline-none focus:border-emerald-500"
+                  id="off-peak-rate-input"
+                  aria-label="Utility Off-Peak electricity rate per kilowatt-hour"
+                  type="number" 
+                  step="0.01" 
+                  min="0"
+                  value={offPeakRate} 
+                  onChange={(e) => setOffPeakRate(Number(e.target.value))}
+                  className="w-full bg-slate-900 border border-slate-700 text-emerald-400 font-bold rounded-xl p-2.5 focus:outline-none focus:border-emerald-500 transition-colors text-sm"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Peak Rate</label>
+                <label htmlFor="peak-rate-input" className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">
+                  Peak Rate ({currency.symbol}/kWh)
+                </label>
                 <input 
-                  type="number" step="0.01" min="0"
-                  value={peakRate} onChange={(e) => setPeakRate(Number(e.target.value))}
-                  className="w-full bg-slate-900 border border-slate-700 text-orange-400 font-bold rounded-xl p-2 focus:outline-none focus:border-orange-500"
+                  id="peak-rate-input"
+                  aria-label="Utility Peak electricity rate per kilowatt-hour"
+                  type="number" 
+                  step="0.01" 
+                  min="0"
+                  value={peakRate} 
+                  onChange={(e) => setPeakRate(Number(e.target.value))}
+                  className="w-full bg-slate-900 border border-slate-700 text-orange-400 font-bold rounded-xl p-2.5 focus:outline-none focus:border-orange-500 transition-colors text-sm"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div>
-                <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Gas Price ({currency.symbol}/gal)</label>
+                <label htmlFor="gas-price-input" className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">
+                  Gas Price ({currency.symbol}/gal)
+                </label>
                 <input 
-                  type="number" step="0.1" min="0"
-                  value={gasPrice} onChange={(e) => setGasPrice(Number(e.target.value))}
-                  className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-2 focus:outline-none focus:border-emerald-500"
+                  id="gas-price-input"
+                  aria-label="Gasoline price per gallon"
+                  type="number" 
+                  step="0.1" 
+                  min="0"
+                  value={gasPrice} 
+                  onChange={(e) => setGasPrice(Number(e.target.value))}
+                  className="w-full bg-slate-900 border border-slate-700 text-white font-medium rounded-xl p-2.5 focus:outline-none focus:border-emerald-500 transition-colors text-sm"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">Gas Car (MPG)</label>
+                <label htmlFor="gas-mpg-input" className="text-xs text-slate-400 uppercase tracking-wider mb-2 block font-semibold">
+                  Gas Car (MPG)
+                </label>
                 <input 
-                  type="number" step="1" min="10"
-                  value={mpg} onChange={(e) => setMpg(Number(e.target.value))}
-                  className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-2 focus:outline-none focus:border-emerald-500"
+                  id="gas-mpg-input"
+                  aria-label="Gasoline vehicle miles per gallon efficiency"
+                  type="number" 
+                  step="1" 
+                  min="10"
+                  value={mpg} 
+                  onChange={(e) => setMpg(Number(e.target.value))}
+                  className="w-full bg-slate-900 border border-slate-700 text-white font-medium rounded-xl p-2.5 focus:outline-none focus:border-emerald-500 transition-colors text-sm"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex justify-between mb-2">
-                <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Annual Driving</label>
+                <label htmlFor="annual-driving-slider" className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+                  Annual Driving
+                </label>
                 <span className="text-sm font-bold text-white">{annualMiles.toLocaleString()} {distanceLabel}</span>
               </div>
               <input 
-                aria-label="Adjust slider" type="range" min="5000" max="35000" step="500"
-                value={annualMiles} onChange={(e) => setAnnualMiles(Number(e.target.value))}
+                id="annual-driving-slider"
+                aria-label="Annual driving distance slider"
+                type="range" 
+                min="5000" 
+                max="35000" 
+                step="500"
+                value={annualMiles} 
+                onChange={(e) => setAnnualMiles(Number(e.target.value))}
                 className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
               />
             </div>
@@ -267,7 +326,7 @@ export default function HomeChargingTool() {
             
             {/* Speed & Duration */}
             <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl relative overflow-hidden">
-              <Clock className="absolute top-4 right-4 w-16 h-16 text-slate-700/50" />
+              <Clock className="absolute top-4 right-4 w-16 h-16 text-slate-700/50 pointer-events-none" aria-hidden="true" />
               <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-4">Session Duration</h4>
               <div className="flex items-baseline gap-2 mb-4">
                 <span className="text-5xl font-black text-white">{formatHrs(results.chargeTimeHours)}</span>
@@ -283,7 +342,7 @@ export default function HomeChargingTool() {
 
             {/* Session Cost */}
             <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl relative overflow-hidden">
-              <DollarSign className="absolute top-4 right-4 w-16 h-16 text-slate-700/50" />
+              <DollarSign className="absolute top-4 right-4 w-16 h-16 text-slate-700/50 pointer-events-none" aria-hidden="true" />
               <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-4">Session Cost (Off-Peak)</h4>
               <div className="flex items-baseline gap-1 mb-4">
                 <span key={currency.symbol} className="text-3xl text-emerald-400 font-bold">{currency.symbol}</span>
@@ -301,10 +360,10 @@ export default function HomeChargingTool() {
           </div>
 
           <div className="bg-blue-500/10 border border-blue-500/20 p-5 rounded-2xl flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wider mb-1">AC Inverter Loss Factored In</h4>
-              <p className="text-sm text-slate-800 dark:text-blue-100 leading-relaxed font-normal">
+              <h4 className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-1">AC Inverter Loss Factored In</h4>
+              <p className="text-sm text-slate-200 leading-relaxed font-normal">
                 Home chargers supply AC power, but the battery stores DC power. The vehicle&apos;s onboard converter handles this conversion, resulting in approximately <strong>10% energy loss as heat</strong>. This calculator automatically bills you for {results.actualEnergyNeededKwh.toFixed(1)} kWh drawn from the wall to safely put {(results.actualEnergyNeededKwh * 0.9).toFixed(1)} kWh into the pack.
               </p>
             </div>
@@ -322,7 +381,7 @@ export default function HomeChargingTool() {
                   <span className="text-sm font-bold text-emerald-400 uppercase tracking-wider">Home EV</span>
                 </div>
                 <div className="text-3xl font-black text-white mb-1">{currency.symbol}{Math.round(results.annualHomeCost)}<span className="text-sm font-normal text-slate-400">/yr</span></div>
-                <p className="text-xs text-slate-500">Charging off-peak 100%</p>
+                <p className="text-xs text-slate-400">Charging off-peak 100%</p>
               </div>
 
               {/* Public Fast */}
@@ -332,7 +391,7 @@ export default function HomeChargingTool() {
                   <span className="text-sm font-bold text-cyan-400 uppercase tracking-wider">Public DC</span>
                 </div>
                 <div className="text-3xl font-black text-white mb-1">{currency.symbol}{Math.round(results.annualDcCost)}<span className="text-sm font-normal text-slate-400">/yr</span></div>
-                <p className="text-xs text-slate-500 mb-2">Assumes avg {currency.symbol}0.45/kWh</p>
+                <p className="text-xs text-slate-400 mb-2">Assumes avg {currency.symbol}0.45/kWh</p>
                 <div className="text-[11px] text-slate-400 pt-2 border-t border-slate-800">
                   Model highway station stops with our{' '}
                   <Link href="/" className="text-cyan-400 underline underline-offset-2 hover:text-cyan-300 font-medium">
@@ -349,23 +408,23 @@ export default function HomeChargingTool() {
                   <span className="text-sm font-bold text-red-400 uppercase tracking-wider">Gas Car</span>
                 </div>
                 <div className="text-3xl font-black text-white mb-1">{currency.symbol}{Math.round(results.annualGasCost)}<span className="text-sm font-normal text-slate-400">/yr</span></div>
-                <p className="text-xs text-slate-500">{mpg} MPG @ {currency.symbol}{gasPrice.toFixed(2)}/gal</p>
+                <p className="text-xs text-slate-400">{mpg} MPG @ {currency.symbol}{gasPrice.toFixed(2)}/gal</p>
               </div>
             </div>
 
             <div className="bg-slate-900 rounded-xl border border-slate-700 p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div>
-                <h4 className="text-slate-400 font-medium mb-1">Total Savings Charging at Home vs Gas</h4>
+                <h4 className="text-slate-300 font-medium mb-1">Total Savings Charging at Home vs Gas</h4>
                 <div className="flex items-center gap-3">
                   <span className="text-4xl font-black text-emerald-400">+{currency.symbol}{Math.round(results.savingsVsGas)}</span>
-                  <span className="text-sm text-emerald-500/80 uppercase tracking-wider font-bold">In Your Pocket<br/>Every Year</span>
+                  <span className="text-sm text-emerald-400 uppercase tracking-wider font-bold">In Your Pocket<br/>Every Year</span>
                 </div>
               </div>
               
               <div className="hidden sm:block h-16 w-px bg-slate-700"></div>
 
               <div>
-                <h4 className="text-slate-400 font-medium mb-1">Total Savings vs Exclusively Fast Charging</h4>
+                <h4 className="text-slate-300 font-medium mb-1">Total Savings vs Exclusively Fast Charging</h4>
                 <div className="flex items-center gap-3">
                   <span className="text-4xl font-black text-cyan-400">+{currency.symbol}{Math.round(results.savingsVsDc)}</span>
                 </div>

@@ -113,7 +113,7 @@ export default function CarbonOffsetPage() {
       
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-14 md:pb-10 text-center relative">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/20 via-[#0B0F17]/0 to-transparent pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/20 via-[#0B0F17]/0 to-transparent pointer-events-none" aria-hidden="true"></div>
 
         {/* Visual Breadcrumb Navigation */}
         <Breadcrumb items={[{ label: 'CO2 Emissions Saved Calculator' }]} />
@@ -131,7 +131,7 @@ export default function CarbonOffsetPage() {
           &amp; Well-to-Wheel Offset
         </h1>
 
-        <p className="text-base sm:text-lg md:text-xl text-slate-400 max-w-4xl mx-auto leading-relaxed mb-8 relative z-10">
+        <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-4xl mx-auto leading-relaxed mb-8 relative z-10">
           Calculate real carbon dioxide reduction from switching to an electric vehicle using our <strong>electric car carbon footprint calculator</strong>. Models regional grid carbon intensity (g CO2/kWh), upstream petroleum extraction, and urban tree sequestration equivalents with our precise <strong>ev co2 emissions saved calculator</strong>.
         </p>
 
@@ -177,7 +177,7 @@ export default function CarbonOffsetPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               1
             </div>
             <div className="relative z-10">
@@ -185,7 +185,7 @@ export default function CarbonOffsetPage() {
                 <Fuel className="w-6 h-6 text-amber-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">1. Upstream Crude Refining</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">
+              <p className="text-slate-300 leading-relaxed text-sm">
                 Burning a gallon of gas emits 8,887g tailpipe CO2. Our <strong>ev vs gas co2 emissions calculator</strong> adds 2,213g/gal for drilling, flaring, pipeline transit, and refining (11,100g total WTW).
               </p>
             </div>
@@ -193,7 +193,7 @@ export default function CarbonOffsetPage() {
 
           {/* Card 2 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               2
             </div>
             <div className="relative z-10">
@@ -201,7 +201,7 @@ export default function CarbonOffsetPage() {
                 <Zap className="w-6 h-6 text-cyan-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">2. Power Grid Carbon Mix</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">
+              <p className="text-slate-300 leading-relaxed text-sm">
                 An <strong>electric car carbon footprint calculator</strong> must localize where you charge. We model regional generation (hydro, nuclear, solar, gas, coal) plus 12% charging and line losses.
               </p>
             </div>
@@ -209,7 +209,7 @@ export default function CarbonOffsetPage() {
 
           {/* Card 3 */}
           <div className="relative bg-[#0F172A] border border-slate-800 rounded-2xl p-8 overflow-hidden group hover:border-slate-700 transition-colors shadow-lg">
-            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors">
+            <div className="absolute -right-4 -top-4 text-9xl font-black text-slate-800/20 select-none group-hover:text-slate-800/30 transition-colors" aria-hidden="true">
               3
             </div>
             <div className="relative z-10">
@@ -217,7 +217,7 @@ export default function CarbonOffsetPage() {
                 <Leaf className="w-6 h-6 text-emerald-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">3. Tangible Carbon Offsets</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">
+              <p className="text-slate-300 leading-relaxed text-sm">
                 The <strong>ev co2 emissions saved calculator</strong> translates net atmospheric carbon reduction into real-world equivalents: avoided barrels of crude oil, urban tree-years, and coal burned.
               </p>
             </div>
@@ -326,6 +326,9 @@ export default function CarbonOffsetPage() {
         <div className="bg-[#131B2A] border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
+              <caption className="sr-only">
+                Production EV vs Popular ICE Lifecycle Carbon Benchmark Matrix
+              </caption>
               <thead className="bg-[#0B0F17] border-b border-slate-800">
                 <tr>
                   <th scope="col" className="p-4 sm:p-5 font-semibold text-slate-300">EV Model</th>
@@ -486,6 +489,9 @@ export default function CarbonOffsetPage() {
 
         <div className="overflow-hidden rounded-2xl border border-slate-800 bg-[#131B2A] shadow-2xl">
           <table className="w-full text-left text-sm md:text-base">
+            <caption className="sr-only">
+              Technical Specifications: Full-Cycle Carbon Comparison between Generic Calculators and EVChargeCurve
+            </caption>
             <thead className="bg-[#0B0F17]">
               <tr>
                 <th scope="col" className="p-5 font-semibold text-slate-400 w-1/2 border-b border-slate-800">
