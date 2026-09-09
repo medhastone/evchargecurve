@@ -84,6 +84,11 @@ export default function Footer() {
                   Carbon Offset Matrix
                 </Link>
               </li>
+              <li>
+                <Link href="/betting-ev-calculator" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+                  Betting EV Calculator
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

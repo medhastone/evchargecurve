@@ -13,6 +13,7 @@ const MAIN_LINKS = [
   { name: 'Vehicles', path: '/curve' },
   { name: 'Methodology', path: '/methodology' },
   { name: 'How It Works', path: '/how-it-works' },
+  { name: 'Blog', path: '/blog' },
 ];
 
 const TOOL_LINKS = [
