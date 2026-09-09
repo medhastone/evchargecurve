@@ -22,8 +22,7 @@ import {
   Activity,
   Award,
   Tag,
-  ExternalLink,
-  BookOpen
+  ExternalLink
 } from 'lucide-react';
 import { 
   ChargingSpeedComparisonSvg,
@@ -31,6 +30,7 @@ import {
   ThermalPreconditioningSvg,
   HomeChargingAmpsSvg
 } from '@/components/blog/ChargingInfographics';
+import FloatingShareBar from '@/components/blog/FloatingShareBar';
 
 const ARTICLE_TAGS = [
   'EV Charging Speeds',
@@ -66,11 +66,20 @@ export const metadata: Metadata = {
     description: 'Practical mathematical breakdowns of Level 1, Level 2, and Level 3 DC fast charging. Discover why charging curves taper and how to calculate your exact session duration.',
     type: 'article',
     url: 'https://evchargecurve.com/blog/How-Long-to-Charge-an-Electric-Car',
+    images: [
+      {
+        url: 'https://evchargecurve.com/images/og-how-long-to-charge.png',
+        width: 1200,
+        height: 630,
+        alt: 'How Long Does It Take to Charge an Electric Car? Real-World Guide',
+      }
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How Long Does It Take to Charge an Electric Car? (Real-World Guide)',
     description: 'Real-world mathematical breakdown of Level 1, Level 2, and DC fast charging speeds, thermal throttling, and the 80% charging curve taper.',
+    images: ['https://evchargecurve.com/images/og-how-long-to-charge.png'],
   }
 };
 
@@ -168,6 +177,14 @@ export default function HowLongToChargeEVPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+
+      {/* Floating Social Sharing Bar (Desktop Left Dock + Mobile Bottom Pill) */}
+      <FloatingShareBar 
+        url="https://evchargecurve.com/blog/How-Long-to-Charge-an-Electric-Car"
+        title="How Long Does It Take to Charge an Electric Car? (The Real-World Truth & Charging Curves)"
+        description="Practical breakdowns of Level 1, Level 2, and DC fast charging. Discover why charging curves taper and how to calculate exact session duration."
+        ogImage="/images/og-how-long-to-charge.png"
       />
 
       {/* Header Container */}
@@ -291,9 +308,9 @@ export default function HowLongToChargeEVPage() {
           <p className="text-xs text-slate-400 mt-3 flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>
-              Charging equipment power tiers and definitions benchmarked in accordance with the{' '}
+              Charging equipment power tiers and equipment classifications benchmarked according to the{' '}
               <a 
-                href="https://afdc.energy.gov/fuels/electricity-infrastructure" 
+                href="https://afdc.energy.gov/fuels/electricity_infrastructure.html" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 inline-flex items-center gap-1 font-medium transition-colors"
@@ -370,17 +387,17 @@ export default function HowLongToChargeEVPage() {
             Level 2: How Long to Charge Electric Car at Home (220V / 240V)?
           </h2>
           <p className="text-slate-300 leading-relaxed">
-            Level 2 charging is the cornerstone of standard EV ownership. It utilizes a dedicated 208V to 240V single-phase circuit—the same electrical specification that powers electric clothes dryers, ovens, and central heat pumps. Under electrical safety codes established by the{' '}
+            Level 2 charging is the cornerstone of standard EV ownership. It utilizes a dedicated 208V to 240V single-phase circuit—the same electrical specification that powers electric clothes dryers, ovens, and central heat pumps. Under electrical safety codes (such as NEC Article 625) and residential efficiency benchmarks compiled by the{' '}
             <a 
-              href="https://www.nfpa.org/codes-and-standards/625" 
+              href="https://www.epa.gov/greenvehicles" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 inline-flex items-center gap-1 font-medium transition-colors"
             >
-              National Electrical Code (NEC Article 625)
+              U.S. Environmental Protection Agency (EPA) Green Vehicles
               <ExternalLink className="w-3 h-3 inline" />
-            </a>{' '}
-            and the continuous load rule, residential EVSE circuits cannot exceed 80% of the breaker’s rated amperage.
+            </a>,
+            residential EVSE circuits follow the continuous load rule and cannot exceed 80% of the breaker’s rated amperage.
           </p>
           <p className="text-slate-300 leading-relaxed">
             Residential Level 2 wallbox units typically deliver between <strong className="text-white">32 amps and 48 amps</strong> of continuous current:
@@ -428,7 +445,17 @@ export default function HowLongToChargeEVPage() {
             Level 3 DC Fast Charging: The 10% to 80% Window (The Reality Check)
           </h2>
           <p className="text-slate-300 leading-relaxed">
-            When you travel on highways, you bypass the vehicle’s onboard charger completely. Level 3 Direct Current Fast Chargers (DCFC)—such as Tesla Superchargers, Electrify America, EVgo, and Ionity—feed high-voltage direct current straight into the battery pack through liquid-cooled cables.
+            When you travel on highways, you bypass the vehicle’s onboard charger completely. Level 3 Direct Current Fast Chargers (DCFC)—such as Tesla Superchargers, Electrify America, EVgo, and Ionity—feed high-voltage direct current straight into the battery pack through liquid-cooled cables governed by standards developed by{' '}
+            <a 
+              href="https://www.sae.org" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 inline-flex items-center gap-1 font-medium transition-colors"
+            >
+              SAE International
+              <ExternalLink className="w-3 h-3 inline" />
+            </a>{' '}
+            (including J1772 and J3400 / NACS).
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
@@ -512,17 +539,7 @@ export default function HowLongToChargeEVPage() {
               </div>
             </div>
             <p className="text-xs text-slate-400 mt-4 leading-relaxed">
-              If the vehicle’s Battery Management System (BMS) sustained 200+ kW into a battery above 75% SoC, the extreme internal cell resistance would cause <strong>lithium plating</strong>—metallic lithium dendrites that can permanently short-circuit cells and degrade battery capacity. As documented by researchers at the{' '}
-              <a 
-                href="https://www.nrel.gov/transportation/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 inline-flex items-center gap-1 font-medium transition-colors"
-              >
-                National Renewable Energy Laboratory (NREL)
-                <ExternalLink className="w-3 h-3 inline" />
-              </a>,
-              tapering incoming current is essential for safeguarding cell cycle life. This is why <strong className="text-white">charging from 80% to 100% often takes just as long as charging from 10% to 80%</strong>.
+              If the vehicle’s Battery Management System (BMS) sustained 200+ kW into a battery above 75% SoC, the extreme internal cell resistance would cause <strong>lithium plating</strong>—metallic lithium dendrites that can permanently short-circuit cells and degrade battery capacity. As documented in automotive research from the National Renewable Energy Laboratory (NREL), tapering incoming current is essential for safeguarding cell cycle life. This is why <strong className="text-white">charging from 80% to 100% often takes just as long as charging from 10% to 80%</strong>.
             </p>
           </div>
 
@@ -572,17 +589,7 @@ export default function HowLongToChargeEVPage() {
                 1. Cold Battery (No Preconditioning)
               </div>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Lithium-ion electrolyte thickens and ionic mobility drops drastically at freezing temperatures. Field benchmarks by the{' '}
-                <a 
-                  href="https://avt.inl.gov" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 inline-flex items-center gap-1 font-medium transition-colors"
-                >
-                  Idaho National Laboratory (INL)
-                  <ExternalLink className="w-3 h-3 inline" />
-                </a>{' '}
-                show that plugging in cold without preheating causes the BMS to throttle power to 30–50 kW to prevent lithium dendrite formation.
+                Lithium-ion electrolyte thickens and ionic mobility drops drastically at freezing temperatures. Field benchmarks conducted by the Idaho National Laboratory (INL) show that plugging in cold without preheating causes the BMS to throttle power to 30–50 kW to prevent lithium dendrite formation.
               </p>
               <div className="text-[11px] text-emerald-400 font-medium bg-[#0B0F17] p-2 rounded-lg border border-slate-800">
                 Fix: Route to the fast charger using in-car navigation 30 minutes before arrival so the battery preheats to ~77°F (25°C).
@@ -666,96 +673,6 @@ export default function HowLongToChargeEVPage() {
             </div>
           </div>
         </section>
-
-        {/* Authoritative References & Standards Section */}
-        <div className="bg-[#131B2A] border border-slate-800 rounded-2xl p-6 mb-10">
-          <div className="flex items-center gap-2 mb-3">
-            <BookOpen className="w-4 h-4 text-emerald-400" />
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-              Authoritative References &amp; Scientific Data Sources
-            </h3>
-          </div>
-          <p className="text-xs text-slate-400 mb-5 leading-relaxed">
-            The mathematical formulas, electrical sizing limits, and electrochemical taper models in this technical guide are grounded in official engineering standards and published laboratory research:
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-            <a
-              href="https://afdc.energy.gov/fuels/electricity-infrastructure"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3.5 rounded-xl bg-[#0B0F17] border border-slate-800 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all group block"
-            >
-              <div className="flex items-center justify-between font-semibold text-slate-200 group-hover:text-emerald-400 mb-1">
-                <span>U.S. Department of Energy (DOE) AFDC</span>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 shrink-0" />
-              </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                Official specifications on Level 1, Level 2, and DC fast-charging infrastructure power outputs and equipment taxonomy.
-              </p>
-            </a>
-
-            <a
-              href="https://www.nfpa.org/codes-and-standards/625"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3.5 rounded-xl bg-[#0B0F17] border border-slate-800 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all group block"
-            >
-              <div className="flex items-center justify-between font-semibold text-slate-200 group-hover:text-emerald-400 mb-1">
-                <span>NFPA — NEC Article 625</span>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 shrink-0" />
-              </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                National Electrical Code standards governing continuous-load electrical safety, circuit breaker sizing, and EV branch circuits.
-              </p>
-            </a>
-
-            <a
-              href="https://www.nrel.gov/transportation/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3.5 rounded-xl bg-[#0B0F17] border border-slate-800 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all group block"
-            >
-              <div className="flex items-center justify-between font-semibold text-slate-200 group-hover:text-emerald-400 mb-1">
-                <span>National Renewable Energy Laboratory (NREL)</span>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 shrink-0" />
-              </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                Mobility studies on lithium-ion degradation, extreme fast charging (XFC) thermal stress, and battery cycle longevity.
-              </p>
-            </a>
-
-            <a
-              href="https://avt.inl.gov"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3.5 rounded-xl bg-[#0B0F17] border border-slate-800 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all group block"
-            >
-              <div className="flex items-center justify-between font-semibold text-slate-200 group-hover:text-emerald-400 mb-1">
-                <span>Idaho National Laboratory (INL) AVT</span>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 shrink-0" />
-              </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                Empirical field trials and dynamometer data characterizing cold-weather DC fast-charging throttling and battery warming.
-              </p>
-            </a>
-
-            <a
-              href="https://www.sae.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3.5 rounded-xl bg-[#0B0F17] border border-slate-800 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all group block sm:col-span-2"
-            >
-              <div className="flex items-center justify-between font-semibold text-slate-200 group-hover:text-emerald-400 mb-1">
-                <span>SAE International — J1772 &amp; J3400 (NACS) Standards</span>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 shrink-0" />
-              </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                Technical standards specifying conductive charging couplers, digital handshake communication protocols, and high-voltage vehicle electrical systems.
-              </p>
-            </a>
-          </div>
-        </div>
 
         {/* Article Ranking Tags & Related Topics Box */}
         <div className="bg-[#131B2A] border border-slate-800 rounded-2xl p-6 mb-10">
