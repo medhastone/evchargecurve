@@ -1,31 +1,80 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { calculateBatteryDegradation } from '@/lib/evCalculations';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Zap, Activity, ShieldCheck, ShieldAlert, HeartPulse, Battery, Info, PlusCircle } from 'lucide-react';
+import { 
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, 
+  Tooltip, ResponsiveContainer, Legend, ReferenceLine, ReferenceDot 
+} from 'recharts';
+import { 
+  Zap, Activity, ShieldCheck, ShieldAlert, HeartPulse, Battery, 
+  Info, PlusCircle, Calendar, BarChart2, Table, CheckCircle2, ArrowRight
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/components/providers/SettingsProvider';
 import { useVehicles } from '@/components/providers/VehicleContext';
 
-interface TooltipProps {
+interface CustomTooltipProps {
   active?: boolean;
-  payload?: Array<{ value: number | string }>;
+  payload?: Array<{ value: number | string; payload?: any }>;
   label?: string | number;
+  distanceLabel?: string;
+  totalPackKwh?: number;
+  epaRange?: number;
+  isKm?: boolean;
 }
 
-const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
+const CustomTooltip = ({ active, payload, label, distanceLabel = 'mi', totalPackKwh = 75, epaRange = 300, isKm = false }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
+    const soh = Number(payload[0]?.value || 0);
+    const usableKwh = (totalPackKwh * (soh / 100)).toFixed(1);
+    const rangeMiles = Math.round(epaRange * (soh / 100));
+    const displayedRange = isKm ? Math.round(rangeMiles * 1.60934) : rangeMiles;
+    const warrantyMargin = (soh - 70).toFixed(1);
+    const yearNum = Number(label);
+
     return (
-      <div className="bg-slate-900/95 border border-slate-700 p-3 rounded-lg shadow-xl backdrop-blur-sm">
-        <p className="text-slate-300 font-medium mb-2">Year {label}</p>
-        <p className="text-emerald-400 font-bold">Projected SoH: {payload[0]?.value}%</p>
-        {payload[1] && <p className="text-red-400 font-bold text-sm mt-1">Warranty Limit: {payload[1].value}%</p>}
+      <div className="bg-slate-900/95 border border-slate-700 p-3.5 rounded-xl shadow-2xl backdrop-blur-md min-w-[210px]">
+        <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
+          <span className="text-white font-bold text-sm">Year {label} Forecast</span>
+          <span className={cn(
+            "text-[10px] px-2 py-0.5 rounded-full font-bold",
+            yearNum === 0 
+              ? "bg-blue-500/20 text-blue-300" 
+              : yearNum <= 8 
+                ? "bg-emerald-500/20 text-emerald-300" 
+                : "bg-slate-700 text-slate-300"
+          )}>
+            {yearNum === 0 ? 'Factory Spec' : yearNum <= 8 ? '8-Yr Warranty Era' : 'Post-Warranty'}
+          </span>
+        </div>
+        <div className="space-y-1.5 text-xs">
+          <div className="flex justify-between">
+            <span className="text-slate-400">State of Health:</span>
+            <span className="text-emerald-400 font-bold">{soh}%</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-slate-400">Usable Battery:</span>
+            <span className="text-slate-200 font-medium">{usableKwh} kWh</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-slate-400">Projected Range:</span>
+            <span className="text-slate-200 font-medium">{displayedRange} {distanceLabel}</span>
+          </div>
+          <div className="flex justify-between pt-1 border-t border-slate-800/80">
+            <span className="text-slate-400">70% Warranty Buffer:</span>
+            <span className={Number(warrantyMargin) >= 0 ? "text-emerald-400 font-semibold" : "text-rose-400 font-semibold"}>
+              {Number(warrantyMargin) >= 0 ? `+${warrantyMargin}% Safe` : `${warrantyMargin}% Replacement`}
+            </span>
+          </div>
+        </div>
       </div>
     );
   }
   return null;
 };
+
+const MILESTONE_YEARS = [1, 3, 5, 8, 10];
 
 export default function BatteryHealthTool() {
   const { unit, setUnit, distanceLabel } = useSettings();
@@ -36,6 +85,12 @@ export default function BatteryHealthTool() {
   const [mileage, setMileage] = useState(40000);
   
   const [habit, setHabit] = useState<'ac_gentle' | 'mixed' | 'dc_heavy'>('mixed');
+  const [viewMode, setViewMode] = useState<'chart' | 'table'>('chart');
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const currentYear = 2026;
   const ageYears = Math.max(0, currentYear - modelYear);
@@ -55,6 +110,24 @@ export default function BatteryHealthTool() {
       vehicle?.epaRangeMiles || 300
     );
   }, [vehicle, ageYears, mileageMiles, habit]);
+
+  const milestones = useMemo(() => {
+    const totalPack = vehicle?.usablePackKwh || vehicle?.batteryCapacity || 75;
+    const epa = vehicle?.epaRangeMiles || 300;
+    return MILESTONE_YEARS.map(yr => {
+      const pt = degradation.projectionPoints.find(p => p.year === yr) || { year: yr, sohPct: 100, warrantyThreshold: 70 };
+      const usableKwh = (totalPack * (pt.sohPct / 100)).toFixed(1);
+      const rangeMiles = Math.round(epa * (pt.sohPct / 100));
+      const displayedRange = isKm ? Math.round(rangeMiles * 1.60934) : rangeMiles;
+      return {
+        year: yr,
+        sohPct: pt.sohPct,
+        usableKwh,
+        range: displayedRange,
+        isCurrentAge: Math.round(ageYears) === yr,
+      };
+    });
+  }, [degradation.projectionPoints, vehicle, isKm, ageYears]);
 
   const radius = 50;
   const stroke = 10;
@@ -267,38 +340,232 @@ export default function BatteryHealthTool() {
             </div>
           </div>
 
-          {/* 10-Year Lifecycle Chart */}
-          <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl min-h-[360px] flex flex-col relative">
-            <h3 className="text-lg font-bold text-white mb-6">10-Year Lifecycle Trajectory</h3>
-            <div className="flex-1 w-full h-[260px] relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={degradation.projectionPoints} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                  <XAxis dataKey="year" stroke="#94a3b8" fontSize={12} tickFormatter={(val) => `Yr ${val}`} tickMargin={10} />
-                  <YAxis stroke="#94a3b8" fontSize={12} tickFormatter={(val) => `${val}%`} domain={[50, 100]} />
-                  <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#94a3b8', strokeWidth: 1, strokeDasharray: '4 4' }} />
-                  <Legend verticalAlign="top" height={36} iconType="circle" />
-                  
-                  <Line 
-                    type="monotone" 
-                    name="Projected SoH" 
-                    dataKey="sohPct" 
-                    stroke="#10B981" 
-                    strokeWidth={3} 
-                    dot={{ r: 4, fill: '#10B981', strokeWidth: 0 }} 
-                    activeDot={{ r: 6 }} 
-                  />
-                  <Line 
-                    type="stepAfter" 
-                    name="70% Warranty Floor" 
-                    dataKey="warrantyThreshold" 
-                    stroke="#EF4444" 
-                    strokeWidth={2} 
-                    strokeDasharray="5 5" 
-                    dot={false} 
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+          {/* 10-Year Lifecycle Chart & Milestone Visuals */}
+          <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl flex flex-col relative shadow-xl">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-lg font-bold text-white">10-Year Lifecycle Trajectory</h3>
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 rounded-full">
+                    Active Physics Model
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400">
+                  Non-linear root decay (&radic;t) modeled for {vehicle?.chemistry || 'NMC'} cells under {habit === 'ac_gentle' ? 'gentle AC' : habit === 'dc_heavy' ? 'frequent DCFC' : 'balanced'} charging
+                </p>
+              </div>
+
+              {/* View Mode Toggle */}
+              <div className="flex items-center bg-slate-900/90 border border-slate-700 rounded-xl p-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('chart')}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors",
+                    viewMode === 'chart' 
+                      ? "bg-emerald-500 text-slate-950 shadow-md font-bold" 
+                      : "text-slate-400 hover:text-white"
+                  )}
+                >
+                  <BarChart2 className="w-3.5 h-3.5" />
+                  Trajectory Curve
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('table')}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors",
+                    viewMode === 'table' 
+                      ? "bg-emerald-500 text-slate-950 shadow-md font-bold" 
+                      : "text-slate-400 hover:text-white"
+                  )}
+                >
+                  <Table className="w-3.5 h-3.5" />
+                  Milestone Matrix
+                </button>
+              </div>
+            </div>
+
+            {viewMode === 'chart' ? (
+              <div className="w-full h-[300px] sm:h-[340px] min-h-[300px] shrink-0 relative">
+                {isMounted ? (
+                  <ResponsiveContainer width="100%" height="100%" minHeight={280}>
+                    <AreaChart data={degradation.projectionPoints} margin={{ top: 10, right: 15, left: -20, bottom: 5 }}>
+                      <defs>
+                        <linearGradient id="sohGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10B981" stopOpacity={0.4}/>
+                          <stop offset="95%" stopColor="#10B981" stopOpacity={0.0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                      <XAxis 
+                        dataKey="year" 
+                        stroke="#94a3b8" 
+                        fontSize={12} 
+                        tickFormatter={(val) => `Yr ${val}`} 
+                        tickMargin={10} 
+                      />
+                      <YAxis 
+                        stroke="#94a3b8" 
+                        fontSize={12} 
+                        tickFormatter={(val) => `${val}%`} 
+                        domain={[50, 100]} 
+                      />
+                      <Tooltip 
+                        content={
+                          <CustomTooltip 
+                            distanceLabel={distanceLabel}
+                            totalPackKwh={vehicle?.usablePackKwh || vehicle?.batteryCapacity || 75}
+                            epaRange={vehicle?.epaRangeMiles || 300}
+                            isKm={isKm}
+                          />
+                        } 
+                        cursor={{ stroke: '#94a3b8', strokeWidth: 1, strokeDasharray: '4 4' }} 
+                      />
+                      <Legend verticalAlign="top" height={36} iconType="circle" />
+                      
+                      <ReferenceLine 
+                        y={70} 
+                        stroke="#EF4444" 
+                        strokeWidth={2} 
+                        strokeDasharray="5 5" 
+                        label={{ 
+                          value: '70% Legal Warranty Floor', 
+                          fill: '#F87171', 
+                          fontSize: 11, 
+                          position: 'insideBottomRight' 
+                        }} 
+                      />
+
+                      {ageYears <= 10 && (
+                        <ReferenceDot 
+                          x={Math.min(10, Math.round(ageYears))} 
+                          y={degradation.currentSohPct} 
+                          r={6} 
+                          fill="#38BDF8" 
+                          stroke="#FFFFFF" 
+                          strokeWidth={2} 
+                        />
+                      )}
+                      
+                      <Area 
+                        type="monotone" 
+                        name="Projected SoH (%)" 
+                        dataKey="sohPct" 
+                        stroke="#10B981" 
+                        strokeWidth={3} 
+                        fillOpacity={1} 
+                        fill="url(#sohGradient)"
+                        dot={{ r: 3, fill: '#10B981', strokeWidth: 0 }} 
+                        activeDot={{ r: 6 }} 
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  /* SVG Fallback while mounting */
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900/40 rounded-xl p-4">
+                    <svg viewBox="0 0 500 200" className="w-full h-full max-h-[260px]">
+                      <path d="M 20 20 Q 150 45 250 65 T 480 95" fill="none" stroke="#10B981" strokeWidth="3" />
+                      <line x1="20" y1="120" x2="480" y2="120" stroke="#EF4444" strokeWidth="2" strokeDasharray="5 5" />
+                      <text x="250" y="115" fill="#EF4444" fontSize="11" textAnchor="middle">70% Warranty Replacement Line</text>
+                    </svg>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Milestone Data Matrix Table */
+              <div className="overflow-x-auto w-full">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-900/90 text-slate-400 border-b border-slate-700">
+                    <tr>
+                      <th className="p-3 font-semibold">Milestone</th>
+                      <th className="p-3 font-semibold">Estimated Odometer</th>
+                      <th className="p-3 font-semibold text-emerald-400">State of Health</th>
+                      <th className="p-3 font-semibold">Usable kWh</th>
+                      <th className="p-3 font-semibold">Projected Range</th>
+                      <th className="p-3 font-semibold">Warranty Headroom</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800 text-slate-200">
+                    {degradation.projectionPoints.map((pt) => {
+                      const miles = (ageYears > 0 ? (mileageMiles / ageYears) : 12000) * pt.year;
+                      const dist = isKm ? Math.round(miles * 1.60934) : Math.round(miles);
+                      const kwh = ((vehicle?.usablePackKwh || vehicle?.batteryCapacity || 75) * (pt.sohPct / 100)).toFixed(1);
+                      const range = Math.round((vehicle?.epaRangeMiles || 300) * (pt.sohPct / 100));
+                      const dispRange = isKm ? Math.round(range * 1.60934) : range;
+                      const isCurrentYear = pt.year === Math.min(10, Math.round(ageYears));
+                      const isWarrantyYear = pt.year === 8;
+                      return (
+                        <tr 
+                          key={pt.year}
+                          className={cn(
+                            "hover:bg-slate-800/40 transition-colors",
+                            isCurrentYear && "bg-blue-500/10 font-medium",
+                            isWarrantyYear && "border-l-2 border-l-amber-400"
+                          )}
+                        >
+                          <td className="p-3 font-bold flex items-center gap-1.5">
+                            Year {pt.year}
+                            {isCurrentYear && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-normal">
+                                Current
+                              </span>
+                            )}
+                            {isWarrantyYear && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-normal">
+                                8-Yr / 100k Limit
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-3 font-mono text-slate-300">{dist.toLocaleString()} {distanceLabel}</td>
+                          <td className="p-3 font-mono font-bold text-emerald-400">{pt.sohPct}%</td>
+                          <td className="p-3 font-mono text-slate-300">{kwh} kWh</td>
+                          <td className="p-3 font-mono text-slate-300">{dispRange} {distanceLabel}</td>
+                          <td className="p-3">
+                            {pt.year <= 8 ? (
+                              pt.sohPct > 70 ? (
+                                <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                                  <ShieldCheck className="w-3.5 h-3.5" /> +{(pt.sohPct - 70).toFixed(1)}% Safe
+                                </span>
+                              ) : (
+                                <span className="text-red-400 font-semibold flex items-center gap-1">
+                                  <ShieldAlert className="w-3.5 h-3.5" /> Claim Eligible
+                                </span>
+                              )
+                            ) : (
+                              <span className="text-slate-500 text-[11px]">Post-Warranty</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Quick 5-Milestone Visual Cards Bar */}
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mt-6 pt-5 border-t border-slate-800/80">
+              {milestones.map((m) => (
+                <div 
+                  key={m.year}
+                  className={cn(
+                    "rounded-xl p-2.5 border text-center transition-all",
+                    m.isCurrentAge 
+                      ? "bg-blue-500/15 border-blue-500/40 ring-1 ring-blue-400/30" 
+                      : "bg-slate-900/60 border-slate-800 hover:border-slate-700"
+                  )}
+                >
+                  <div className="flex items-center justify-center gap-1 text-[11px] font-semibold text-slate-400 mb-1">
+                    <Calendar className="w-3 h-3 text-slate-500" />
+                    <span>Year {m.year}</span>
+                    {m.isCurrentAge && <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />}
+                  </div>
+                  <div className="text-base font-black text-emerald-400">{m.sohPct}%</div>
+                  <div className="text-[11px] text-slate-300 mt-0.5">{m.range} {distanceLabel}</div>
+                  <div className="text-[10px] text-slate-500 mt-0.5">{m.usableKwh} kWh</div>
+                </div>
+              ))}
             </div>
           </div>
 

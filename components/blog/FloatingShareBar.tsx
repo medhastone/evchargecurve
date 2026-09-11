@@ -19,13 +19,15 @@ interface FloatingShareBarProps {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogSvg?: React.ReactNode;
 }
 
 export default function FloatingShareBar({
   url = 'https://evchargecurve.com/blog/How-Long-to-Charge-an-Electric-Car',
   title = 'How Long Does It Take to Charge an Electric Car? (Real-World Guide & Charging Curves)',
   description = 'Real-world charging speeds for Level 1, 2, and 3 DC fast charging, plus the 80% charging curve taper and cold-gate thermal limits.',
-  ogImage = '/images/og-how-long-to-charge.png'
+  ogImage = '/images/og-how-long-to-charge.png',
+  ogSvg
 }: FloatingShareBarProps) {
   const [copied, setCopied] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
@@ -298,14 +300,20 @@ export default function FloatingShareBar({
             <div className="bg-[#131B2A] border border-slate-700/80 rounded-xl overflow-hidden shadow-xl mb-5">
               {/* Card Banner Image */}
               <div className="relative aspect-[1200/630] w-full bg-[#0B0F17] overflow-hidden">
-                <Image
-                  src={ogImage}
-                  alt="Open Graph preview card for How Long to Charge an Electric Car"
-                  fill
-                  className="object-cover"
-                  referrerPolicy="no-referrer"
-                  unoptimized
-                />
+                {ogSvg ? (
+                  <div className="w-full h-full">
+                    {ogSvg}
+                  </div>
+                ) : (
+                  <Image
+                    src={ogImage}
+                    alt="Open Graph preview card"
+                    fill
+                    className="object-cover"
+                    referrerPolicy="no-referrer"
+                    unoptimized
+                  />
+                )}
               </div>
 
               {/* Card Content Snippet */}

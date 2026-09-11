@@ -147,8 +147,8 @@ export default function HowLongToChargeEVPage() {
     'description': 'A comprehensive engineering guide breaking down real-world Level 1, Level 2, and Level 3 DC fast charging times, the physics of charging curve tapers, and battery preconditioning.',
     'author': {
       '@type': 'Person',
-      'name': 'Dr. Marcus Vance, PhD',
-      'jobTitle': 'Senior Automotive Battery Systems Engineer'
+      'name': 'EV Charge Curve Editorial Team',
+      'jobTitle': 'Battery & Infrastructure Experts'
     },
     'publisher': {
       '@type': 'Organization',
@@ -158,8 +158,8 @@ export default function HowLongToChargeEVPage() {
         'url': 'https://evchargecurve.com/icon.png'
       }
     },
-    'datePublished': '2026-03-01T08:00:00+00:00',
-    'dateModified': '2026-09-09T03:00:00+00:00',
+    'datePublished': '2026-09-11',
+    'dateModified': '2026-09-11T03:00:00+00:00',
     'mainEntityOfPage': 'https://evchargecurve.com/blog/How-Long-to-Charge-an-Electric-Car'
   };
 
@@ -207,7 +207,7 @@ export default function HowLongToChargeEVPage() {
             8 min read
           </span>
           <span className="text-xs text-slate-400">
-            Updated September 2026
+            Updated September 11, 2026
           </span>
         </div>
 
@@ -705,7 +705,7 @@ export default function HowLongToChargeEVPage() {
           </div>
           <div className="space-y-1 text-xs sm:text-sm">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-white text-base">Dr. Marcus Vance, PhD</span>
+              <span className="font-bold text-white text-base">EV Charge Curve Editorial Team</span>
               <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-[10px] font-semibold uppercase">
                 Battery Systems Engineer
               </span>

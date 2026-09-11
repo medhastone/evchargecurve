@@ -60,15 +60,36 @@ interface BlogPost {
 
 const BLOG_POSTS: BlogPost[] = [
   {
+    id: 'level-3-ev-charger',
+    title: 'Level 3 EV Charger Explained: Speeds, kW Power, Costs, and the Home Charging Myth',
+    slug: '/blog/level-3-ev-charger',
+    excerpt: 'Comprehensive engineering guide to Level 3 DC fast charging: 50kW-350kW power ratings, 400V vs 800V bottlenecks, charging curve taper physics, and home installation myths.',
+    date: 'September 11, 2026',
+    readTime: '12 min read',
+    author: {
+      name: 'EV Charge Curve Editorial Team',
+      role: 'EV Infrastructure Experts'
+    },
+    category: 'DC Fast Charging',
+    tags: [
+      'Level 3 Charging',
+      'DC Fast Charging',
+      'Charging Curves',
+      'EV Infrastructure',
+      'Battery Engineering'
+    ],
+    featured: true
+  },
+  {
     id: 'how-long-to-charge-an-electric-car',
     title: 'How Long Does It Take to Charge an Electric Car? (The Real-World Truth & Charging Curves)',
     slug: '/blog/How-Long-to-Charge-an-Electric-Car',
     excerpt: 'An authoritative mathematical and electrochemical breakdown of Level 1, Level 2, and Level 3 DC fast charging. Discover why charging curves taper above 80%, how to calculate your session duration, and how cold weather impacts power delivery.',
-    date: 'September 2026',
+    date: 'September 11, 2026',
     readTime: '8 min read',
     author: {
-      name: 'Dr. Marcus Vance, PhD',
-      role: 'Battery Systems Engineer'
+      name: 'EV Charge Curve Editorial Team',
+      role: 'Battery & Infrastructure Experts'
     },
     category: 'Charging Guides',
     tags: [
@@ -78,38 +99,55 @@ const BLOG_POSTS: BlogPost[] = [
       'Home Charging',
       'Battery Taper',
       'Cold-Gate'
-    ],
-    featured: true
+    ]
   },
   {
-    id: 'battery-degradation-mechanisms',
-    title: 'Lithium-Ion Battery Degradation: Calendar Aging vs. Cyclic DC Fast-Charging Stress',
-    slug: '/battery-health',
-    excerpt: 'Explore the solid electrolyte interphase (SEI) growth, transition metal dissolution, and mechanical cracking caused by repeated high-C-rate fast charging versus time at elevated ambient temperatures.',
-    date: 'August 2026',
-    readTime: '11 min read',
+    id: 'lithium-ion-battery-degradation',
+    title: 'Lithium-Ion Battery Degradation: Calendar Aging vs. Cyclic DC Fast Charging',
+    slug: '/blog/lithium-ion-battery-degradation',
+    excerpt: 'Understand the physics of EV battery degradation. Learn the real impact of calendar aging, SEI layer formation, and frequent DC fast charging on LFP and NMC batteries.',
+    date: 'September 11, 2026',
+    readTime: '12 min read',
     author: {
-      name: 'Dr. Elena Rostova',
-      role: 'Electrochemistry Lead'
+      name: 'EV Charge Curve Editorial Team',
+      role: 'Battery & Infrastructure Experts'
     },
     category: 'Battery Science',
     tags: [
       'Battery Health',
       'Degradation',
       'SEI Layer',
-      'C-Rate'
+      'Calendar Aging'
+    ]
+  },
+  {
+    id: 'nema-14-50-ev-charging-guide',
+    title: 'NEMA 14-50 EV Charging Speed, Wiring, & Cost: The Complete Real-World Guide',
+    slug: '/blog/nema-14-50-ev-charging-guide',
+    excerpt: 'Master how fast a NEMA 14-50 outlet charges an EV. Discover the NEC 80% rule, NEMA 14-50 vs 6-50, and why industrial-grade receptacles prevent melting.',
+    date: 'September 11, 2026',
+    readTime: '10 min read',
+    author: {
+      name: 'EV Charge Curve Editorial Team',
+      role: 'EV Infrastructure Experts'
+    },
+    category: 'Home Installation',
+    tags: [
+      'Level 2 Charging',
+      'NEMA 14-50',
+      'Electrical Safety'
     ]
   },
   {
     id: 'cold-weather-charging-preconditioning',
-    title: 'The Cold-Gate Dilemma: Why EVs Charge at One-Third Speed in Sub-Freezing Weather',
-    slug: '/preconditioning',
-    excerpt: 'Why cold electrolyte viscosity causes severe charging throttling and how automated thermal preconditioning uses 4–7 kW of heat energy to safeguard your pack from irreversible lithium plating.',
-    date: 'July 2026',
-    readTime: '9 min read',
+    title: 'EV Cold Weather Charging: Fix Slow Winter Charging & Range Loss',
+    slug: '/blog/the-cold-gate-dilemma',
+    excerpt: 'Learn why your electric car battery charges slowly in winter. Discover EV cold-gating, lithium plating, and how battery preconditioning speeds up charging.',
+    date: 'September 11, 2026',
+    readTime: '12 min read',
     author: {
-      name: 'Marcus Vance, PhD',
-      role: 'Battery Systems Engineer'
+      name: 'EV Charge Curve Editorial Team',
+      role: 'Battery & Infrastructure Experts'
     },
     category: 'Winter Engineering',
     tags: [
@@ -122,13 +160,13 @@ const BLOG_POSTS: BlogPost[] = [
   {
     id: 'level-2-breaker-sizing-economics',
     title: 'Residential Level 2 Charging: 32A vs. 40A vs. 48A Continuous Load Breaker Sizing',
-    slug: '/panel-capacity',
+    slug: '/blog/level-2-breaker-sizing-economics',
     excerpt: 'Understanding National Electrical Code (NEC) 80% continuous duty guidelines, NEMA 14-50 receptacles versus hardwired wallboxes, and panel capacity calculations.',
-    date: 'June 2026',
+    date: 'September 11, 2026',
     readTime: '7 min read',
     author: {
-      name: 'David Chen, PE',
-      role: 'Master Electrician & Infrastructure Consultant'
+      name: 'EV Charge Curve Editorial Team',
+      role: 'EV Infrastructure Experts'
     },
     category: 'Home Charging',
     tags: [
@@ -139,6 +177,28 @@ const BLOG_POSTS: BlogPost[] = [
     ]
   }
 ];
+
+import { BatteryDegradationThumbnail, ColdGateThumbnail, Level2Thumbnail, Nema1450Thumbnail, Level3Thumbnail, ChargeCurveThumbnail } from '@/components/blog/BlogThumbnails';
+
+// Helper function to map thumbnail component based on post ID
+const getThumbnailForPost = (postId: string) => {
+  switch (postId) {
+    case 'level-3-ev-charger':
+      return <Level3Thumbnail />;
+    case 'how-long-to-charge-an-electric-car':
+      return <ChargeCurveThumbnail />;
+    case 'nema-14-50-ev-charging-guide':
+      return <Nema1450Thumbnail />;
+    case 'lithium-ion-battery-degradation':
+      return <BatteryDegradationThumbnail />;
+    case 'cold-weather-charging-preconditioning':
+      return <ColdGateThumbnail />;
+    case 'level-2-breaker-sizing-economics':
+      return <Level2Thumbnail />;
+    default:
+      return null;
+  }
+};
 
 const ALL_TAGS = [
   'All',
@@ -325,36 +385,9 @@ export default function BlogIndexPage() {
               </div>
 
               {/* Right Column: Visual Preview Card */}
-              <div className="lg:col-span-5 bg-[#0B0F17] rounded-2xl border border-slate-800 p-6 flex flex-col justify-between space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between text-xs text-slate-400 pb-3 border-b border-slate-800">
-                    <span className="font-mono text-emerald-400 font-bold">INCLUDED TECHNICAL SVG DIAGRAMS</span>
-                    <span>4 Interactive Figures</span>
-                  </div>
-
-                  <div className="space-y-2.5 text-xs">
-                    <div className="p-2.5 rounded-lg bg-[#131B2A] border border-slate-800 flex items-center justify-between">
-                      <span className="text-slate-300 font-medium">Figure 1: Charging Speed Tier Comparison</span>
-                      <span className="text-emerald-400 font-mono text-[11px]">Level 1 vs 2 vs 3</span>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-[#131B2A] border border-slate-800 flex items-center justify-between">
-                      <span className="text-slate-300 font-medium">Figure 2: EV Charge Curve &amp; 80% Taper Cliff</span>
-                      <span className="text-purple-400 font-mono text-[11px]">kW vs. SoC %</span>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-[#131B2A] border border-slate-800 flex items-center justify-between">
-                      <span className="text-slate-300 font-medium">Figure 3: Thermal Cold-Gate Throttling Curve</span>
-                      <span className="text-cyan-400 font-mono text-[11px]">32&deg;F vs 77&deg;F</span>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-[#131B2A] border border-slate-800 flex items-center justify-between">
-                      <span className="text-slate-300 font-medium">Figure 4: Level 2 Breaker &amp; 80% Continuous Rule</span>
-                      <span className="text-amber-400 font-mono text-[11px]">32A / 40A / 48A</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3.5 text-xs text-slate-300">
-                  <span className="text-emerald-400 font-bold block mb-1">Key Takeaway</span>
-                  &ldquo;A standard 60 kWh EV charges in ~4.5 hours on Level 2 AC, but under 20 minutes from 20% to 80% on high-power 800V DC hardware.&rdquo;
+              <div className="lg:col-span-5 h-full min-h-[250px] w-full bg-[#0B0F19] rounded-2xl border border-slate-800 overflow-hidden shadow-inner flex flex-col">
+                <div className="w-full h-full flex-1">
+                  {getThumbnailForPost(featuredPost.id)}
                 </div>
               </div>
 
@@ -384,7 +417,10 @@ export default function BlogIndexPage() {
                 key={post.id}
                 className="rounded-2xl bg-[#131B2A] border border-slate-800 hover:border-slate-700 p-6 flex flex-col justify-between transition-all hover:-translate-y-1 duration-200 group shadow-lg"
               >
-                <div className="space-y-3">
+                <div className="space-y-4">
+                  <div className="w-full h-32 sm:h-40 bg-[#0B0F19] rounded-xl overflow-hidden border border-slate-800 mb-4">
+                    {getThumbnailForPost(post.id)}
+                  </div>
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-emerald-400 font-semibold px-2.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
                       {post.category}

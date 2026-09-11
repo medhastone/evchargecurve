@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import BatteryHealthTool from '@/components/BatteryHealthTool';
+import { BatteryLifecycleTrajectorySvg } from '@/components/BatteryLifecycleTrajectorySvg';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getToolMetadata } from '@/lib/seoConfig';
 import { 
@@ -304,6 +305,9 @@ export default function BatteryHealthPage() {
               Where <span className="font-mono text-slate-300">&alpha;<sub>cal</sub></span> is chemistry calendar decay (0.9% for LFP, 1.4% for NMC), <span className="font-mono text-slate-300">N<sub>equiv_cycles</sub></span> represents full 100% cycle equivalents (N = Mileage / EPA Range), and <span className="font-mono text-slate-300">&gamma;<sub>DCFC</sub></span> models rapid ion insertion strain.
             </p>
           </div>
+
+          {/* 10-Year Lifecycle Trajectory Technical Infographic */}
+          <BatteryLifecycleTrajectorySvg />
         </div>
       </section>
 
