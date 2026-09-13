@@ -48,6 +48,16 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/tco-calculator" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+                  EV vs Gas 5-Yr TCO
+                </Link>
+              </li>
+              <li>
+                <Link href="/ev-charging-cost" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+                  EV Charging Cost & Savings
+                </Link>
+              </li>
+              <li>
                 <Link href="/panel-capacity" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
                   Panel Capacity
                 </Link>
@@ -82,6 +92,11 @@ export default function Footer() {
               <li>
                 <Link href="/carbon-offset" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
                   Carbon Offset Matrix
+                </Link>
+              </li>
+              <li>
+                <Link href="/solar-to-ev" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+                  Solar Array Sizer
                 </Link>
               </li>
               <li>

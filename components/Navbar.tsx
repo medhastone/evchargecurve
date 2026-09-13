@@ -26,7 +26,10 @@ const TOOL_LINKS = [
   { name: 'Battery Health', path: '/battery-health' },
   { name: 'Winter & Towing', path: '/range-loss' },
   { name: 'Home Charging', path: '/home-charging' },
+  { name: 'EV vs Gas TCO', path: '/tco-calculator' },
+  { name: 'EV Charging Cost', path: '/ev-charging-cost' },
   { name: 'Carbon Offset', path: '/carbon-offset' },
+  { name: 'Solar Array Sizer', path: '/solar-to-ev' },
   { name: 'V2H Power Outage', path: '/v2h-backup' },
 ];
 
