@@ -28,6 +28,8 @@ const TOOL_LINKS = [
   { name: 'Home Charging', path: '/home-charging' },
   { name: 'EV vs Gas TCO', path: '/tco-calculator' },
   { name: 'EV Charging Cost', path: '/ev-charging-cost' },
+  { name: 'kW to Miles Speed', path: '/kw-to-miles' },
+  { name: 'Battery Replacement', path: '/battery-replacement' },
   { name: 'Carbon Offset', path: '/carbon-offset' },
   { name: 'Solar Array Sizer', path: '/solar-to-ev' },
   { name: 'V2H Power Outage', path: '/v2h-backup' },

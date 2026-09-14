@@ -58,6 +58,16 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/kw-to-miles" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+                  kW to Miles Speed
+                </Link>
+              </li>
+              <li>
+                <Link href="/battery-replacement" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
+                  Battery Replacement Cost
+                </Link>
+              </li>
+              <li>
                 <Link href="/panel-capacity" className="text-slate-400 hover:text-emerald-400 text-sm transition-colors">
                   Panel Capacity
                 </Link>

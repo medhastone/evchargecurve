@@ -26,6 +26,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 3. Static informational and specialized calculation routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
+      url: `${BASE_URL}/battery-replacement`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.95,
+    },
+    {
+      url: `${BASE_URL}/kw-to-miles`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.95,
+    },
+    {
+      url: `${BASE_URL}/ev-charging-cost`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.95,
+    },
+    {
       url: `${BASE_URL}/tco-calculator`,
       lastModified: currentDate,
       changeFrequency: 'weekly' as const,
