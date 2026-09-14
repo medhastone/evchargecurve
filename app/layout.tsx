@@ -26,13 +26,23 @@ export const metadata: Metadata = {
     default: 'EVChargeCurve | DC Fast Charging & Battery Analytics',
   },
   description: 'High-performance web utility platform for EV battery diagnostics, DC fast-charging taper curves, winter range degradation, and home charging economics.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon-512.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: ['/favicon.ico'],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/png" href="/icon.png" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
