@@ -245,7 +245,7 @@ export default function VehicleDirectoryView() {
                         Edit Curve
                       </button>
                       <Link
-                        href={`/simulator?vid=${v.id}`}
+                        href={`/?vehicle=${v.id}#simulator`}
                         className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center justify-center gap-1 transition-colors"
                       >
                         <Zap className="w-3.5 h-3.5 text-cyan-400" />
@@ -283,7 +283,7 @@ export default function VehicleDirectoryView() {
                           <span>Clone</span>
                         </button>
                         <Link
-                          href={`/simulator?vid=${v.id}`}
+                          href={`/?vehicle=${v.id}#simulator`}
                           className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30 flex items-center gap-1 transition-colors"
                         >
                           <Zap className="w-3 h-3" />

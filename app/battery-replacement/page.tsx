@@ -28,21 +28,21 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'EV Battery Replacement Cost Calculator & Warranty Tool',
-  description: 'Calculate out-of-warranty EV battery replacement costs. Compare OEM full packs, refurbished modules, labor, and warranty expiration thresholds by model.',
+  title: 'EV Battery Replacement Cost Calculator & Warranty Guide | EVChargeCurve',
+  description: 'Calculate out-of-warranty EV battery replacement and module repair costs. Compare OEM full packs, refurbished modules, labor rates, and warranty coverage by model.',
   alternates: {
     canonical: 'https://evchargecurve.com/battery-replacement',
   },
   openGraph: {
-    title: 'EV Battery Replacement Cost Calculator – Full Pack vs Module Repair',
-    description: 'Estimate real out-of-warranty traction battery replacement and module repair costs across all major EV brands. Check warranty coverage limits instantly.',
+    title: 'EV Battery Replacement Cost Calculator & Warranty Guide',
+    description: 'Estimate out-of-warranty traction battery replacement and module repair costs across major EV brands. Check warranty expiration thresholds.',
     url: 'https://evchargecurve.com/battery-replacement',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EV Battery Replacement Cost Calculator – Full Pack vs Module Repair',
-    description: 'Estimate real out-of-warranty traction battery replacement and module repair costs across all major EV brands. Check warranty coverage limits instantly.',
+    title: 'EV Battery Replacement Cost Calculator & Warranty Guide',
+    description: 'Estimate out-of-warranty traction battery replacement and module repair costs across major EV brands. Check warranty expiration thresholds.',
   },
 };
 

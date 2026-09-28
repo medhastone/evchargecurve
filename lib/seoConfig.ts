@@ -36,13 +36,13 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
   dcFastCharge: {
     key: 'dcFastCharge',
     path: '/',
-    primaryKeyword: 'ev charging curve calculator',
-    title: 'EV Charging Curve Calculator & DC Fast Charge Time Tool',
+    primaryKeyword: 'ev charging time calculator',
+    title: 'EV Charging Time Calculator: Real 10–80% Charging Times | EVChargeCurve',
     description:
-      'Accurate EV charging curve calculator and DC fast charge time tool. Simulate real 10% to 80% taper drop-offs, charging speed, and charging session costs.',
-    softwareName: 'EV Charging Curve & DC Fast Charge Simulator',
-    breadcrumbName: 'DC Fast Charge Simulator',
-    imageCaption: 'Real-time 10% to 80% EV DC fast charging curve simulator and session duration estimator.',
+      'Calculate realistic EV charging times from 10% to 80%. Simulate DC fast charging curves, battery taper drop-offs, cold-weather penalties, and session costs across 50+ models.',
+    softwareName: 'EV Charging Time & DC Fast Charge Simulator',
+    breadcrumbName: 'Charging Time Calculator',
+    imageCaption: '10% to 80% EV DC fast charging curve simulator and session duration estimator.',
     faqs: [
       {
         question: 'Why do I need a specialized EV charging curve calculator instead of using peak kW?',
@@ -67,7 +67,7 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
       {
         question: 'How does station voltage architecture (400V vs 800V) affect charging time?',
         answer:
-          '800V vehicles (such as the Hyundai Ioniq 5 and Porsche Taycan) draw higher power at lower cable amperage, reducing resistive heat losses and sustaining high peak rates up to 70% state of charge for 18-minute 10%–80% stops.',
+          '800V vehicles (such as the Hyundai Ioniq 5 and Porsche Taycan) draw higher power at lower cable amperage, reducing resistive heat losses and sustaining high peak rates up to 70% state of charge for 15- to 18-minute 10%–80% sessions (15.4 min empirical CAN-bus curve vs 18 min official OEM rating).',
       },
       {
         question: 'What is the optimal highway road trip charging strategy?',
@@ -80,11 +80,11 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
     key: 'batteryHealth',
     path: '/battery-health',
     primaryKeyword: 'ev battery degradation calculator',
-    title: 'EV Battery Degradation Calculator | State of Health Test',
+    title: 'EV Battery Degradation Calculator: State of Health Test | EVChargeCurve',
     description:
-      'Calculate battery capacity loss with our EV battery degradation calculator. Run an EV battery health test, calculate State of Health, and verify warranties.',
-    softwareName: 'EV Battery Health & Degradation Sizer',
-    breadcrumbName: 'Battery Health & Degradation',
+      'Calculate EV battery capacity loss and remaining State of Health (SoH) over 10+ years. Models chemistry (LFP vs NMC), annual mileage, fast-charge frequency, and warranty limits.',
+    softwareName: 'EV Battery Health & Degradation Calculator',
+    breadcrumbName: 'Battery Health Calculator',
     imageCaption: 'EV battery capacity retention and State of Health degradation curve over 10 years.',
     faqs: [
       {
@@ -123,9 +123,9 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
     key: 'rangeLoss',
     path: '/range-loss',
     primaryKeyword: 'ev cold weather range loss calculator',
-    title: 'EV Cold Weather Range Loss Calculator & Towing Estimator',
+    title: 'EV Cold Weather Range Loss Calculator & Towing Drag | EVChargeCurve',
     description:
-      'Estimate winter highway drop with our EV cold weather range loss calculator. Model sub-zero temperatures, aerodynamic drag, and EV towing weight vs range.',
+      'Estimate EV winter highway range drop and aerodynamic towing penalties. Simulates sub-zero temperatures, cabin heat pump vs PTC draw, tire drag, and trailer frontal area.',
     softwareName: 'EV Winter Range & Towing Loss Estimator',
     breadcrumbName: 'Winter & Towing Range Loss',
     imageCaption: 'EV winter sub-zero highway range loss and aerodynamic trailer towing consumption model.',
@@ -166,11 +166,11 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
     key: 'homeCharging',
     path: '/home-charging',
     primaryKeyword: 'ev home charging time calculator 240v',
-    title: 'EV Home Charging Time Calculator 240V | Level 2 & TOU Cost Estimator',
+    title: 'EV Home Charging Time Calculator: 240V Level 2 & Cost | EVChargeCurve',
     description:
-      'Calculate overnight charging times with our EV home charging time calculator 240V. Compare Level 2 NEMA 14-50 vs 48A hardwired speeds, off-peak TOU rates, and annual fuel savings.',
+      'Calculate 240V Level 2 home charging times and overnight electricity costs. Compare NEMA 14-50 vs 48A hardwired stations, off-peak TOU utility tariffs, and annual gas savings.',
     softwareName: 'EV Home Charging Time & TOU Cost Calculator',
-    breadcrumbName: 'Home Charging & 240V Time',
+    breadcrumbName: 'Home Charging Calculator',
     imageCaption: 'Level 2 240V residential charging session durations, breaker amperage sizing, and Time-of-Use electricity cost comparison.',
     faqs: [
       {
@@ -208,12 +208,12 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
   compare: {
     key: 'compare',
     path: '/compare',
-    primaryKeyword: 'ev charging curve comparison tool',
-    title: 'EV Charging Curve Comparison Tool | 10-80% Speed Faceoff',
+    primaryKeyword: 'ev charging comparison',
+    title: 'EV Charging Comparison: 400V vs 800V & 10–80% Time | EVChargeCurve',
     description:
-      'Compare electric vehicle DC fast charging curves side-by-side. Analyze 150kW vs 350kW charging times, 800V vs 400V architecture, and 15-minute road trip miles added.',
-    softwareName: 'EV Head-to-Head Charging Speed & Dwell Time Comparison Tool',
-    breadcrumbName: 'Compare Charging Curves',
+      'Compare electric vehicle DC fast charging curves side-by-side. Analyze 150kW vs 350kW charging speeds, 400V vs 800V architectures, and 15-minute road trip miles recovered.',
+    softwareName: 'EV Head-to-Head Charging Speed Comparison Tool',
+    breadcrumbName: 'Compare EV Charging',
     imageCaption: 'Side-by-side EV charging curve comparison displaying 150kW vs 350kW power acceptance profiles and 10% to 80% dwell times.',
     faqs: [
       {
@@ -252,11 +252,11 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
     key: 'carbonOffset',
     path: '/carbon-offset',
     primaryKeyword: 'ev co2 emissions saved calculator',
-    title: 'EV CO2 Emissions Saved Calculator | Well-to-Wheel Carbon Offset',
+    title: 'EV CO2 Emissions Saved Calculator: Lifecycle Carbon Offset | EVChargeCurve',
     description:
-      'Calculate real lifecycle carbon dioxide reduction with our EV CO2 emissions saved calculator. Models Well-to-Wheel grid carbon intensity, gasoline upstream refining, and tree offsets.',
+      'Calculate lifecycle greenhouse gas reductions from driving an electric vehicle. Compares regional grid carbon intensity, Well-to-Wheel fuel emissions, and tree planting equivalents.',
     softwareName: 'EV Well-to-Wheel Lifecycle Carbon Offset Calculator',
-    breadcrumbName: 'Carbon Offset & CO2 Savings',
+    breadcrumbName: 'Carbon Offset Calculator',
     imageCaption: 'Well-to-Wheel lifecycle greenhouse gas emissions reduction comparison between EVs and ICE vehicles across regional power grids.',
     faqs: [
       {
@@ -295,11 +295,11 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
     key: 'idleDrain',
     path: '/idle-drain',
     primaryKeyword: 'ev phantom drain calculator',
-    title: 'EV Phantom Drain Calculator | Airport Parking Battery Loss',
+    title: 'EV Phantom Drain Calculator: Airport Parking Battery Loss | EVChargeCurve',
     description:
-      'Calculate vampire battery drain when parking your EV at airports or long-term storage. Models Tesla Sentry Mode, BMS thermal loops, and freezing weather.',
+      'Calculate vampire battery drain when parking an EV at airport lots or in long-term storage. Models Tesla Sentry Mode, cabin protection, cold weather, and sleep cycles.',
     softwareName: 'EV Phantom Vampire Drain Calculator',
-    breadcrumbName: 'Phantom Vampire Drain',
+    breadcrumbName: 'Phantom Drain Calculator',
     imageCaption: 'Long-term airport parking EV standby battery drain and security camera wake consumption model.',
     faqs: [
       {
@@ -338,11 +338,11 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
     key: 'panelCapacity',
     path: '/panel-capacity',
     primaryKeyword: 'ev charger breaker size calculator',
-    title: 'EV Charger Breaker Size Calculator | 100A Panel Capacity',
+    title: 'EV Charger Breaker Size Calculator: 100A & 200A Panel Sizer | EVChargeCurve',
     description:
-      'Calculate if your 100A or 200A home electrical panel can handle an EV charger without a costly upgrade. Computes NEC 80% continuous loads and breaker sizes.',
+      'Check if your 100A or 200A home electrical panel can safely support an EV charger. Calculates NEC Article 625 continuous loads, 80% breaker sizing, and EVEMS load sharing.',
     softwareName: 'EV Electrical Panel Capacity & Breaker Sizer',
-    breadcrumbName: 'Breaker & Panel Capacity',
+    breadcrumbName: 'Breaker Sizing Calculator',
     imageCaption: 'NEC 80% continuous load calculations for 100A and 200A residential electrical service panels.',
     faqs: [
       {
@@ -381,11 +381,11 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
     key: 'preconditioning',
     path: '/preconditioning',
     primaryKeyword: 'ev battery preconditioning calculator',
-    title: 'EV Battery Preconditioning Calculator | Cold Gate vs Time',
+    title: 'EV Battery Preconditioning Calculator: Cold-Gate vs Time Saved | EVChargeCurve',
     description:
-      'Calculate if battery preconditioning saves net highway travel time. Compare energy spent heating the pack against minutes saved at DC fast chargers.',
+      'Calculate if battery preconditioning saves net travel time on highway road trips. Models energy used to heat the battery pack against fast charging minutes saved.',
     softwareName: 'EV Battery Thermal Preconditioning Net Time Sizer',
-    breadcrumbName: 'Battery Preconditioning',
+    breadcrumbName: 'Preconditioning Calculator',
     imageCaption: 'Battery thermal preconditioning energy consumption vs DC fast charging time savings curve.',
     faqs: [
       {
@@ -424,11 +424,11 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
     key: 'destinationCharging',
     path: '/destination-charging',
     primaryKeyword: 'hotel ev charger speed calculator',
-    title: 'Hotel EV Charger Speed Calculator | Overnight Sizer Tool',
+    title: 'Hotel EV Charger Speed Calculator: Overnight Dwell Sizer | EVChargeCurve',
     description:
-      'Calculate if hotel Level 2 destination chargers will fully recharge your EV overnight. Models 208V commercial voltage drop and eliminated morning stops.',
+      'Calculate if hotel destination chargers will fully recharge your electric car overnight. Factors 208V commercial voltage drop, shared power pedestals, and morning departure range.',
     softwareName: 'Hotel EV Destination Charger Speed Sizer',
-    breadcrumbName: 'Hotel Destination Charging',
+    breadcrumbName: 'Destination Charging Calculator',
     imageCaption: 'Hotel 208V commercial 3-phase AC destination charging speeds and overnight refill calculations.',
     faqs: [
       {
@@ -466,12 +466,12 @@ export const SEO_CONFIG: Record<ToolKey, ToolSeoConfig> = {
   v2hBackup: {
     key: 'v2hBackup',
     path: '/v2h-backup',
-    primaryKeyword: 'how long can an ev power my house calculator',
-    title: 'EV V2H Backup Calculator | How Long Can an EV Power House',
+    primaryKeyword: 'ev v2h backup calculator',
+    title: 'EV V2H Backup Calculator: Outage Run Time & Home Sizer | EVChargeCurve',
     description:
-      'Calculate how many days your electric vehicle can power your home during an electrical blackout. Models Ford Lightning, Cybertruck, GM Ultium, and Ioniq 5 V2H run times.',
+      'Calculate how many days your electric vehicle battery can power your home during a blackout. Models Ford Lightning, Cybertruck, and Hyundai V2H discharge duration.',
     softwareName: 'EV Vehicle-to-Home (V2H) Emergency Power Sizer',
-    breadcrumbName: 'V2H Home Emergency Power',
+    breadcrumbName: 'V2H Home Backup Calculator',
     imageCaption: 'Vehicle-to-Home (V2H) bidirectional discharge duration modeling powering critical residential loads.',
     faqs: [
       {

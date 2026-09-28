@@ -94,7 +94,7 @@ export default function Home() {
             How Our EV Fast Charging Curve Calculator Operates
           </h2>
           <p className="text-lg text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Most generic calculators divide pack capacity (kWh) by peak charging power (kW), producing dangerously optimistic wait times. Here is how our piecewise integration model delivers laboratory-grade road trip accuracy.
+            Most generic calculators divide pack capacity (kWh) by peak charging power (kW), producing dangerously optimistic wait times. Here is how our piecewise integration model delivers realistic, physically constrained road-trip dwell estimates.
           </p>
         </div>
 

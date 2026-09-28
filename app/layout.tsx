@@ -23,9 +23,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://evchargecurve.com'),
   title: {
     template: '%s | EVChargeCurve',
-    default: 'EVChargeCurve | DC Fast Charging & Battery Analytics',
+    default: 'EVChargeCurve: Transparent EV Charging Curves & Telemetry Observatory',
   },
-  description: 'High-performance web utility platform for EV battery diagnostics, DC fast-charging taper curves, winter range degradation, and home charging economics.',
+  description: 'Empirical EV charging curves, DC fast charging dwell time simulations, battery degradation models, and home charging economics.',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -43,6 +43,35 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Organization',
+                  name: 'EVChargeCurve',
+                  url: 'https://evchargecurve.com',
+                  logo: 'https://evchargecurve.com/logo.png',
+                  sameAs: [],
+                  description: 'Open-source empirical EV charging curves, DC fast charging telemetry, and battery degradation modeling.',
+                },
+                {
+                  '@type': 'WebSite',
+                  name: 'EVChargeCurve',
+                  url: 'https://evchargecurve.com',
+                  description: 'Empirical EV charging curves, DC fast charging dwell time simulations, and battery degradation models.',
+                  potentialAction: {
+                    '@type': 'SearchAction',
+                    target: 'https://evchargecurve.com/curve?search={search_term_string}',
+                    'query-input': 'required name=search_term_string',
+                  },
+                },
+              ],
+            }),
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `

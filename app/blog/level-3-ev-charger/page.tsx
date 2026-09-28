@@ -30,8 +30,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Level 3 EV Charger Explained: Speeds, kW Power & Costs',
-  description: 'Complete engineering guide to Level 3 EV chargers: 50kW-350kW DC fast charging speeds, 400V vs 800V math, cost breakdown, and the home installation myth.',
+  title: 'Level 3 EV Charger Explained: 50–350kW Speeds & Costs | EVChargeCurve',
+  description: 'Understand Level 3 DC fast charging: compare 50kW to 350kW charging speeds, 400V vs 800V voltage architectures, installation costs, and why homes cannot support Level 3.',
   keywords: [
     'level 3 ev charger',
     'can you install a level 3 charger at home',
@@ -44,9 +44,12 @@ export const metadata: Metadata = {
     'dc fast charging',
     'nacs vs ccs fast charge'
   ],
+  alternates: {
+    canonical: 'https://evchargecurve.com/blog/level-3-ev-charger',
+  },
   openGraph: {
-    title: 'Level 3 EV Charger Explained: Speeds, kW Power & Costs',
-    description: 'Complete engineering guide to Level 3 EV chargers: 50kW-350kW DC fast charging speeds, 400V vs 800V math, cost breakdown, and the home installation myth.',
+    title: 'Level 3 EV Charger Explained: 50–350kW Speeds & Costs',
+    description: 'Understand Level 3 DC fast charging: compare 50kW to 350kW charging speeds, 400V vs 800V voltage architectures, installation costs, and why homes cannot support Level 3.',
     type: 'article',
     url: 'https://evchargecurve.com/blog/level-3-ev-charger',
     images: [
@@ -60,8 +63,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Level 3 EV Charger Explained: Speeds, kW Power & Costs',
-    description: 'Demystifying Level 3 DC fast charging speeds, kW power ratings, installation economics, and charge curve taper physics.',
+    title: 'Level 3 EV Charger Explained: 50–350kW Speeds & Costs',
+    description: 'Understand Level 3 DC fast charging: compare 50kW to 350kW charging speeds, 400V vs 800V voltage architectures, installation costs, and why homes cannot support Level 3.',
   }
 };
 
@@ -717,7 +720,7 @@ export default function Level3ChargerGuidePage() {
                   <p className="text-slate-300 text-base leading-relaxed m-0 mb-4">
                     When lithium-ion battery cells drop below 20&deg;C (68&deg;F), their electrolyte fluid thickens and internal chemical resistance multiplies. If high DC current were forced into cold cells, lithium ions would plate into metallic lithium dendrites rather than safely intercalating into the anode. To prevent irreversible damage, the vehicle BMS enforces <strong>cold-gating</strong>, limiting charge rates to 30 kW to 60 kW until battery heaters warm the pack to optimal operating temperatures (30&deg;C to 40&deg;C). Always use your vehicle&apos;s built-in GPS navigation to route to DC fast chargers so automatic battery thermal preconditioning activates in advance.
                   </p>
-                  <Link href="/blog/cold-weather-charging-preconditioning" className="text-cyan-400 font-medium hover:underline text-sm flex items-center gap-1"><ArrowRight className="w-4 h-4"/> See our Winter Cold-Gating &amp; Preconditioning Guide</Link>
+                  <Link href="/blog/the-cold-gate-dilemma" className="text-cyan-400 font-medium hover:underline text-sm flex items-center gap-1"><ArrowRight className="w-4 h-4"/> See our Winter Cold-Gating &amp; Preconditioning Guide</Link>
                 </div>
 
                 {/* FAQ 4 */}
@@ -735,7 +738,7 @@ export default function Level3ChargerGuidePage() {
             </section>
 
             {/* Author Footer Bio */}
-            <div className="mt-16 p-6 rounded-2xl bg-[#131B2A] border border-slate-800 flex flex-col sm:flex-row items-center gap-5">
+            <div className="mt-12 p-6 rounded-2xl bg-[#131B2A] border border-slate-800 flex flex-col sm:flex-row items-center gap-5">
               <div className="w-16 h-16 rounded-full bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center text-cyan-400 font-bold text-xl shrink-0">
                 MV
               </div>
@@ -747,6 +750,92 @@ export default function Level3ChargerGuidePage() {
                 <p className="text-sm text-slate-400 m-0 leading-relaxed">
                   The EV Charge Curve editorial team specializes in translating complex lithium-ion thermal behavior, charging curves, and electrical infrastructure into accessible engineering guides. We focus on data-driven insights and verified technical testing.
                 </p>
+              </div>
+            </div>
+
+            {/* Hub-and-Spoke Related Topic Pillars, Calculators & Vehicle Curves */}
+            <div className="mt-12 bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-6">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-bold text-white">
+                  Related Knowledge Pillars &amp; Simulation Models
+                </h3>
+                <Link href="/topics" className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold">
+                  Browse 12 Knowledge Pillars →
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Topic Pillars */}
+                <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                  <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block mb-2">
+                    Topic Pillars
+                  </span>
+                  <ul className="space-y-1.5 text-xs">
+                    <li>
+                      <Link href="/topics/dc-fast-charging" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                        DC Fast Charging (Level 3) Hub →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/topics/400v-vs-800v" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                        400V vs 800V Architecture Hub →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/topics/10-80-charging" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                        10–80% Charging Standard Hub →
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Interactive Calculators */}
+                <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                  <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-wider block mb-2">
+                    Interactive Sizers
+                  </span>
+                  <ul className="space-y-1.5 text-xs">
+                    <li>
+                      <Link href="/" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                        DC Fast Charge Simulator →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/compare" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                        Compare 400V vs 800V Speeds →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/kw-to-miles" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                        kW to Miles Added Per Hour →
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Featured Vehicle Curves */}
+                <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                  <span className="text-[11px] font-mono text-amber-400 uppercase tracking-wider block mb-2">
+                    Vehicle Telemetry
+                  </span>
+                  <ul className="space-y-1.5 text-xs">
+                    <li>
+                      <Link href="/curve/porsche-taycan-plus" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                        Porsche Taycan (800V 320kW) →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/curve/kia-ev6-long-range" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                        Kia EV6 Long Range (800V) →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/curve/tesla-model-y-lr" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                        Tesla Model Y Long Range (400V) →
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
 

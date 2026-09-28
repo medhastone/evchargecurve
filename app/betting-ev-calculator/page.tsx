@@ -17,8 +17,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Sports Betting EV Calculator: Free +EV & No-Vig Engine',
-  description: 'Calculate sports betting expected value (+EV), strip bookmaker vig, and calculate Kelly Criterion stakes with our free, real-time betting EV calculator.',
+  title: 'Expected Value (+EV) Betting Calculator: No-Vig Fair Odds | EVChargeCurve',
+  description: 'Calculate mathematical expected value (+EV) and strip sportsbook vig from betting lines. Calculate fair win probability, market edge percentages, and Kelly bankroll staking.',
   keywords: [
     'sports betting ev calculator',
     'expected value calculator betting',
@@ -34,11 +34,16 @@ export const metadata: Metadata = {
     canonical: 'https://evchargecurve.com/betting-ev-calculator',
   },
   openGraph: {
-    title: 'Sports Betting EV Calculator: Free +EV & No-Vig Engine',
-    description: 'Calculate sports betting expected value (+EV), strip bookmaker vig, and calculate Kelly Criterion stakes with our free, real-time betting EV calculator.',
+    title: 'Expected Value (+EV) Betting Calculator: No-Vig Fair Odds',
+    description: 'Calculate mathematical expected value (+EV) and strip sportsbook vig from betting lines. Calculate fair probability, market edges, and Kelly Criterion bet sizing.',
     url: 'https://evchargecurve.com/betting-ev-calculator',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Expected Value (+EV) Betting Calculator: No-Vig Fair Odds',
+    description: 'Calculate mathematical expected value (+EV) and strip sportsbook vig from betting lines. Calculate fair probability, market edges, and Kelly Criterion bet sizing.',
+  }
 };
 
 const SCHEMAS = [
@@ -532,6 +537,39 @@ export default function BettingEVCalculatorPage() {
           <p className="text-slate-400">
             If you or someone you know has a gambling problem, confidential crisis counseling and referral resources are available 24/7. Call <strong className="text-slate-300">1-800-GAMBLER</strong> (US) or visit <a href="https://www.ncpgambling.org" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">ncpgambling.org</a> / <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">gamcare.org.uk</a> (UK).
           </p>
+        </section>
+
+        {/* Cross-Link to Automotive EV Charging Tools */}
+        <section className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 text-center space-y-3">
+          <div className="text-xs font-mono uppercase tracking-wider text-emerald-400">
+            Automotive Electric Vehicle (EV) Telemetry
+          </div>
+          <h3 className="text-base font-bold text-white">
+            Looking for Electric Vehicle (EV) Battery Charging Calculators?
+          </h3>
+          <p className="text-xs text-slate-400 max-w-2xl mx-auto">
+            EVChargeCurve also maintains open-source empirical DC fast charging curves, battery degradation models, and home charging economics across 50+ electric vehicles.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 pt-1">
+            <Link
+              href="/"
+              className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-colors"
+            >
+              EV Charging Simulator
+            </Link>
+            <Link
+              href="/topics"
+              className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition-colors border border-slate-700"
+            >
+              12 EV Knowledge Pillars
+            </Link>
+            <Link
+              href="/curve"
+              className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition-colors border border-slate-700"
+            >
+              Vehicle Curve Directory
+            </Link>
+          </div>
         </section>
 
       </div>

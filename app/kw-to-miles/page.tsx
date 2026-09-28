@@ -24,21 +24,21 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'EV Charging Speed Calculator: kW to Miles & Km per Hour',
-  description: 'Convert EV charging power (kW) to driving range added per hour. Calculate exact miles per hour (mph) and km/h across AC Level 1, Level 2, and DC fast chargers.',
+  title: 'EV Charging Speed Calculator: kW to Miles & Km per Hour | EVChargeCurve',
+  description: 'Convert EV charging power (kW) directly into miles and kilometers added per hour. Factors onboard inverter efficiency, vehicle drag, and battery capacity.',
   alternates: {
     canonical: 'https://evchargecurve.com/kw-to-miles',
   },
   openGraph: {
-    title: 'EV Charging Speed Calculator – kW to Miles & Km/hr',
-    description: 'Calculate true range replenishment rates from 1.4 kW trickle outlets to 350 kW ultra-fast chargers. Factors onboard inverter efficiency and vehicle drag.',
+    title: 'EV Charging Speed Calculator: kW to Miles & Km per Hour',
+    description: 'Convert charging station kilowatts (kW) into miles and km of driving range per hour across Level 1, Level 2, and DC fast chargers.',
     url: 'https://evchargecurve.com/kw-to-miles',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EV Charging Speed Calculator – kW to Miles & Km/hr',
-    description: 'Calculate true range replenishment rates from 1.4 kW trickle outlets to 350 kW ultra-fast chargers. Factors onboard inverter efficiency and vehicle drag.',
+    title: 'EV Charging Speed Calculator: kW to Miles & Km per Hour',
+    description: 'Convert charging station kilowatts (kW) into miles and km of driving range per hour across Level 1, Level 2, and DC fast chargers.',
   },
 };
 

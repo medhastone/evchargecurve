@@ -22,11 +22,14 @@ import {
 import { Level2Thumbnail } from '@/components/blog/BlogThumbnails';
 
 export const metadata: Metadata = {
-  title: 'NEMA 14-50 EV Charging Speed, Wiring & Cost: Complete Guide',
-  description: 'Master how fast a NEMA 14-50 outlet charges an EV. Discover the NEC 80% rule, NEMA 14-50 vs 6-50, and why industrial-grade receptacles prevent melting.',
+  title: 'NEMA 14-50 EV Charging: Speed, Wiring & Cost Guide | EVChargeCurve',
+  description: 'Learn how fast a NEMA 14-50 240V outlet charges an electric car. Covers NEC 80% continuous load rules (32A/40A), wire sizing (6 AWG), and industrial outlet safety.',
+  alternates: {
+    canonical: 'https://evchargecurve.com/blog/nema-14-50-ev-charging-guide',
+  },
   openGraph: {
-    title: 'NEMA 14-50 EV Charging Speed, Wiring & Cost: Complete Guide',
-    description: 'Master how fast a NEMA 14-50 outlet charges an EV. Discover the NEC 80% rule, NEMA 14-50 vs 6-50, and why industrial-grade receptacles prevent melting.',
+    title: 'NEMA 14-50 EV Charging: Speed, Wiring & Cost Guide',
+    description: 'Learn how fast a NEMA 14-50 240V outlet charges an electric car. Covers NEC 80% continuous load rules (32A/40A), wire sizing (6 AWG), and industrial outlet safety.',
     type: 'article',
     url: 'https://evchargecurve.com/blog/nema-14-50-ev-charging-guide',
     images: [
@@ -37,6 +40,11 @@ export const metadata: Metadata = {
         alt: 'NEMA 14-50 EV Charging Guide',
       }
     ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'NEMA 14-50 EV Charging: Speed, Wiring & Cost Guide',
+    description: 'Learn how fast a NEMA 14-50 240V outlet charges an electric car. Covers NEC 80% continuous load rules (32A/40A), wire sizing (6 AWG), and industrial outlet safety.',
   }
 };
 
@@ -449,6 +457,92 @@ export default function Nema1450GuidePage() {
                   <p className="text-slate-400 text-sm leading-relaxed">
                     It is highly discouraged. Most consumer extension cords cannot handle the continuous 40-amp draw and will overheat, creating a severe fire risk. If absolutely necessary, you must use a heavy-duty, 6 AWG EV-rated extension cord specifically designed for continuous loads.
                   </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Hub-and-Spoke Related Topic Pillars, Calculators & Vehicle Curves */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-6 mb-12">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-bold text-white">
+                  Related Knowledge Pillars &amp; Simulation Models
+                </h3>
+                <Link href="/topics" className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold">
+                  Browse 12 Knowledge Pillars →
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Topic Pillars */}
+                <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                  <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block mb-2">
+                    Topic Pillars
+                  </span>
+                  <ul className="space-y-1.5 text-xs">
+                    <li>
+                      <Link href="/topics/home-charging" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                        Home 240V Charging Hub →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/topics/ev-charging-time" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                        EV Charging Time Hub →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/topics/ev-charging-cost" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                        EV Charging Cost &amp; Economics Hub →
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Interactive Calculators */}
+                <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                  <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-wider block mb-2">
+                    Interactive Sizers
+                  </span>
+                  <ul className="space-y-1.5 text-xs">
+                    <li>
+                      <Link href="/home-charging" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                        Home Charging Time &amp; Cost Tool →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/panel-capacity" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                        Panel Capacity &amp; Breaker Sizer →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/v2h-backup" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                        Vehicle-to-Home (V2H) Backup Sizer →
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Supporting Guides */}
+                <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                  <span className="text-[11px] font-mono text-amber-400 uppercase tracking-wider block mb-2">
+                    Engineering Guides
+                  </span>
+                  <ul className="space-y-1.5 text-xs">
+                    <li>
+                      <Link href="/blog/level-2-breaker-sizing-economics" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                        32A vs 40A vs 48A Breaker Guide →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/how-long-to-charge-an-electric-car" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                        Level 1, 2 &amp; 3 Speed Guide →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/lithium-ion-battery-degradation" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                        Battery Degradation &amp; AC Health →
+                      </Link>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>

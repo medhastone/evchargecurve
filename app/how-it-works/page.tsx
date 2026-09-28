@@ -32,8 +32,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'How It Works: EV Charging Curve Simulation Engine & Battery Physics | EVChargeCurve',
-  description: 'Deep dive into the mathematics, electrochemical physics, and CAN-bus telemetry behind our EV DC fast charging curve simulator. Learn how we model 400V vs 800V architectures, BMS thermal tapers, and C-rate dynamics.',
+  title: 'How EV Charging Curves Work: Physics & Simulation Math | EVChargeCurve',
+  description: 'Understand the physics behind EV charging curves, BMS thermal tapers, 400V vs 800V voltage boosts, and discrete Riemann sum numerical integration algorithms.',
   keywords: [
     'EV charging curve simulation',
     'how DC fast charging works',
@@ -44,10 +44,19 @@ export const metadata: Metadata = {
     'CAN bus EV telemetry',
     'C-rate calculation electric vehicle'
   ],
+  alternates: {
+    canonical: 'https://evchargecurve.com/how-it-works',
+  },
   openGraph: {
-    title: 'How EVChargeCurve Works: Engineering Physics & Telemetry Engine',
-    description: 'Explore the numerical integration, thermal throttle models, and real-world CAN-bus telemetry powering our engineering-grade EV charging simulator.',
+    title: 'How EV Charging Curves Work: Physics & Simulation Math',
+    description: 'Explore the numerical integration, thermal throttle models, and empirical CAN-bus telemetry powering the EVChargeCurve simulation engine.',
     type: 'article',
+    url: 'https://evchargecurve.com/how-it-works',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How EV Charging Curves Work: Physics & Simulation Math',
+    description: 'Explore the numerical integration, thermal throttle models, and empirical CAN-bus telemetry powering the EVChargeCurve simulation engine.',
   }
 };
 
@@ -822,7 +831,7 @@ export default function HowItWorksPage() {
 
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Link
-                href="/simulator"
+                href="/#simulator"
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-black hover:from-emerald-400 hover:to-cyan-400 transition-all shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:scale-[1.02] text-sm"
               >
                 <Zap className="w-4 h-4" />

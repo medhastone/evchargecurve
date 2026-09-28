@@ -3,11 +3,22 @@ import VehicleDirectoryView from '@/components/VehicleDirectoryView';
 import { BASE_URL } from '@/lib/seoConfig';
 
 export const metadata: Metadata = {
-  title: 'Global EV Charging Curve Directory & Pro Custom Studio | EVChargeCurve',
-  description: 'Explore lab-tested DC fast charging taper curves across Tesla, Hyundai, Porsche, BYD, Rivian, Lucid, and custom-synthesized EV battery architectures.',
+  title: 'EV Charging Curve Directory: 50+ Models & Peak kW | EVChargeCurve',
+  description: 'Explore empirical DC fast charging curves across 50+ electric vehicles. Compare 10–80% dwell times, peak kW acceptance, voltage architectures, and BMS taper profiles.',
   alternates: {
     canonical: `${BASE_URL}/curve`,
   },
+  openGraph: {
+    title: 'EV Charging Curve Directory: 50+ Models & Peak kW',
+    description: 'Explore empirical DC fast charging curves across 50+ electric vehicles. Compare 10–80% dwell times, peak kW acceptance, voltage architectures, and BMS taper profiles.',
+    url: `${BASE_URL}/curve`,
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'EV Charging Curve Directory: 50+ Models & Peak kW',
+    description: 'Explore empirical DC fast charging curves across 50+ electric vehicles. Compare 10–80% dwell times, peak kW acceptance, voltage architectures, and BMS taper profiles.',
+  }
 };
 
 export default function CurveIndexPage() {

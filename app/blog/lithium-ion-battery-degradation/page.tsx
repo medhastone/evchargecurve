@@ -41,8 +41,8 @@ const ARTICLE_TAGS = [
 ];
 
 export const metadata: Metadata = {
-  title: 'Lithium-Ion Battery Degradation: Calendar Aging vs. Cyclic DC Fast Charging',
-  description: 'Understand the physics of EV battery degradation. Learn the real impact of calendar aging, SEI layer formation, and frequent DC fast charging on LFP and NMC batteries.',
+  title: 'EV Battery Degradation: Calendar Aging vs Fast Charging | EVChargeCurve',
+  description: 'Understand EV battery degradation physics: compare calendar aging vs DC fast charging cycles, SEI layer growth, and longevity differences between LFP and NMC cells.',
   keywords: [
     'ev battery degradation over time',
     'ev battery calendar aging',
@@ -57,8 +57,8 @@ export const metadata: Metadata = {
     canonical: 'https://evchargecurve.com/blog/lithium-ion-battery-degradation',
   },
   openGraph: {
-    title: 'Lithium-Ion Battery Degradation: Calendar Aging vs. Cyclic DC Fast Charging',
-    description: 'Understand the physics of EV battery degradation. Learn the real impact of calendar aging, SEI layer formation, and frequent DC fast charging on LFP and NMC batteries.',
+    title: 'EV Battery Degradation: Calendar Aging vs Fast Charging',
+    description: 'Understand EV battery degradation physics: compare calendar aging vs DC fast charging cycles, SEI layer growth, and longevity differences between LFP and NMC cells.',
     type: 'article',
     url: 'https://evchargecurve.com/blog/lithium-ion-battery-degradation',
     images: [
@@ -66,9 +66,15 @@ export const metadata: Metadata = {
         url: 'https://evchargecurve.com/images/og-battery-degradation.png',
         width: 1200,
         height: 630,
-        alt: 'Lithium-Ion Battery Degradation: Calendar vs Cyclic Aging',
+        alt: 'EV Battery Degradation: Calendar vs Cyclic Aging',
       }
     ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'EV Battery Degradation: Calendar Aging vs Fast Charging',
+    description: 'Understand EV battery degradation physics: compare calendar aging vs DC fast charging cycles, SEI layer growth, and longevity differences between LFP and NMC cells.',
+    images: ['https://evchargecurve.com/images/og-battery-degradation.png'],
   }
 };
 
@@ -519,7 +525,7 @@ export default function LithiumIonDegradationPage() {
             </div>
 
             {/* Author Bio & E-E-A-T Card */}
-            <div className="bg-[#131B2A] border border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5 mb-12">
+            <div className="bg-[#131B2A] border border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5 mb-10">
               <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-slate-950 font-bold text-xl shrink-0 shadow-md">
                 ER
               </div>
@@ -533,6 +539,92 @@ export default function LithiumIonDegradationPage() {
                 <p className="text-slate-400 leading-relaxed">
                   The EV Charge Curve editorial team specializes in translating complex lithium-ion thermal behavior, charging curves, and electrical infrastructure into accessible engineering guides.
                 </p>
+              </div>
+            </div>
+
+            {/* Hub-and-Spoke Related Topic Pillars, Calculators & Vehicle Curves */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-6 mb-12">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-bold text-white">
+                  Related Knowledge Pillars &amp; Simulation Models
+                </h3>
+                <Link href="/topics" className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold">
+                  Browse 12 Knowledge Pillars →
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Topic Pillars */}
+                <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                  <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block mb-2">
+                    Topic Pillars
+                  </span>
+                  <ul className="space-y-1.5 text-xs">
+                    <li>
+                      <Link href="/topics/ev-battery-health" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                        EV Battery Health &amp; SoH Hub →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/topics/charging-taper" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                        Charging Taper Physics Hub →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/topics/battery-preconditioning" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                        Battery Preconditioning Hub →
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Interactive Calculators */}
+                <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                  <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-wider block mb-2">
+                    Interactive Sizers
+                  </span>
+                  <ul className="space-y-1.5 text-xs">
+                    <li>
+                      <Link href="/battery-health" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                        10-Year Battery Health Sizer →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/battery-replacement" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                        Battery Replacement Cost Tool →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                        DC Fast Charge Simulator →
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Featured Vehicle Curves */}
+                <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                  <span className="text-[11px] font-mono text-amber-400 uppercase tracking-wider block mb-2">
+                    Vehicle Telemetry
+                  </span>
+                  <ul className="space-y-1.5 text-xs">
+                    <li>
+                      <Link href="/curve/tesla-model-3-rwd" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                        Tesla Model 3 RWD (LFP Cell) →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/curve/tesla-model-y-lr" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                        Tesla Model Y LR (NMC Cell) →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/curve/hyundai-ioniq-5" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                        Hyundai Ioniq 5 (800V NMC) →
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
             </div>

@@ -21,8 +21,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Residential Level 2 Charging: 32A vs. 40A vs. 48A Continuous Load Breaker',
-  description: 'A complete guide to electrical panel capacity for EV charging. Learn about the NEC 80% rule, NEMA 14-50 vs hardwired, and how to size a continuous load breaker.',
+  title: 'Level 2 EV Charger Sizing: 32A vs 40A vs 48A Breaker Guide | EVChargeCurve',
+  description: 'Understand residential Level 2 EV charging electrical requirements. Compare 32A, 40A, and 48A chargers, NEC 80% continuous load rules, and hardwired vs NEMA 14-50.',
   keywords: [
     'Level 2 Charging',
     '32A vs 40A vs 48A EV charger',
@@ -34,16 +34,19 @@ export const metadata: Metadata = {
     '50A breaker wire size',
     'EVEMS load shedding'
   ],
+  alternates: {
+    canonical: 'https://evchargecurve.com/blog/level-2-breaker-sizing-economics',
+  },
   openGraph: {
-    title: 'Residential Level 2 Charging: 32A vs. 40A vs. 48A Continuous Load Breaker',
-    description: 'Learn about the NEC 80% rule, NEMA 14-50 vs hardwired, and how to properly size a continuous load breaker for your residential EV charger.',
+    title: 'Level 2 EV Charger Sizing: 32A vs 40A vs 48A Breaker Guide',
+    description: 'Understand residential Level 2 EV charging electrical requirements. Compare 32A, 40A, and 48A chargers, NEC 80% continuous load rules, and hardwired vs NEMA 14-50.',
     type: 'article',
     url: 'https://evchargecurve.com/blog/level-2-breaker-sizing-economics',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Residential Level 2 Charging: 32A vs. 40A vs. 48A Continuous Load Breaker',
-    description: 'Demystifying the NEC 80% rule and residential EV charger installation.',
+    title: 'Level 2 EV Charger Sizing: 32A vs 40A vs 48A Breaker Guide',
+    description: 'Understand residential Level 2 EV charging electrical requirements. Compare 32A, 40A, and 48A chargers, NEC 80% continuous load rules, and hardwired vs NEMA 14-50.',
   }
 };
 
@@ -389,6 +392,92 @@ export default function Level2BreakerGuidePage() {
 
             </div>
           </section>
+
+          {/* Hub-and-Spoke Related Topic Pillars, Calculators & Vehicle Curves */}
+          <div className="mt-12 bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <h3 className="text-sm font-bold text-white">
+                Related Knowledge Pillars &amp; Simulation Models
+              </h3>
+              <Link href="/topics" className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold">
+                Browse 12 Knowledge Pillars →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Topic Pillars */}
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block mb-2">
+                  Topic Pillars
+                </span>
+                <ul className="space-y-1.5 text-xs">
+                  <li>
+                    <Link href="/topics/home-charging" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                      Home 240V Charging Hub →
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/topics/ev-charging-cost" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                      EV Charging Cost &amp; Economics Hub →
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/topics/ev-charging-time" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                      EV Charging Time Hub →
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Interactive Calculators */}
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-wider block mb-2">
+                  Interactive Sizers
+                </span>
+                <ul className="space-y-1.5 text-xs">
+                  <li>
+                    <Link href="/panel-capacity" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                      Panel Capacity &amp; Breaker Sizer →
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/home-charging" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                      Home Charging Time &amp; Cost Tool →
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/v2h-backup" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                      Vehicle-to-Home (V2H) Backup Sizer →
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Supporting Guides */}
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+                <span className="text-[11px] font-mono text-amber-400 uppercase tracking-wider block mb-2">
+                  Engineering Guides
+                </span>
+                <ul className="space-y-1.5 text-xs">
+                  <li>
+                    <Link href="/blog/nema-14-50-ev-charging-guide" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                      NEMA 14-50 EV Charging Guide →
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/how-long-to-charge-an-electric-car" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                      Level 1, 2 &amp; 3 Speed Guide →
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/blog/lithium-ion-battery-degradation" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                      Battery Degradation &amp; AC Health →
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
         </article>
       </main>

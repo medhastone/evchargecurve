@@ -47,12 +47,46 @@ export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehic
   
   const [copied, setCopied] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isHighlighted, setIsHighlighted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     const params = new URLSearchParams(window.location.search);
-    if (params.get('vid')) setVehicleId(params.get('vid') as string);
-    else if (defaultVehicleId) setVehicleId(defaultVehicleId);
+    const incomingVid = params.get('vid') || params.get('vehicle');
+    
+    if (incomingVid) {
+      setVehicleId(incomingVid);
+      setIsHighlighted(true);
+      const timer = setTimeout(() => setIsHighlighted(false), 3500);
+
+      // Auto-scroll to simulator
+      setTimeout(() => {
+        const el = document.getElementById('simulator');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 150);
+
+      if (params.get('kw')) setChargerKw(Number(params.get('kw')));
+      if (params.get('start')) setStartSoc(Number(params.get('start')));
+      if (params.get('end')) setEndSoc(Number(params.get('end')));
+      if (params.get('cold')) setIsCold(params.get('cold') === 'true');
+      if (params.get('rate')) setRate(Number(params.get('rate')));
+
+      return () => clearTimeout(timer);
+    } else if (defaultVehicleId) {
+      setVehicleId(defaultVehicleId);
+    }
+
+    if (window.location.hash === '#simulator') {
+      setTimeout(() => {
+        const el = document.getElementById('simulator');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 150);
+    }
+
     if (params.get('kw')) setChargerKw(Number(params.get('kw')));
     if (params.get('start')) setStartSoc(Number(params.get('start')));
     if (params.get('end')) setEndSoc(Number(params.get('end')));
@@ -139,18 +173,30 @@ export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehic
   const usablePack = vehicle.usablePackKwh || vehicle.batteryCapacity || 75;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="region" aria-label="Interactive EV Fast Charge Simulator">
+    <div id="simulator" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 scroll-mt-24" role="region" aria-label="Interactive EV Fast Charge Simulator">
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         
         {/* LEFT COLUMN: CONTROLS */}
         <div className="xl:col-span-5 space-y-6">
           
           {/* 1. Vehicle Selector & Pro Architect */}
-          <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl">
+          <div className={cn(
+            "bg-slate-800/50 border p-6 rounded-2xl transition-all duration-700",
+            isHighlighted 
+              ? "border-cyan-400 ring-2 ring-cyan-400/50 shadow-[0_0_35px_rgba(6,182,212,0.35)] bg-slate-800/90" 
+              : "border-slate-700"
+          )}>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <Zap className="w-5 h-5 text-emerald-400" /> Vehicle Profile
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-emerald-400" /> Vehicle Profile
+                </h2>
+                {isHighlighted && (
+                  <span className="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 animate-pulse">
+                    Loaded
+                  </span>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={() => openStudio()}
@@ -500,6 +546,42 @@ export default function FastChargeSimulator({ defaultVehicleId }: { defaultVehic
                   />
                 </AreaChart>
               </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Data Provenance & Telemetry Metadata */}
+          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-xs space-y-2.5">
+            <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+              <span className="font-bold text-slate-300 flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-cyan-400" />
+                Data Provenance &amp; Verification
+              </span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                {vehicle.dataSourceLabel || (vehicle.dataSourceType === 'measured_benchmark' ? 'Verified Telemetry Log' : 'Physical BMS Model')}
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-400">
+              <div>
+                <span className="text-slate-500">Architecture:</span>{' '}
+                <strong className="text-slate-200">{vehicle.voltageArchitecture || `${vehicle.architecture || '400V'} System`}</strong>
+              </div>
+              <div>
+                <span className="text-slate-500">Pack Capacity:</span>{' '}
+                <strong className="text-slate-200">{usablePack} kWh usable</strong> {vehicle.grossBatteryCapacity ? `(${vehicle.grossBatteryCapacity} kWh gross)` : ''}
+              </div>
+              {vehicle.testConditions && (
+                <div>
+                  <span className="text-slate-500">Baseline Lab Test:</span>{' '}
+                  <strong className="text-slate-200">{vehicle.testConditions.temperatureC ?? 22}°C / {vehicle.testConditions.preconditioned ? 'Preconditioned' : 'Cold'} ({vehicle.testConditions.chargerRatedKw ?? 250}kW DCFC)</strong>
+                </div>
+              )}
+              {vehicle.sources && vehicle.sources.length > 0 && (
+                <div>
+                  <span className="text-slate-500">Primary Source:</span>{' '}
+                  <strong className="text-slate-200">{vehicle.sources[0].source} ({vehicle.sources[0].date})</strong>
+                </div>
+              )}
             </div>
           </div>
 

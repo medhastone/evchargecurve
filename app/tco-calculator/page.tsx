@@ -18,24 +18,24 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'EV vs Gas TCO Calculator & 5-Year Break-Even Tool',
+  title: 'EV vs Gas TCO Calculator: 5-Year Cost & Break-Even | EVChargeCurve',
   description:
-    'Calculate the 5-year Total Cost of Ownership (TCO) of an EV vs gas vehicle. Factors purchase price, tax credits, fuel savings, tire wear, and depreciation.',
+    'Calculate the 5-year Total Cost of Ownership (TCO) between an electric car and gas vehicle. Compare purchase price, tax credits, home charging rates, tire wear, and fuel savings.',
   alternates: {
     canonical: 'https://evchargecurve.com/tco-calculator',
   },
   openGraph: {
-    title: 'EV vs Gas 5-Year TCO Calculator & Financial Break-Even Sizer',
+    title: 'EV vs Gas TCO Calculator: 5-Year Cost & Break-Even',
     description:
-      'Compare true 5-year ownership costs: financing, fuel vs electric rates, regenerative braking savings, tire replacement, and resale depreciation.',
+      'Compare true 5-year vehicle ownership costs: upfront incentives, electric vs gasoline fuel costs, maintenance differentials, and resale depreciation.',
     url: 'https://evchargecurve.com/tco-calculator',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EV vs Gas 5-Year TCO Calculator & Financial Break-Even Sizer',
+    title: 'EV vs Gas TCO Calculator: 5-Year Cost & Break-Even',
     description:
-      'Compare true 5-year ownership costs: financing, fuel vs electric rates, regenerative braking savings, tire replacement, and resale depreciation.',
+      'Compare true 5-year vehicle ownership costs: upfront incentives, electric vs gasoline fuel costs, maintenance differentials, and resale depreciation.',
   },
 };
 

@@ -5,20 +5,20 @@ import SolarCalculator from './Calculator';
 import { ShieldCheck, Cpu, Globe, Zap, Settings, Sun, ArrowRight, CheckCircle2, PanelTop } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Solar Panels to Charge an EV Calculator & Array Sizer',
-  description: 'Calculate how many solar panels you need to charge your EV. Models solar irradiance, inverter loss, battery chemistry, and annual driving mileage.',
+  title: 'Solar Panels to Charge an EV Calculator & Array Sizer | EVChargeCurve',
+  description: 'Calculate how many rooftop solar panels are needed to charge your electric vehicle. Models annual driving mileage, regional sun-hours, inverter losses, and panel wattage.',
   alternates: {
     canonical: 'https://evchargecurve.com/solar-to-ev',
   },
   openGraph: {
-    title: 'Solar Panels to Charge an EV Calculator – Zero-Carbon Rooftop Sizer',
+    title: 'Solar Panels to Charge an EV Calculator & Array Sizer',
     description: 'Size your rooftop solar array to offset 100% of your EV charging. Factor in regional sun-hours, inverter clipping, and AC-to-DC conversion efficiency.',
     url: 'https://evchargecurve.com/solar-to-ev',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Solar Panels to Charge an EV Calculator – Zero-Carbon Rooftop Sizer',
+    title: 'Solar Panels to Charge an EV Calculator & Array Sizer',
     description: 'Size your rooftop solar array to offset 100% of your EV charging. Factor in regional sun-hours, inverter clipping, and AC-to-DC conversion efficiency.',
   },
 };

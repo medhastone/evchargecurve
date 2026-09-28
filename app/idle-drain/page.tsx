@@ -223,7 +223,7 @@ export default function IdleDrainPage() {
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Airport Departure Buffer</h3>
               <p className="text-slate-400 leading-relaxed text-sm">
-                Answering <strong>how much battery does an ev lose parked at airport terminals</strong>, the system computes cumulative standby drain plus return highway consumption, generating a guaranteed arrival State of Charge buffer so you never return to a dead vehicle.
+                Answering <strong>how much battery does an ev lose parked at airport terminals</strong>, the system computes cumulative standby drain plus return highway consumption, generating a calculated arrival State of Charge buffer to prevent unexpected vehicle depletion.
               </p>
             </div>
           </div>

@@ -45,8 +45,8 @@ const ARTICLE_TAGS = [
 ];
 
 export const metadata: Metadata = {
-  title: 'How Long Does It Take to Charge an Electric Car? (Real-World Guide)',
-  description: 'Wondering how long it takes to charge an electric car? Learn real-world charging speeds for Level 1, 2, and 3 DC fast charging, plus the charging curve taper.',
+  title: 'How Long to Charge an Electric Car: Level 1, 2 & DC Fast Times | EVChargeCurve',
+  description: 'Understand exactly how long it takes to charge an electric car across Level 1 (120V), Level 2 (240V), and DC fast chargers. Compare charging speed tables and 10–80% times.',
   keywords: [
     'how long to charge an electric car',
     'how long does it take to charge an ev from 20 to 80',
@@ -59,26 +59,26 @@ export const metadata: Metadata = {
     'dc fast charging taper'
   ],
   alternates: {
-    canonical: 'https://evchargecurve.com/blog/How-Long-to-Charge-an-Electric-Car',
+    canonical: 'https://evchargecurve.com/how-long-to-charge-an-electric-car',
   },
   openGraph: {
-    title: 'How Long Does It Take to Charge an Electric Car? (The Real-World Truth & Charging Curves)',
-    description: 'Practical mathematical breakdowns of Level 1, Level 2, and Level 3 DC fast charging. Discover why charging curves taper and how to calculate your exact session duration.',
+    title: 'How Long to Charge an Electric Car: Level 1, 2 & DC Fast Times',
+    description: 'Complete breakdown of electric car charging durations across 120V Level 1, 240V Level 2, and 50kW–350kW DC fast charging stations.',
     type: 'article',
-    url: 'https://evchargecurve.com/blog/How-Long-to-Charge-an-Electric-Car',
+    url: 'https://evchargecurve.com/how-long-to-charge-an-electric-car',
     images: [
       {
         url: 'https://evchargecurve.com/images/og-how-long-to-charge.png',
         width: 1200,
         height: 630,
-        alt: 'How Long Does It Take to Charge an Electric Car? Real-World Guide',
+        alt: 'How Long to Charge an Electric Car: Level 1, 2 & DC Fast Times',
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How Long Does It Take to Charge an Electric Car? (Real-World Guide)',
-    description: 'Real-world mathematical breakdown of Level 1, Level 2, and DC fast charging speeds, thermal throttling, and the 80% charging curve taper.',
+    title: 'How Long to Charge an Electric Car: Level 1, 2 & DC Fast Times',
+    description: 'Complete breakdown of electric car charging durations across 120V Level 1, 240V Level 2, and 50kW–350kW DC fast charging stations.',
     images: ['https://evchargecurve.com/images/og-how-long-to-charge.png'],
   }
 };
@@ -87,26 +87,26 @@ export default function HowLongToChargeEVPage() {
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
-    'itemListElement': [
+    itemListElement: [
       {
         '@type': 'ListItem',
-        'position': 1,
-        'name': 'Home',
-        'item': 'https://evchargecurve.com'
+        position: 1,
+        name: 'Home',
+        item: 'https://evchargecurve.com',
       },
       {
         '@type': 'ListItem',
-        'position': 2,
-        'name': 'Blog',
-        'item': 'https://evchargecurve.com/blog'
+        position: 2,
+        name: 'Topic Hubs',
+        item: 'https://evchargecurve.com/topics',
       },
       {
         '@type': 'ListItem',
-        'position': 3,
-        'name': 'How Long to Charge an Electric Car',
-        'item': 'https://evchargecurve.com/blog/How-Long-to-Charge-an-Electric-Car'
-      }
-    ]
+        position: 3,
+        name: 'How Long to Charge an Electric Car',
+        item: 'https://evchargecurve.com/how-long-to-charge-an-electric-car',
+      },
+    ],
   };
 
   const faqSchema = {

@@ -5,21 +5,21 @@ import CalculatorComponent from './Calculator';
 import { ShieldCheck, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'EV Charging Cost Calculator & Cost Per Mile Estimator',
-  description: 'Calculate the exact cost to charge any EV at home or public DC fast chargers. Compare cost per mile, 100 km, and total savings over gas in real time.',
+  title: 'EV Charging Cost Calculator: Cost Per Mile & Savings | EVChargeCurve',
+  description: 'Calculate the cost to charge any electric car at home (Level 1/2) or public DC fast chargers. Computes cost per mile, cost per 100km, and fuel savings over gasoline.',
   alternates: {
     canonical: 'https://evchargecurve.com/ev-charging-cost',
   },
   openGraph: {
-    title: 'EV Charging Cost Calculator - Cost Per Mile & 100km Estimator',
-    description: 'Accurately compute home off-peak vs public DC fast charging session costs, AC-to-DC rectification losses, and annual fuel savings across all currencies.',
+    title: 'EV Charging Cost Calculator: Cost Per Mile & Savings',
+    description: 'Calculate home off-peak vs public DC fast charging session costs, AC-to-DC rectification losses, cost per mile, and annual fuel savings.',
     url: 'https://evchargecurve.com/ev-charging-cost',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EV Charging Cost Calculator - Cost Per Mile & 100km Estimator',
-    description: 'Accurately compute home off-peak vs public DC fast charging session costs, AC-to-DC rectification losses, and annual fuel savings across all currencies.',
+    title: 'EV Charging Cost Calculator: Cost Per Mile & Savings',
+    description: 'Calculate home off-peak vs public DC fast charging session costs, AC-to-DC rectification losses, cost per mile, and annual fuel savings.',
   },
 };
 

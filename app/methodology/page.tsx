@@ -63,7 +63,7 @@ export default function MethodologyPage() {
         'dateModified': '2026-03-01T12:00:00+00:00',
         'author': {
           '@type': 'Organization',
-          'name': 'EVChargeCurve Battery Systems & Powertrain Working Group',
+          'name': 'EVChargeCurve Open-Source Maintainers & Peer Review Board',
           'url': 'https://evchargecurve.com'
         },
         'publisher': {
@@ -158,7 +158,7 @@ export default function MethodologyPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-4">
-                <ShieldCheck className="w-3.5 h-3.5" /> E-E-A-T Scientific Documentation &amp; Standards
+                <ShieldCheck className="w-3.5 h-3.5" /> Transparent Methodology &amp; Mathematical Standards
               </div>
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[1.1]">
                 Calculation Methodology &amp; <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400">Battery Standards</span>
@@ -175,21 +175,21 @@ export default function MethodologyPage() {
             <div className="flex items-center gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
               <Award className="w-5 h-5 text-emerald-400 flex-shrink-0" />
               <div>
-                <span className="text-slate-200 font-bold block">Scientific Governance</span>
-                <span className="text-slate-500">Powertrain &amp; Electrochemistry Group</span>
+                <span className="text-slate-200 font-bold block">Open Governance</span>
+                <span className="text-slate-500">Maintainers &amp; Peer Review Board</span>
               </div>
             </div>
             <div className="flex items-center gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
               <Database className="w-5 h-5 text-cyan-400 flex-shrink-0" />
               <div>
                 <span className="text-slate-200 font-bold block">Empirical Telemetry</span>
-                <span className="text-slate-500">12,000+ Verified DC Fast Charging Logs</span>
+                <span className="text-slate-500">OBD-II &amp; CAN-Bus Telemetry Sessions</span>
               </div>
             </div>
             <div className="flex items-center gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
               <Scale className="w-5 h-5 text-blue-400 flex-shrink-0" />
               <div>
-                <span className="text-slate-200 font-bold block">Global Standards</span>
+                <span className="text-slate-200 font-bold block">Physical Standards</span>
                 <span className="text-slate-500">SAE J1772, J3400 NACS, ISO 15118, UN GTR 22</span>
               </div>
             </div>
@@ -648,7 +648,7 @@ export default function MethodologyPage() {
           <p className="text-slate-400 text-sm mb-6">Ready to apply these mathematical models to your electric vehicle?</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              href="/simulator"
+              href="/#simulator"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-bold hover:from-emerald-400 hover:to-cyan-400 transition-all shadow-lg text-sm"
             >
               <Zap className="w-4 h-4" />

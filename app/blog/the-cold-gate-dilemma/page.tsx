@@ -19,11 +19,11 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'EV Cold Weather Charging: Fix Slow Winter Charging & Range Loss',
-  description: 'Learn why your electric car battery charges slowly in winter. Discover EV cold-gating, lithium plating, and how battery preconditioning speeds up charging.',
+  title: 'EV Cold Weather Charging: Fix Slow Winter Charging & Cold-Gating | EVChargeCurve',
+  description: 'Understand why electric cars charge slowly in freezing winter weather. Learn the physics of cold-gating, lithium plating risks, and how preconditioning cuts dwell times.',
   openGraph: {
-    title: 'EV Cold Weather Charging: Fix Slow Winter Charging & Range Loss',
-    description: 'Learn why your electric car battery charges slowly in winter. Discover EV cold-gating, lithium plating, and how battery preconditioning speeds up charging.',
+    title: 'EV Cold Weather Charging: Fix Slow Winter Charging & Cold-Gating',
+    description: 'Understand why electric cars charge slowly in freezing winter weather. Learn the physics of cold-gating, lithium plating risks, and how preconditioning cuts dwell times.',
     type: 'article',
     url: 'https://evchargecurve.com/blog/the-cold-gate-dilemma',
     images: [
@@ -31,9 +31,14 @@ export const metadata: Metadata = {
         url: 'https://evchargecurve.com/images/og-cold-gate.png',
         width: 1200,
         height: 630,
-        alt: 'EV Cold Weather Charging',
+        alt: 'EV Cold Weather Fast Charging & Cold Gate',
       }
     ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'EV Cold Weather Charging: Fix Slow Winter Charging & Cold-Gating',
+    description: 'Understand why electric cars charge slowly in freezing winter weather. Learn the physics of cold-gating, lithium plating risks, and how preconditioning cuts dwell times.',
   }
 };
 
@@ -281,6 +286,99 @@ export default function ColdGateDilemmaPage() {
             <p className="text-slate-400 text-sm leading-relaxed">
               Preconditioning warms cell anodes to the optimal 75°F–90°F range, expanding the graphite lattice and lowering electrolyte viscosity. This allows lithium ions to insert smoothly without depositing as metallic dendrites, preserving long-term battery cycle life and health.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Hub-and-Spoke Related Topic Pillars, Calculators & Vehicle Curves */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
+            <div>
+              <h2 className="text-lg font-bold text-white">
+                Related Topical Authority Hubs &amp; Simulators
+              </h2>
+              <p className="text-xs text-slate-400">
+                Explore empirical formulas, real-time calculators, and specific vehicle curves.
+              </p>
+            </div>
+            <Link href="/topics" className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold">
+              Browse 12 Knowledge Pillars →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Topic Pillars */}
+            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+              <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block mb-2">
+                Knowledge Pillars
+              </span>
+              <ul className="space-y-2 text-xs">
+                <li>
+                  <Link href="/topics/cold-weather-charging" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                    Cold Weather Charging Hub →
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/topics/battery-preconditioning" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                    Battery Preconditioning Hub →
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/topics/ev-battery-health" className="text-slate-300 hover:text-emerald-400 transition-colors font-medium block">
+                    EV Battery Health &amp; SoH Hub →
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Interactive Calculators */}
+            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+              <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-wider block mb-2">
+                Interactive Calculators
+              </span>
+              <ul className="space-y-2 text-xs">
+                <li>
+                  <Link href="/preconditioning" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                    Preconditioning vs Cold-Gate Tool →
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/range-loss" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                    Winter Range Loss &amp; Towing Drag →
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium block">
+                    DC Fast Charge Simulator →
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Featured Vehicle Curves */}
+            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4">
+              <span className="text-[11px] font-mono text-amber-400 uppercase tracking-wider block mb-2">
+                Empirical Vehicle Curves
+              </span>
+              <ul className="space-y-2 text-xs">
+                <li>
+                  <Link href="/curve/tesla-model-y-lr" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                    Tesla Model Y Long Range Curve →
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/curve/hyundai-ioniq-5" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                    Hyundai Ioniq 5 (800V) Curve →
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/curve/ford-mustang-mach-e-er" className="text-slate-300 hover:text-amber-400 transition-colors font-medium block">
+                    Ford Mustang Mach-E ER Curve →
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
